@@ -1,0 +1,26 @@
+---
+import Auth from '#/layouts/Auth.astro'
+import { Show, UserProfile } from '@clerk/astro/components'
+---
+
+<Auth pageTitle="User Management - Astro Basics" pageDescription="Manage users and profiles">
+  <main class="container dashboard-page">
+    <Show when="signed-in">
+      <div class="dashboard-header">
+        <h1>User Management</h1>
+      </div>
+
+      <section class="user-actions">
+        <h2>Manage Users</h2>
+        <UserProfile />
+      </section>
+    </Show>
+
+    <Show when="signed-out">
+      <div class="alert alert--info">
+        <p>Please sign in to access the user management dashboard.</p>
+        <a href="/login" class="btn btn--primary">Sign In</a>
+      </div>
+    </Show>
+  </main>
+</Auth>

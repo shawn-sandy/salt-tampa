@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro'
+import CollectionList from '#components/astro/CollectionList.astro'
+import FeatureCards from '#components/astro/FeatureCards.astro'
+import Featured from '#components/astro/Featured.astro'
+import HomeHero from '#components/astro/HomeHero.astro'
+import { SITE_DESCRIPTION, SITE_TITLE } from '#utils/site-config.js'
+---
+
+<Layout
+  pageTitle={SITE_TITLE}
+  pageDescription={SITE_DESCRIPTION}
+  showBreadcrumb={false}
+  pageImageUrl="/images/astro-kit-cover.webp"
+>
+  <HomeHero slot="header" />
+  <div slot="featured">
+    <!-- <section>
+      <Featured />
+    </section> -->
+    <section class="home-features">
+      <FeatureCards promoted={2} />
+    </section>
+  </div>
+  <section>
+    <CollectionList pageSize={2} />
+  </section>
+</Layout>
+
+<style>
+  /* The hero's own padding sits inside its background band, so it buys no
+     separation from the cards below it. Spacing between the two belongs here,
+     where they are composed -- FeatureCards is exported for reuse and must not
+     carry homepage-specific margin. */
+  .home-features {
+    margin-block-start: 4rem;
+  }
+</style>
