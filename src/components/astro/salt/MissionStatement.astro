@@ -1,0 +1,93 @@
+---
+/**
+ * The terracotta band's editorial pair: a sand uppercase label over a large
+ * Lato 700 statement at -2px tracking.
+ *
+ * The readme is explicit that mission and vision copy is a different register
+ * from the rest of the site and must not be paraphrased, shortened or
+ * "tightened". This component sets it and does nothing else to it.
+ *
+ * @component MissionStatement
+ * @example
+ * ```astro
+ * <MissionStatement label="Mission" statement={MISSION} />
+ * ```
+ */
+export type Props = {
+  /** Small uppercase eyebrow. Uppercasing is done by CSS, not by the writer. */
+  label?: string
+  statement: string
+  /** Overrides the sand label colour -- the testimonial uses a light grey. */
+  labelColor?: string
+  /** Overrides the white statement colour. */
+  statementColor?: string
+  align?: 'center' | 'left'
+  class?: string
+}
+
+const {
+  label,
+  statement,
+  labelColor = 'var(--st-text-eyebrow-on-terracotta)',
+  statementColor = 'var(--st-white)',
+  align = 'center',
+  class: className,
+} = Astro.props as Props
+---
+
+<div
+  class:list={['st-mission', align === 'left' && 'st-mission--left', className]}
+  style={`--st-mission-label:${labelColor};--st-mission-text:${statementColor}`}
+>
+  {label && <p class="st-mission__label">{label}</p>}
+  <p class="st-mission__statement">{statement}</p>
+</div>
+
+<style>
+  .st-mission {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-1);
+    max-width: 1020px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .st-mission--left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .st-mission__label {
+    align-self: stretch;
+    color: var(--st-mission-label);
+    font-family: var(--st-font-editorial);
+    font-weight: 400;
+    letter-spacing: var(--st-track-eyebrow);
+    line-height: var(--st-lh-utility);
+    margin: 0;
+    text-transform: uppercase;
+
+    /* Drawn at 32px; scaled down rather than clipped on narrow viewports. */
+    font-size: clamp(1.25rem, 0.9rem + 1.75vw, var(--st-size-eyebrow));
+  }
+
+  .st-mission__statement {
+    align-self: stretch;
+    color: var(--st-mission-text);
+    font-family: var(--st-font-editorial);
+    font-weight: 700;
+    margin: 0;
+    text-wrap: pretty;
+
+    /*
+     * Drawn at 48px/1.1 with -2px tracking. The tracking is scaled with the
+     * size -- a flat -2px on a 24px statement closes the letters up far more
+     * than it does on a 48px one.
+     */
+    font-size: clamp(1.5rem, 0.95rem + 2.75vw, var(--st-size-statement));
+    letter-spacing: -0.042em;
+    line-height: var(--st-lh-statement);
+  }
+</style>

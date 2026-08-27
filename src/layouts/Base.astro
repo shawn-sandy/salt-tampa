@@ -9,6 +9,10 @@ import Header from '#components/astro/Header.astro'
 import { SITE_DESCRIPTION, SITE_TITLE } from '#utils/site-config'
 import '@fpkit/acss/styles'
 import '../styles/index.css'
+// Salt Tampa design tokens. Every name is `--st-` prefixed and the file
+// declares no element selectors outside `.st`, so importing it globally is
+// inert on routes that do not opt in. See src/styles/salt/index.css.
+import '../styles/salt/index.css'
 import { Show, UserButton, SignInButton } from '@clerk/astro/components'
 const isPWAEnabled = import.meta.env.PWA_ENABLED === 'true' || false
 // types
@@ -49,6 +53,30 @@ const { pageTitle, pageDescription, pageImageUrl, hideHeader } = Astro.props
       preload is discarded and the request happens twice.
     -->
     <link rel="preload" href="/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!--
+      Salt Tampa webfonts.
+
+      Six families, because the source Figma file assigns each of them a fixed
+      job: Montserrat (wordmark, nav), Poppins (event card, pills), Inter
+      (section headings, buttons), Lato (mission, testimonial, captions),
+      Roboto (footer, forms), Josefin Sans (donate appeal). The design system
+      loads them from Google Fonts and ships no binaries.
+
+      This is a knowing regression against the one-request budget documented
+      above, carried so the imported components render as drawn. Cutting the
+      roster to three self-hosted families is step 2 of
+      docs/plans/port-salt-tampa-landing-page.md; do that before launch.
+
+      `<link>` rather than the design system's CSS `@import`, which would chain
+      a second round trip behind the stylesheet before any font is requested.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Lato:wght@400;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&display=swap"
+    />
 
     <!-- PWA Meta Tags -->
     <meta name="description" content={pageDescription || SITE_DESCRIPTION} />

@@ -1,0 +1,48 @@
+/* Salt Tampa Outreach — type. Six families, each with a fixed job. */
+:root{
+  --st-font-display:"Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;   /* wordmark, nav */
+  --st-font-event:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;        /* event card, pill buttons */
+  --st-font-ui:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;             /* section headings, buttons, cards */
+  --st-font-editorial:"Lato",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;       /* mission, testimonial, service copy, footer brand */
+  --st-font-utility:"Roboto",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;       /* footer links, forms, fine print */
+  --st-font-poster:"Josefin Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;  /* donate headline, ghost button */
+  --st-font-partners:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;     /* SUBSTITUTE for Neutrif Pro */
+
+  /* Sizes, verbatim from the file */
+  --st-size-hero:130px;
+  --st-size-donate:86px;
+  --st-size-partners:54px;
+  --st-size-event-headline:51px;
+  --st-size-statement:48px;
+  --st-size-heading:48px;
+  --st-size-event-eyebrow:36px;
+  --st-size-eyebrow:32px;
+  --st-size-brand:24px;
+  --st-size-footer-brand:22px;
+  --st-size-ghost:20px;
+  --st-size-lead:18px;
+  --st-size-name:18px;
+  --st-size-body:16px;
+  --st-size-caption:14px;
+  --st-size-fine:12px;
+
+  /* Line heights */
+  --st-lh-tight:100%;
+  --st-lh-statement:1.1; /* @kind other */
+  --st-lh-heading:72px;
+  --st-lh-lead:28px;
+  --st-lh-caption:25px;
+  --st-lh-utility:1.5; /* @kind other */
+  --st-lh-body-relaxed:1.6; /* @kind other */
+  --st-lh-partners:1.3; /* @kind other */
+  --st-lh-donate:88px;
+
+  /* Tracking */
+  --st-track-brand:.09em;
+  --st-track-event:.105em;
+  --st-track-ghost:.1em;
+  --st-track-eyebrow:1px;
+  --st-track-statement:-2px;
+  --st-track-footer-brand:-.03em;
+  --st-track-donate:.01em;
+}

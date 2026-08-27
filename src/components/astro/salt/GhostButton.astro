@@ -1,0 +1,77 @@
+---
+/**
+ * The poster button from the donate band: square corners, a 2px white rule, and
+ * a two-step hard offset shadow in peach. Josefin Sans 700/20 at 0.1em,
+ * uppercased by CSS rather than by the writer.
+ *
+ * Squareness is the point -- `--st-radius-none` is bound to this control alone.
+ *
+ * @component GhostButton
+ * @example
+ * ```astro
+ * <GhostButton href="/donate">Donate</GhostButton>
+ * ```
+ */
+export type Props = {
+  href?: string
+  type?: 'button' | 'submit' | 'reset'
+  class?: string
+}
+
+const { href, type = 'button', class: className, ...rest } = Astro.props as Props
+const Tag = href ? 'a' : 'button'
+---
+
+<Tag href={href} type={href ? undefined : type} class:list={['st-ghost', className]} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .st-ghost {
+    align-items: center;
+    background: transparent;
+    border: 2px solid var(--st-white);
+    border-radius: var(--st-radius-none);
+    box-shadow: var(--st-shadow-offset);
+    box-sizing: border-box;
+    color: var(--st-white);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--st-font-poster);
+    font-size: var(--st-size-ghost);
+    font-weight: 700;
+    justify-content: center;
+    letter-spacing: var(--st-track-ghost);
+    line-height: var(--st-lh-lead);
+    min-height: 68px;
+    padding: var(--st-space-5) var(--st-space-5);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      box-shadow var(--st-dur-base) var(--st-ease-standard),
+      transform var(--st-dur-base) var(--st-ease-standard);
+  }
+
+  /*
+   * The readme's stated press convention: the offset stack collapses toward the
+   * button. Implemented as a shadow change plus an equal translate so the
+   * button's outer edge stays put and only the peach steps move.
+   */
+  .st-ghost:active {
+    box-shadow:
+      2px 2px 0 0 var(--st-shadow-peach-1),
+      4px 4px 0 0 var(--st-shadow-peach-2);
+    transform: translate(2px, 2px);
+  }
+
+  .st-ghost:focus-visible {
+    outline: 2px solid var(--st-white);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .st-ghost {
+      transition: none;
+    }
+  }
+</style>

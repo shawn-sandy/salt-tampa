@@ -1,0 +1,238 @@
+---
+/**
+ * Specimen page for the imported Salt Tampa design system.
+ *
+ * Every component in `#components/astro/salt` renders once here, which is what
+ * makes the import verifiable: without a page that mounts them, Astro never
+ * compiles them and a broken component stays broken until the home page is
+ * built on top of it.
+ *
+ * Not linked from anywhere. Delete it once the real pages exercise the kit.
+ */
+import Base from '#layouts/Base.astro'
+
+import Button from '#components/astro/salt/Button.astro'
+import CarouselDots from '#components/astro/salt/CarouselDots.astro'
+import DonateBand from '#components/astro/salt/DonateBand.astro'
+import EventCard from '#components/astro/salt/EventCard.astro'
+import SaltFooter from '#components/astro/salt/Footer.astro'
+import FooterLink from '#components/astro/salt/FooterLink.astro'
+import GhostButton from '#components/astro/salt/GhostButton.astro'
+import Icon from '#components/astro/salt/Icon.astro'
+import ImageStrip from '#components/astro/salt/ImageStrip.astro'
+import MissionBand from '#components/astro/salt/MissionBand.astro'
+import MissionStatement from '#components/astro/salt/MissionStatement.astro'
+import Navbar from '#components/astro/salt/Navbar.astro'
+import NavbarLink from '#components/astro/salt/NavbarLink.astro'
+import NewsletterForm from '#components/astro/salt/NewsletterForm.astro'
+import OutlineButton from '#components/astro/salt/OutlineButton.astro'
+import PartnerRow from '#components/astro/salt/PartnerRow.astro'
+import PillButton from '#components/astro/salt/PillButton.astro'
+import RoundIconButton from '#components/astro/salt/RoundIconButton.astro'
+import SectionHeading from '#components/astro/salt/SectionHeading.astro'
+import ServiceCard from '#components/astro/salt/ServiceCard.astro'
+import TeamCard from '#components/astro/salt/TeamCard.astro'
+import Testimonial from '#components/astro/salt/Testimonial.astro'
+import TextInput from '#components/astro/salt/TextInput.astro'
+import Wordmark from '#components/astro/salt/Wordmark.astro'
+
+import carousel1 from '#assets/salt/images/carousel-1.jpg'
+import carousel2 from '#assets/salt/images/carousel-2.jpg'
+import carousel3 from '#assets/salt/images/carousel-3.jpg'
+import donateBg from '#assets/salt/images/donate-bg.png'
+import outreachTent from '#assets/salt/images/outreach-tent.jpg'
+import serviceClothes from '#assets/salt/images/service-clothes.jpg'
+import serviceShower from '#assets/salt/images/service-shower.jpg'
+import teamAndrea from '#assets/salt/images/team-andrea.jpg'
+import teamHolly from '#assets/salt/images/team-holly.jpg'
+import teamNiehel from '#assets/salt/images/team-niehel.jpg'
+import partner1 from '#assets/salt/partners/partner-1.svg'
+import partner2 from '#assets/salt/partners/partner-2.svg'
+
+const MISSION =
+  "To Share Christ's Love by Serving the Unsheltered Through Comprehensive Mobile Outreach Centers that Serve Immediate Needs, Catalyze Permanent Housing Solutions, and Empower Self-Sufficiency"
+---
+
+<Base pageTitle="Salt Tampa design kit" pageDescription="Specimen page for the imported Salt Tampa design system." hideHeader>
+  <main id="main" tabindex="-1" class="st kit">
+    <h1 class="kit__h1">Salt Tampa design kit</h1>
+
+    <section class="kit__row kit__row--dark">
+      <h2 class="kit__label kit__label--light">Navbar</h2>
+      <Navbar
+        links={[
+          { label: 'Services', href: '#services' },
+          { label: 'About', href: '#about' },
+        ]}
+        ctaHref="#donate"
+      />
+    </section>
+
+    <section class="kit__row kit__row--dark">
+      <h2 class="kit__label kit__label--light">Wordmark, NavbarLink, PillButton, EventCard</h2>
+      <Wordmark variant="nav" />
+      <NavbarLink href="#services">Services</NavbarLink>
+      <PillButton href="#volunteer">Volunteer Today</PillButton>
+      <PillButton size="small" href="#donate">Donate</PillButton>
+      <EventCard href="#volunteer" />
+    </section>
+
+    <section class="kit__row">
+      <h2 class="kit__label">Button, OutlineButton, RoundIconButton, Icon, CarouselDots</h2>
+      <Button variant="primary" href="#donate">Contact Us</Button>
+      <Button variant="secondary" href="#volunteer">Become a Volunteer</Button>
+      <Button variant="secondary" icon="none" disabled>Disabled</Button>
+      <OutlineButton type="submit">Subscribe</OutlineButton>
+      <RoundIconButton direction="left" label="Previous" />
+      <RoundIconButton direction="right" size={54} color="var(--st-ink-800)" label="Next" />
+      <Icon name="facebook" size={16} color="var(--st-ink-950)" />
+      <Icon name="linkedin" size={16} color="var(--st-ink-950)" />
+      <CarouselDots count={5} active={1} />
+    </section>
+
+    <section class="kit__row">
+      <h2 class="kit__label">Wordmark (footer), FooterLink, TextInput, NewsletterForm</h2>
+      <Wordmark variant="footer" />
+      <FooterLink href="#donate">Donate</FooterLink>
+      <FooterLink variant="legal" href="#privacy">Privacy Policy</FooterLink>
+      <TextInput name="demo" label="Email address" showLabel type="email" placeholder="Enter your email" />
+      <NewsletterForm action="#" />
+    </section>
+
+    <section class="kit__stack">
+      <h2 class="kit__label">SectionHeading</h2>
+      <SectionHeading heading="Take a look at our services" paragraph="Three services, every second Saturday of the month.">
+        <Button slot="actions" variant="secondary" href="#volunteer">Become a Volunteer</Button>
+        <Button slot="actions" variant="primary" href="#contact">Contact Us</Button>
+      </SectionHeading>
+    </section>
+
+    <section class="kit__stack">
+      <h2 class="kit__label">ServiceCard</h2>
+      <div class="kit__grid kit__grid--services">
+        <ServiceCard title="Clothes" image={serviceClothes} imageAlt="A rail of donated clothing at the mobile station" body="Find clean clothes at our mobile station, in a range of sizes and styles." />
+        <ServiceCard title="Barber" image={outreachTent} imageAlt="A volunteer barber cutting hair under the outreach tent" body="Free haircuts, beard trims and styling, every second Saturday of the month." />
+        <ServiceCard title="Shower" image={serviceShower} imageAlt="Salt's mobile shower unit parked on site" body="A clean, private space to refresh, with toiletries and towels provided." />
+      </div>
+    </section>
+
+    <section class="kit__stack">
+      <h2 class="kit__label">TeamCard</h2>
+      <div class="kit__grid kit__grid--team">
+        <TeamCard name="Niehel" title="Program Director" image={teamNiehel} />
+        <TeamCard name="Andrea" title="Program Director" image={teamAndrea} facebook="#" linkedin="#" />
+        <TeamCard name="Holly" title="Fundraising Manager" image={teamHolly} linkedin="#" />
+      </div>
+    </section>
+
+    <section class="kit__stack">
+      <h2 class="kit__label">PartnerRow</h2>
+      <PartnerRow
+        logos={[
+          { src: partner1, alt: 'Placeholder partner one', height: 63 },
+          { src: partner2, alt: 'Placeholder partner two', height: 61 },
+        ]}
+      />
+    </section>
+
+    <MissionBand>
+      <MissionStatement label="Mission" statement={MISSION} />
+    </MissionBand>
+
+    <ImageStrip
+      images={[
+        { src: carousel1, alt: 'Volunteers setting up on a Saturday morning' },
+        { src: outreachTent, alt: 'The outreach tent with guests queuing' },
+        { src: carousel2, alt: 'A volunteer handing over a bag of clothes' },
+        { src: carousel3, alt: 'Guests sharing a meal at Trinity Cafe' },
+      ]}
+    />
+
+    <Testimonial statement={MISSION} image={teamAndrea} imageAlt="" attribution="Andrea, Program Director">
+      <div slot="controls" class="kit__quote-controls">
+        <RoundIconButton direction="left" size={54} color="var(--st-ink-800)" label="Previous quote" />
+        <RoundIconButton direction="right" size={54} color="var(--st-ink-800)" label="Next quote" />
+      </div>
+    </Testimonial>
+
+    <DonateBand id="donate" image={donateBg} imageAlt="" href="#donate" />
+
+    <SaltFooter
+      copyright="2026 Salt Tampa Outreach. All rights reserved."
+      newsletterAction="#"
+      links={[
+        { label: 'Donate', href: '#donate' },
+        { label: 'Our Services', href: '#services' },
+      ]}
+      legal={[{ label: 'Privacy Policy', href: '#privacy' }]}
+    />
+  </main>
+</Base>
+
+<style>
+  .kit {
+    background: var(--st-white);
+  }
+
+  .kit__h1 {
+    color: var(--st-ink-950);
+    font-family: var(--st-font-ui);
+    padding: var(--st-space-9) var(--st-space-5) 0;
+  }
+
+  .kit__row,
+  .kit__stack {
+    box-sizing: border-box;
+    padding: var(--st-space-9) var(--st-space-5);
+  }
+
+  .kit__row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-5);
+  }
+
+  .kit__stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-6);
+  }
+
+  .kit__row--dark {
+    background: var(--st-ink-800);
+  }
+
+  .kit__label {
+    color: var(--st-ink-600);
+    flex-basis: 100%;
+    font-family: var(--st-font-utility);
+    font-size: var(--st-size-fine);
+    letter-spacing: var(--st-track-eyebrow);
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .kit__label--light {
+    color: var(--st-ink-200);
+  }
+
+  .kit__grid {
+    display: grid;
+    gap: var(--st-space-7);
+  }
+
+  .kit__grid--services {
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  }
+
+  .kit__grid--team {
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 45%), 224px));
+  }
+
+  .kit__quote-controls {
+    display: flex;
+    gap: 21px;
+    margin-block-start: var(--st-space-6);
+  }
+</style>

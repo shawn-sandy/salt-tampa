@@ -1,0 +1,120 @@
+---
+/**
+ * The workhorse button: 40px tall, 12px radius, Inter 500/14, with a trailing
+ * chevron 8px after the label.
+ *
+ * Renders an `<a>` when `href` is supplied and a `<button>` otherwise, so the
+ * element matches what the control actually does. The source component took an
+ * `as` prop and could render an `<a>` with no `href`; that combination is not
+ * focusable and is not reproduced here.
+ *
+ * Hover, active and focus states are additions. The source is authored in
+ * inline React style objects, which cannot express any of them.
+ *
+ * @component Button
+ * @example
+ * ```astro
+ * <Button variant="primary" href="/donate">Donate</Button>
+ * <Button variant="secondary" icon="none" type="submit">Subscribe</Button>
+ * ```
+ */
+import Icon from './Icon.astro'
+
+export type Props = {
+  /** `primary` is the terracotta fill; `secondary` is the near-white one. */
+  variant?: 'primary' | 'secondary'
+  /** Which side the chevron sits on, or `none` for a bare label. */
+  icon?: 'right' | 'left' | 'none'
+  /** Renders an `<a>` instead of a `<button>`. */
+  href?: string
+  /** Only applies when rendering a `<button>`. */
+  type?: 'button' | 'submit' | 'reset'
+  disabled?: boolean
+  class?: string
+}
+
+const {
+  variant = 'primary',
+  icon = 'right',
+  href,
+  type = 'button',
+  disabled = false,
+  class: className,
+  ...rest
+} = Astro.props as Props
+
+const Tag = href ? 'a' : 'button'
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  disabled={href ? undefined : disabled}
+  aria-disabled={href && disabled ? 'true' : undefined}
+  class:list={['st-button', `st-button--${variant}`, className]}
+  {...rest}
+>
+  {icon === 'left' && <Icon name="arrow-left" size={16} />}
+  <span><slot /></span>
+  {icon === 'right' && <Icon name="arrow-right" size={16} />}
+</Tag>
+
+<style>
+  .st-button {
+    align-items: center;
+    border: none;
+    border-radius: var(--st-radius-card);
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--st-font-ui);
+    font-size: var(--st-size-caption);
+    font-weight: 500;
+    gap: var(--st-space-1);
+    justify-content: center;
+    line-height: var(--st-lh-caption);
+    min-height: 40px;
+    padding: var(--st-space-3);
+    text-decoration: none;
+    transition:
+      background var(--st-dur-base) var(--st-ease-standard),
+      opacity var(--st-dur-fast) var(--st-ease-standard);
+
+    /* The source sets `white-space: nowrap`, which pushes a two-word label past
+       a 320px viewport. Wrapping between words keeps the label inside the
+       button; `text-wrap: balance` keeps the two lines even when it happens. */
+    text-wrap: balance;
+  }
+
+  .st-button--primary {
+    background: var(--st-surface-button-primary);
+    color: var(--st-white);
+  }
+
+  .st-button--secondary {
+    background: var(--st-surface-button-secondary);
+    color: var(--st-ink-950);
+  }
+
+  /* The readme's stated convention: buttons shift their ground one step on
+     hover. Secondary goes #F8F8F8 -> #EAEBEC; primary darkens toward its own
+     overlay colour, which is the terracotta the file already contains. */
+  .st-button--primary:hover {
+    background: var(--st-terracotta-overlay);
+  }
+
+  .st-button--secondary:hover {
+    background: var(--st-ink-100);
+  }
+
+  .st-button:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .st-button[disabled],
+  .st-button[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+</style>

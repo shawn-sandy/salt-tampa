@@ -96,6 +96,7 @@ export function useSupabase() {
         try {
           token = await session.getToken({ template: 'supabase' })
           tokenRef.current = token
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           /**
            * Dual error detection pattern for Clerk JWT template availability.
@@ -200,6 +201,7 @@ export function useSupabase() {
             tokenRef.current = newToken
             await initClient()
           }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           // Silently handle JWT template errors to avoid spamming logs
           const isJwtTemplateError =

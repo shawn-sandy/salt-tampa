@@ -1,0 +1,63 @@
+---
+/**
+ * The terracotta band. The only place on the page that ground appears, and
+ * nothing but mission and vision copy lives on it.
+ *
+ * @component MissionBand
+ * @example
+ * ```astro
+ * <MissionBand>
+ *   <MissionStatement label="Mission" statement={MISSION} />
+ *   <MissionStatement label="Vision" statement={VISION} />
+ * </MissionBand>
+ * ```
+ */
+export type Props = {
+  /** Optional `id` for in-page navigation. */
+  id?: string
+  class?: string
+}
+
+const { id, class: className } = Astro.props as Props
+---
+
+<section id={id} class:list={['st-band', className]}>
+  <div class="st-band__inner">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .st-band {
+    align-items: center;
+    background: var(--st-surface-band);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--st-space-11) var(--st-space-5);
+    width: 100%;
+
+    /*
+     * Drawn 712px tall. A floor rather than a fixed height, so the band grows
+     * when the mission text wraps to more lines on a narrow viewport instead of
+     * spilling out of it.
+     */
+    min-height: 712px;
+  }
+
+  .st-band__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-5);
+    max-width: 100%;
+    width: var(--st-content-narrow);
+  }
+
+  @media (max-width: 48rem) {
+    .st-band {
+      min-height: 0;
+      padding-block: var(--st-space-10);
+    }
+  }
+</style>

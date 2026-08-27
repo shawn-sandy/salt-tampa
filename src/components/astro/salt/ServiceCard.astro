@@ -1,0 +1,83 @@
+---
+/**
+ * A service column: a 20px-radius photograph with a Lato title and body under
+ * it. No border, no shadow, no panel -- the readme is explicit that a "card"
+ * here is a photograph with a radius and nothing else.
+ *
+ * The photograph is an `<Image>` rather than a CSS background, so it carries
+ * alt text and gets a `srcset`. The source painted it as
+ * `background: url(...)`, which can do neither.
+ *
+ * @component ServiceCard
+ * @example
+ * ```astro
+ * import shower from '#assets/salt/images/service-shower.jpg'
+ * <ServiceCard title="Shower" image={shower} imageAlt="Salt's mobile shower unit" body="..." />
+ * ```
+ */
+import { Image } from 'astro:assets'
+
+export type Props = {
+  title: string
+  body: string
+  /** Imported image. Processed by astro:assets at build. */
+  image: ImageMetadata
+  /** Describes the photograph. Required -- these images carry meaning. */
+  imageAlt: string
+  class?: string
+}
+
+const { title, body, image, imageAlt, class: className } = Astro.props as Props
+---
+
+<article class:list={['st-service', className]}>
+  <Image src={image} alt={imageAlt} widths={[240, 480, 720]} sizes="(max-width: 40rem) 90vw, 240px" class="st-service__photo" />
+  <div class="st-service__text">
+    <h3 class="st-service__title">{title}</h3>
+    <p class="st-service__body">{body}</p>
+  </div>
+</article>
+
+<style>
+  .st-service {
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-4);
+
+    /* Drawn at a fixed 240px. Expressed as a preferred width so the row can be
+       a grid that reflows instead of a fixed three-across strip. */
+    width: 100%;
+  }
+
+  .st-service__photo {
+    border-radius: var(--st-radius-photo);
+    display: block;
+    height: 311px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .st-service__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-2);
+  }
+
+  .st-service__title {
+    color: var(--st-black);
+    font-family: var(--st-font-editorial);
+    font-size: var(--st-size-body);
+    font-weight: 600;
+    line-height: var(--st-lh-partners);
+    margin: 0;
+  }
+
+  .st-service__body {
+    color: var(--st-black);
+    font-family: var(--st-font-editorial);
+    font-size: var(--st-size-caption);
+    font-weight: 400;
+    line-height: var(--st-lh-body-relaxed);
+    margin: 0;
+  }
+</style>

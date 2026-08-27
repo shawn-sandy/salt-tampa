@@ -1,0 +1,57 @@
+/* Salt Tampa Outreach — color. Values transcribed from the source .fig. */
+:root{
+  /* Brand */
+  --st-sage:#5E8F7E;            /* footer type, hairlines, form borders, carousel dots */
+  --st-terracotta:#DC7646;      /* mission band, primary button */
+  --st-sand:#EAE0C7;            /* eyebrow type on the terracotta band */
+  --st-terracotta-overlay:#B2421A;
+
+  /* Ink ramp (Figma "gray color blue") */
+  --st-ink-950:#19191B;
+  --st-ink-900:#1E1F21;
+  --st-ink-800:#3B3D41;
+  --st-ink-700:#5A5C62;
+  --st-ink-600:#787A82;
+  --st-ink-400:#ACAEB4;
+  --st-ink-300:#C0C2C6;
+  --st-ink-200:#D5D7D9;
+  --st-ink-100:#EAEBEC;
+  --st-ink-050:#F8F8F8;
+
+  /* Literal darks used for photo captions and partner marks */
+  --st-ink-1d:#1D1D1D;
+  --st-ink-22:#222222;
+  --st-ink-12:#121212;
+  --st-ink-09:#091002;
+
+  /* Neutrals */
+  --st-white:#FFFFFF;
+  --st-black:#000000;
+  --st-paper:#FDFDFB;                /* services section ground */
+  --st-paper-quote:#E3E3E3;          /* testimonial type over photography */
+
+  /* Ghost-button offset stack */
+  --st-shadow-peach-1:#F1876F;
+  --st-shadow-peach-2:#F5AE9E;
+
+  /* Overlays */
+  --st-scrim-ink:rgba(25,25,27,.49);
+  --st-scrim-black:rgba(0,0,0,.63);
+  --st-scrim-terracotta:rgba(178,66,26,.7);
+
+  /* Semantic aliases */
+  --st-text-body:var(--st-black);
+  --st-text-muted:var(--st-ink-700);
+  --st-text-heading:var(--st-ink-950);
+  --st-text-inverse:var(--st-white);
+  --st-text-on-terracotta:var(--st-white);
+  --st-text-eyebrow-on-terracotta:var(--st-sand);
+  --st-text-footer:var(--st-sage);
+  --st-surface-page:var(--st-white);
+  --st-surface-sunken:var(--st-paper);
+  --st-surface-band:var(--st-terracotta);
+  --st-surface-button-secondary:var(--st-ink-050);
+  --st-surface-button-primary:var(--st-terracotta);
+  --st-border-hairline:var(--st-sage);
+  --st-focus-ring:var(--st-terracotta);
+}

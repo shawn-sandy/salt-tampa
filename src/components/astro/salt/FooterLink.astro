@@ -1,0 +1,61 @@
+---
+/**
+ * Two footer link weights, both sage: `primary` is Roboto 600/16 for the main
+ * row, `legal` is Roboto 400/14 underlined for the bottom row.
+ *
+ * @component FooterLink
+ * @example
+ * ```astro
+ * <FooterLink href="/donate">Donate</FooterLink>
+ * <FooterLink variant="legal" href="/privacy">Privacy Policy</FooterLink>
+ * ```
+ */
+export type Props = {
+  href: string
+  variant?: 'primary' | 'legal'
+  class?: string
+}
+
+const { href, variant = 'primary', class: className, ...rest } = Astro.props as Props
+---
+
+<a href={href} class:list={['st-footerlink', `st-footerlink--${variant}`, className]} {...rest}>
+  <slot />
+</a>
+
+<style>
+  .st-footerlink {
+    color: var(--st-sage);
+    font-family: var(--st-font-utility);
+    line-height: var(--st-lh-utility);
+    transition: opacity var(--st-dur-fast) var(--st-ease-standard);
+  }
+
+  .st-footerlink--primary {
+    font-size: var(--st-size-body);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .st-footerlink--legal {
+    font-size: var(--st-size-caption);
+    font-weight: 400;
+    text-decoration: underline;
+  }
+
+  /* The primary row carries no underline at rest, so hover has to supply the
+     non-colour cue that the legal row already has. */
+  .st-footerlink--primary:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .st-footerlink--legal:hover {
+    opacity: 0.8;
+  }
+
+  .st-footerlink:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: 2px;
+  }
+</style>

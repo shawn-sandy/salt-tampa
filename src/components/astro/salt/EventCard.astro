@@ -1,0 +1,85 @@
+---
+/**
+ * The hero's event announcement: a blurred, hard-shadowed panel over the
+ * skyline photograph.
+ *
+ * This is the design system's only use of blur -- `backdrop-filter` at 62.3px,
+ * never applied to a header, sheet or modal.
+ *
+ * @component EventCard
+ * @example
+ * ```astro
+ * <EventCard href="#volunteer" />
+ * ```
+ */
+import PillButton from './PillButton.astro'
+
+export type Props = {
+  /** Uppercased by CSS. The source string is "come to ouR next event!". */
+  eyebrow?: string
+  headline?: string
+  action?: string
+  /** Where the pill goes. Omit to render the card without a control. */
+  href?: string
+  class?: string
+}
+
+const {
+  eyebrow = 'come to our next event!',
+  headline = 'Every 2nd Saturday',
+  action = 'Volunteer Today',
+  href,
+  class: className,
+} = Astro.props as Props
+---
+
+<div class:list={['st-event', className]}>
+  <p class="st-event__eyebrow">{eyebrow}</p>
+  <p class="st-event__headline">{headline}</p>
+  {action && href && <PillButton href={href}>{action}</PillButton>}
+</div>
+
+<style>
+  .st-event {
+    align-items: center;
+    backdrop-filter: var(--st-blur-event);
+    box-shadow: var(--st-shadow-event);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    justify-content: center;
+    padding: var(--st-space-5) var(--st-space-4);
+    -webkit-backdrop-filter: var(--st-blur-event);
+
+    /* Drawn at a fixed 620px. Preferred rather than fixed so it fits a phone. */
+    width: min(620px, 100%);
+  }
+
+  .st-event__eyebrow {
+    color: var(--st-white);
+    font-family: var(--st-font-event);
+    font-weight: 700;
+    letter-spacing: var(--st-track-event);
+    line-height: var(--st-lh-tight);
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+
+    /* Drawn at 36px. */
+    font-size: clamp(1.125rem, 0.6rem + 2.6vw, var(--st-size-event-eyebrow));
+  }
+
+  .st-event__headline {
+    color: var(--st-white);
+    font-family: var(--st-font-event);
+    font-weight: 400;
+    line-height: var(--st-lh-tight);
+    margin: 0;
+    padding: 14px 0;
+    text-align: center;
+
+    /* Drawn at 51px. */
+    font-size: clamp(1.5rem, 0.75rem + 3.75vw, var(--st-size-event-headline));
+  }
+</style>

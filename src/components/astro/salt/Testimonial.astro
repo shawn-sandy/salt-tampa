@@ -1,0 +1,147 @@
+---
+/**
+ * A full-bleed photograph under a 63% black scrim, with a left-aligned label
+ * and quotation.
+ *
+ * The controls are a slot rather than built-in `onPrev`/`onNext` props. The
+ * source rendered two arrow discs unconditionally, so a single-quote block
+ * still drew a pair of buttons that went nowhere.
+ *
+ * Marked up as a `<blockquote>` inside a `<figure>`, which the source did not
+ * do -- it set the quotation as a plain paragraph.
+ *
+ * @component Testimonial
+ * @example
+ * ```astro
+ * <Testimonial statement="..." image={photo} imageAlt="" attribution="Andrea, Program Director" />
+ * ```
+ */
+import { Image } from 'astro:assets'
+
+export type Props = {
+  /** Small uppercase eyebrow. */
+  label?: string
+  statement: string
+  /** Who said it. Rendered as a `<figcaption>`. */
+  attribution?: string
+  image?: ImageMetadata
+  /** Empty string marks the photograph decorative. */
+  imageAlt?: string
+  class?: string
+}
+
+const {
+  label = 'Testimonials',
+  statement,
+  attribution,
+  image,
+  imageAlt = '',
+  class: className,
+} = Astro.props as Props
+---
+
+<section class:list={['st', 'st-quote', className]}>
+  {
+    image && (
+      <Image
+        src={image}
+        alt={imageAlt}
+        widths={[768, 1280, 1920, 2400]}
+        sizes="100vw"
+        class="st-quote__photo"
+      />
+    )
+  }
+  <div class="st-quote__scrim"></div>
+  <figure class="st-quote__figure">
+    {label && <p class="st-quote__label">{label}</p>}
+    <blockquote class="st-quote__text">{statement}</blockquote>
+    {attribution && <figcaption class="st-quote__attribution">{attribution}</figcaption>}
+    <slot name="controls" />
+  </figure>
+</section>
+
+<style>
+  .st-quote {
+    align-items: center;
+    background: var(--st-ink-700);
+    box-sizing: border-box;
+    display: flex;
+    overflow: hidden;
+    padding: var(--st-space-12) 146px;
+    position: relative;
+    width: 100%;
+
+    /* Drawn 960px tall, with the text absolutely placed at top: 387px. A floor
+       plus centring puts it in the same place without pinning the block. */
+    min-height: 960px;
+  }
+
+  .st-quote__photo {
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+  }
+
+  .st-quote__scrim {
+    background: var(--st-scrim-black);
+    inset: 0;
+    position: absolute;
+  }
+
+  .st-quote__figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-1);
+    margin: 0;
+    max-width: 100%;
+    position: relative;
+    width: 1020px;
+  }
+
+  .st-quote__label {
+    color: var(--st-paper-quote);
+    font-family: var(--st-font-editorial);
+    font-weight: 400;
+    letter-spacing: var(--st-track-eyebrow);
+    line-height: var(--st-lh-utility);
+    margin: 0;
+    text-transform: uppercase;
+    font-size: clamp(1.25rem, 0.9rem + 1.75vw, var(--st-size-eyebrow));
+  }
+
+  .st-quote__text {
+    /*
+     * The source sets this in #E3E3E3 over an arbitrary photograph, so the
+     * contrast depends entirely on which photograph is passed. White over the
+     * 63% black scrim is the only version that holds a ratio regardless of the
+     * image behind it.
+     */
+    color: var(--st-white);
+    font-family: var(--st-font-editorial);
+    font-weight: 700;
+    letter-spacing: -0.042em;
+    line-height: var(--st-lh-statement);
+    margin: 0;
+    text-wrap: pretty;
+    font-size: clamp(1.5rem, 0.95rem + 2.75vw, var(--st-size-statement));
+  }
+
+  .st-quote__attribution {
+    color: var(--st-paper-quote);
+    font-family: var(--st-font-editorial);
+    font-size: var(--st-size-lead);
+    font-weight: 400;
+    line-height: var(--st-lh-lead);
+    margin-block-start: var(--st-space-5);
+  }
+
+  @media (max-width: 64rem) {
+    .st-quote {
+      min-height: 0;
+      padding: var(--st-space-11) var(--st-space-5);
+    }
+  }
+</style>

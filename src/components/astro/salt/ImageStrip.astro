@@ -1,0 +1,130 @@
+---
+/**
+ * The shingled photo strip on white: overlapping frames, each nudged a couple
+ * of degrees off square.
+ *
+ * Named `ImageStrip`, not `ImageCarousel`, because the source component is not
+ * a carousel. It renders every image at once and never reads its `index` prop
+ * for anything except which dot to highlight, so its dots and arrows moved
+ * nothing -- and its caller passed `count={images.length - 1}`, drawing four
+ * dots for five photographs.
+ *
+ * Here the strip is a scroll-snap row. That makes the photographs the source
+ * pushed off the left edge (`left: -289px`) actually reachable on a phone, and
+ * it needs no client JavaScript. The fake dots are not reproduced; use
+ * `CarouselDots` if a real slideshow is ever built.
+ *
+ * @component ImageStrip
+ * @example
+ * ```astro
+ * <ImageStrip images={[{ src: one, alt: 'Volunteers sorting clothes' }]} />
+ * ```
+ */
+import { Image } from 'astro:assets'
+
+export type StripImage = {
+  src: ImageMetadata
+  /** Describes the photograph. Empty string only if purely decorative. */
+  alt: string
+}
+
+export type Props = {
+  images: StripImage[]
+  /** Accessible name for the scrollable region. */
+  label?: string
+  class?: string
+}
+
+const { images, label = 'Photographs from our outreach days', class: className } = Astro.props as Props
+---
+
+<section class:list={['st', 'st-strip', className]}>
+  {/* tabindex makes the scroll container reachable by keyboard. A scrollable
+      region that cannot be focused cannot be scrolled without a mouse. */}
+  <ul class="st-strip__row" tabindex="0" role="group" aria-label={label}>
+    {
+      images.map((img, i) => (
+        <li class:list={['st-strip__item', i % 2 === 0 ? 'st-strip__item--ccw' : 'st-strip__item--cw']}>
+          <Image
+            src={img.src}
+            alt={img.alt}
+            widths={[494, 988]}
+            sizes="(max-width: 40rem) 80vw, 494px"
+            class="st-strip__photo"
+          />
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .st-strip {
+    background: var(--st-white);
+    box-sizing: border-box;
+    padding-block: var(--st-space-11);
+    width: 100%;
+  }
+
+  .st-strip__row {
+    align-items: center;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    overflow-x: auto;
+    padding: var(--st-space-5) var(--st-space-10);
+    scroll-snap-type: x mandatory;
+
+    /* The shingle. The source uses a -108px margin between 494px frames. */
+    gap: 0;
+  }
+
+  .st-strip__item {
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    width: min(494px, 80vw);
+  }
+
+  .st-strip__item + .st-strip__item {
+    margin-inline-start: -108px;
+  }
+
+  .st-strip__item--ccw {
+    transform: rotate(-2.2deg);
+  }
+
+  .st-strip__item--cw {
+    transform: rotate(2.2deg);
+  }
+
+  .st-strip__photo {
+    aspect-ratio: 494 / 363;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .st-strip__row:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: -2px;
+  }
+
+  /* The overlap is a visual flourish that costs readability on a small screen,
+     where two shingled photos leave very little of each one showing. */
+  @media (max-width: 40rem) {
+    .st-strip__row {
+      gap: var(--st-space-4);
+      padding-inline: var(--st-space-5);
+    }
+
+    .st-strip__item + .st-strip__item {
+      margin-inline-start: 0;
+    }
+
+    .st-strip__item--ccw,
+    .st-strip__item--cw {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+/**
+ * The footer signup block: sage label, field and Subscribe on one row, and a
+ * line of fine print underneath.
+ *
+ * `action` is required. The source rendered a `<form>` with no action that
+ * called `preventDefault()` and fired a toast, so the form did nothing; a form
+ * with no destination is worse than no form, because it looks like it works.
+ *
+ * @component NewsletterForm
+ * @example
+ * ```astro
+ * <NewsletterForm action="/api/subscribe" />
+ * ```
+ */
+import TextInput from './TextInput.astro'
+import OutlineButton from './OutlineButton.astro'
+
+export type Props = {
+  /** Where the form posts. Required. */
+  action: string
+  method?: 'get' | 'post'
+  label?: string
+  placeholder?: string
+  submitLabel?: string
+  note?: string
+  class?: string
+}
+
+const {
+  action,
+  method = 'post',
+  label = 'Sign up for our Newsletter',
+  placeholder = 'Enter your email',
+  submitLabel = 'Subscribe',
+  note = 'By subscribing you agree to our Privacy Policy',
+  class: className,
+} = Astro.props as Props
+---
+
+<form action={action} method={method} class:list={['st-newsletter', className]}>
+  <p class="st-newsletter__label" id="st-newsletter-label">{label}</p>
+  <div class="st-newsletter__row">
+    <TextInput name="email" type="email" label={label} placeholder={placeholder} required />
+    <OutlineButton type="submit">{submitLabel}</OutlineButton>
+  </div>
+  <p class="st-newsletter__note">{note}</p>
+</form>
+
+<style>
+  .st-newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-4);
+
+    /* The source pins this at 400px. Preferred, not fixed, so it collapses
+       into a single-column footer rather than overflowing it. */
+    width: min(400px, 100%);
+  }
+
+  .st-newsletter__label {
+    color: var(--st-sage);
+    font-family: var(--st-font-utility);
+    font-size: var(--st-size-body);
+    font-weight: 600;
+    line-height: var(--st-lh-utility);
+    margin: 0;
+  }
+
+  .st-newsletter__row {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-4);
+  }
+
+  .st-newsletter__note {
+    color: var(--st-black);
+    font-family: var(--st-font-utility);
+    font-size: var(--st-size-fine);
+    font-weight: 400;
+    line-height: var(--st-lh-utility);
+    margin: 0;
+  }
+</style>

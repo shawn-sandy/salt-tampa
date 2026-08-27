@@ -1,0 +1,23 @@
+/*
+ * Salt Tampa ground rules.
+ *
+ * The design system ships these as bare `a {}` selectors. Left bare they would
+ * repaint every link on /docs, /blog and the dashboard the moment the tokens
+ * were imported, so they are scoped to `.st` instead -- an opt-in class the
+ * Salt sections carry. When the sitewide rebrand lands, drop `.st ` from these
+ * two selectors and the rules go global as the source intended.
+ *
+ * Focus rings are deliberately NOT declared here. The source has none at all
+ * (inline React style objects cannot express :focus-visible), so each ported
+ * control declares its own in its scoped style block -- that way a control
+ * dropped outside a `.st` container still shows a keyboard focus state.
+ */
+.st a {
+  color: var(--st-sage);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.st a:hover {
+  color: var(--st-terracotta);
+}

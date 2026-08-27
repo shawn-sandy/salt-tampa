@@ -1,0 +1,64 @@
+---
+/**
+ * Montserrat 400/14 white link with a 24px/12px hit box.
+ *
+ * @component NavbarLink
+ * @example
+ * ```astro
+ * <NavbarLink href="#services">Services</NavbarLink>
+ * ```
+ */
+export type Props = {
+  href: string
+  /** Marks the current section. Sets `aria-current` as well as the opacity. */
+  active?: boolean
+  class?: string
+}
+
+const { href, active = false, class: className, ...rest } = Astro.props as Props
+---
+
+<a
+  href={href}
+  aria-current={active ? 'page' : undefined}
+  class:list={['st-navlink', active && 'is-active', className]}
+  {...rest}
+>
+  <slot />
+</a>
+
+<style>
+  .st-navlink {
+    align-items: center;
+    box-sizing: border-box;
+    color: var(--st-white);
+    display: inline-flex;
+    font-family: var(--st-font-display);
+    font-size: var(--st-size-caption);
+    font-weight: 400;
+    line-height: var(--st-lh-utility);
+    min-height: 69px;
+    opacity: 0.9;
+    padding: var(--st-space-5) var(--st-space-3);
+    text-decoration: none;
+    transition: opacity var(--st-dur-fast) var(--st-ease-standard);
+    white-space: nowrap;
+  }
+
+  .st-navlink.is-active,
+  .st-navlink:hover {
+    opacity: 1;
+  }
+
+  /* The link sits on photography, so hover cannot rely on opacity alone --
+     against a bright part of the skyline the change is invisible. */
+  .st-navlink:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .st-navlink:focus-visible {
+    outline: 2px solid var(--st-white);
+    outline-offset: -4px;
+  }
+</style>
