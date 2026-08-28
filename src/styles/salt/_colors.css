@@ -57,7 +57,13 @@
   --st-text-footer:var(--st-sage);
   --st-surface-page:var(--st-white);
   --st-surface-sunken:var(--st-paper);
-  --st-surface-band:var(--st-terracotta);
+  /* The deeper terracotta, not --st-terracotta. Measured on the mission band:
+     the sand eyebrow on #DC7646 is 2.38:1 and cannot reach the 3:1 large-text
+     floor at any size, and white sat at 3.12:1 with 4% to spare. On #B2421A
+     sand is 4.34:1 and white 5.70:1, so both keep the colours the design
+     assigns them. The alternative was dropping the sand eyebrow for white,
+     which passes only while the label stays above 24px. */
+  --st-surface-band:var(--st-terracotta-overlay);
   --st-surface-button-secondary:var(--st-ink-050);
   /* The deeper terracotta, not --st-terracotta. White on #DC7646 measures
      3.12:1, and a 14px button label needs 4.5:1; on #B2421A it is 5.70:1.

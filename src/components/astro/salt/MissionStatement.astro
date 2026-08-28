@@ -69,8 +69,15 @@ const {
     margin: 0;
     text-transform: uppercase;
 
-    /* Drawn at 32px; scaled down rather than clipped on narrow viewports. */
-    font-size: clamp(1.25rem, 0.9rem + 1.75vw, var(--st-size-eyebrow));
+    /*
+     * Drawn at 32px; scaled down rather than clipped on narrow viewports, but
+     * the floor is 24px rather than 20px on purpose. 24px is where WCAG stops
+     * treating text as ordinary body copy, and the sand-on-terracotta pairing
+     * measures 4.34:1 -- clear of the 3:1 large-text floor, short of the 4.5:1
+     * an ordinary-sized label would need. At 20px this label failed at 320px
+     * wide while passing at every other width.
+     */
+    font-size: clamp(1.5rem, 0.9rem + 1.75vw, var(--st-size-eyebrow));
   }
 
   .st-mission__statement {
