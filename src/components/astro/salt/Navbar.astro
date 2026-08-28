@@ -66,14 +66,20 @@ const {
     width: 100%;
   }
 
+  /* `max-width` rather than `width` for the measure. As a fixed width this
+     asked for 1334px no matter how little room there was, and that demand
+     propagated outward: the hero's grid track grew to fit it and the bar
+     overhung the viewport, pushing the last nav item off-screen at 1280px.
+     A capped full-width box can never ask for more than its parent has. */
   .st-navbar__inner {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
     gap: var(--st-space-4);
     justify-content: space-between;
-    max-width: 100%;
-    width: var(--st-container-wide);
+    max-width: var(--st-container-wide);
+    min-width: 0;
+    width: 100%;
   }
 
   .st-navbar__brand {

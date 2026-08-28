@@ -58,6 +58,19 @@ const Tag = href ? 'a' : 'button'
     width: min(232px, 100%);
   }
 
+  /* The repo's global stylesheet paints every `a[href]` with
+     `background-color: var(--link-bg)` and `color: var(--link-color)`. Both
+     custom properties are undefined, so those declarations are invalid at
+     computed-value time and reset the control to a transparent background
+     with an inherited colour -- measured on the hero, where the pill rendered
+     as bare text. That rule is (0,1,1) and a lone class is (0,1,0), so the
+     two properties it claims are restated here at (0,2,0). The rest of the
+     control's paint is uncontested and stays in the rule above. */
+  .st-pill.st-pill {
+    background-color: var(--st-white);
+    color: var(--st-ink-09);
+  }
+
   .st-pill--small {
     font-size: var(--st-size-caption);
     min-height: 32px;

@@ -1,38 +1,35 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import CollectionList from '#components/astro/CollectionList.astro'
-import FeatureCards from '#components/astro/FeatureCards.astro'
-import Featured from '#components/astro/Featured.astro'
-import HomeHero from '#components/astro/HomeHero.astro'
-import { SITE_DESCRIPTION, SITE_TITLE } from '#utils/site-config.js'
+/**
+ * Salt Tampa Outreach landing page.
+ *
+ * Built on `Base` rather than `Layout`: `Layout` wraps its default slot in
+ * `<section><article>...</article><aside><Sidebar/></aside></section>`, and a
+ * full-bleed landing page cannot live inside that article/sidebar grid.
+ * `Base` supplies no `<main>` of its own, so this page provides one.
+ *
+ * Sections land here one at a time as they are rebuilt responsively. Only the
+ * hero exists so far; services, mission, team, donate and testimonial follow.
+ */
+import Base from '#layouts/Base.astro'
+import Hero from '#components/astro/salt/Hero.astro'
+
+/*
+ * Only routes that exist. The source comp shipped `#mission` and `#volunteer`
+ * anchors that were never on the page, and a `Donate` chip wired to a toast --
+ * links are added here as their targets land, not before.
+ */
+const NAV_LINKS = [
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact-us' },
+]
 ---
 
-<Layout
-  pageTitle={SITE_TITLE}
-  pageDescription={SITE_DESCRIPTION}
-  showBreadcrumb={false}
-  pageImageUrl="/images/astro-kit-cover.webp"
+<Base
+  pageTitle="Salt Tampa Outreach"
+  pageDescription="Sharing Christ's love by serving the unsheltered through mobile outreach centers in Tampa."
+  hideHeader
 >
-  <HomeHero slot="header" />
-  <div slot="featured">
-    <!-- <section>
-      <Featured />
-    </section> -->
-    <section class="home-features">
-      <FeatureCards promoted={2} />
-    </section>
-  </div>
-  <section>
-    <CollectionList pageSize={2} />
-  </section>
-</Layout>
-
-<style>
-  /* The hero's own padding sits inside its background band, so it buys no
-     separation from the cards below it. Spacing between the two belongs here,
-     where they are composed -- FeatureCards is exported for reuse and must not
-     carry homepage-specific margin. */
-  .home-features {
-    margin-block-start: 4rem;
-  }
-</style>
+  <main id="main" tabindex="-1" class="st">
+    <Hero links={NAV_LINKS} volunteerHref="/contact-us" />
+  </main>
+</Base>

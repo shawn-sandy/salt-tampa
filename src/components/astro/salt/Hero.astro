@@ -1,0 +1,321 @@
+---
+/**
+ * The landing band: the Tampa skyline under a flat gradient sky, the display
+ * wordmark straddling the horizon, navigation floating on top and the event
+ * card at the foot.
+ *
+ * The source is a literal 1440x960 rectangle with everything -- photographs
+ * and content alike -- pinned absolutely at `top: 150 / 330 / 171`. The port
+ * splits those two jobs:
+ *
+ * - The three photographic layers stay absolute, but their pins become
+ *   percentages of the band's own height, so the horizon lands in the same
+ *   place at any size.
+ * - The navbar, wordmark and card move into normal flow. Flow is what stops
+ *   them colliding on a short viewport -- content can push the band taller,
+ *   which a pinned copy of the drawing cannot.
+ *
+ * @component Hero
+ * @example
+ * ```astro
+ * <Hero
+ *   links={[{ label: 'Services', href: '#services' }]}
+ *   donateHref="/donate"
+ *   volunteerHref="/contact-us"
+ * />
+ * ```
+ */
+import { Image } from 'astro:assets'
+
+import Navbar from './Navbar.astro'
+import type { NavLink } from './Navbar.astro'
+import EventCard from './EventCard.astro'
+
+import LogoMark from '#assets/salt/logo-mark.svg'
+import skyline from '#assets/salt/images/hero-skyline.png'
+import horizon from '#assets/salt/images/hero-overlay.png'
+
+export type Props = {
+  /** Navigation items, passed through to `Navbar`. */
+  links?: NavLink[]
+  /** Navbar call to action. Omit to render the bar without one. */
+  donateHref?: string
+  /** Event card call to action. Omit to render the card without one. */
+  volunteerHref?: string
+  eventEyebrow?: string
+  eventHeadline?: string
+  class?: string
+}
+
+const {
+  links = [],
+  donateHref,
+  volunteerHref,
+  eventEyebrow,
+  eventHeadline,
+  class: className,
+} = Astro.props as Props
+---
+
+<section id="home" class:list={['st-hero', className]}>
+  {
+    /*
+     * Decorative, so `alt=""`. The photograph carries no information the
+     * wordmark and event card do not already state in text.
+     *
+     * Eager and high priority: this is the largest element in the viewport on
+     * first paint, and lazy-loading it would hand the page a late LCP.
+     */
+  }
+  <div class="st-hero__skyline">
+    <Image
+      src={skyline}
+      alt=""
+      class="st-hero__photo st-hero__photo--skyline"
+      widths={[768, 1200, 1600, 2400]}
+      sizes="100vw"
+      format="webp"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="st-hero__sky"></div>
+  <div class="st-hero__horizon">
+    <Image
+      src={horizon}
+      alt=""
+      class="st-hero__photo st-hero__photo--horizon"
+      widths={[768, 1200, 1600, 2400]}
+      sizes="100vw"
+      format="webp"
+      loading="eager"
+    />
+  </div>
+  <div class="st-hero__scrim"></div>
+
+  <div class="st-hero__content">
+    <Navbar links={links} ctaHref={donateHref} />
+
+    {
+      /*
+       * The page's only `<h1>`. The source drew this as two bare `<span>`s
+       * around an image whose alt text repeated the brand name, which left
+       * the document with no heading at all and announced the name three
+       * times over. Here the words are the accessible name, and the mark
+       * between them is decorative.
+       */
+    }
+    <h1 class="st-hero__lockup">
+      <span class="st-hero__word">SALT</span>
+      <LogoMark class="st-hero__mark" aria-hidden="true" />
+      <span class="st-hero__word">TAMPA</span>
+    </h1>
+
+    <div class="st-hero__card">
+      <EventCard eyebrow={eventEyebrow} headline={eventHeadline} href={volunteerHref} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .st-hero {
+    background: var(--st-sky-ground);
+    display: grid;
+    overflow: hidden;
+    position: relative;
+
+    /* `minmax(0, 1fr)`, not the default `auto`. An `auto` track grows to its
+       widest child's demand, so one over-wide descendant stretched the track
+       past the viewport and took the whole band with it. This pins the track
+       to the container and makes children shrink instead. */
+    grid-template-columns: minmax(0, 1fr);
+
+    /* The repo gives `main > section` a 2rem inline padding, which is right
+       for a column of prose and wrong for a full-bleed band -- it inset the
+       navbar and card on top of the padding they already carry. This is a
+       bleed section and sets its own horizontal rhythm. */
+    padding-inline: 0;
+
+    /* Drawn 960 tall on a 1440 stage -- two thirds of the width. Held as a
+       ratio so the band stays in proportion, with a floor that keeps the
+       navbar, wordmark and card apart on a phone and a cap so it does not
+       swallow an ultrawide screen. `min-height` rather than `height`: content
+       that outgrows the ratio pushes the band taller instead of spilling. */
+    min-height: clamp(34rem, 66.67vw, 960px);
+  }
+
+  .st-hero__skyline,
+  .st-hero__sky,
+  .st-hero__horizon {
+    left: 0;
+    position: absolute;
+    right: 0;
+    z-index: 0;
+  }
+
+  /* `top: 150` of 960, running to the foot of the band. */
+  .st-hero__skyline {
+    bottom: 0;
+    top: 15.625%;
+  }
+
+  /*
+   * Each photographic layer is a plain box with the photograph stretched
+   * inside it, rather than a positioned image element carrying the
+   * percentages itself.
+   *
+   * The repo's global stylesheet sets `img { height: auto }` and
+   * `img[alt] { aspect-ratio: ... }`, and a percentage height on a replaced
+   * element resolves against a containing block the hero deliberately leaves
+   * indefinite (`min-height`, so content can push it taller). The percentage
+   * collapsed to `auto` and both photographs fell back to their own 2400x1591
+   * ratio: measured 839px tall where the skyline wanted 720 and the horizon
+   * haze wanted 89, so the haze covered the whole band. A plain `<div>` takes
+   * `top`/`bottom` correctly, which hands the image a definite parent to fill.
+   */
+  /*
+   * Shaped through the repo's image contract rather than around it.
+   * `src/styles/index.css` styles every `img[alt]` from a set of custom
+   * properties -- `--img-display`, `--img-height`, `--img-object-fit`,
+   * `--img-object-position`, `--img-aspect-ratio` -- and applies them with
+   * `block-size: var(--img-height)`, the logical twin of `height`. At (0,1,1)
+   * that rule outranks a single class, so a plain `height: 100%` here was
+   * silently discarded and the photographs kept their own 2400x1591 ratio.
+   *
+   * The class is doubled to reach (0,2,0). Nothing else outranks the contract,
+   * and setting the variables keeps the image behaving like every other image
+   * in the codebase instead of opting out of the system.
+   */
+  .st-hero__photo.st-hero__photo {
+    --img-aspect-ratio: auto;
+    --img-display: block;
+    --img-height: 100%;
+    --img-object-fit: cover;
+
+    width: 100%;
+  }
+
+  .st-hero__photo--skyline.st-hero__photo--skyline {
+    --img-object-position: center 22%;
+  }
+
+  .st-hero__photo--horizon.st-hero__photo--horizon {
+    --img-object-position: center top;
+  }
+
+  /* `top: 0, height: 330` of 960. Fully opaque -- it paints over the
+     photograph's own sky, which is what makes the horizon a single clean
+     line rather than two competing ones. */
+  .st-hero__sky {
+    background: linear-gradient(180deg, var(--st-sky-top) 0%, var(--st-sky-ground) 100%);
+    height: 34.375%;
+    top: 0;
+  }
+
+  /* `top: 330, height: 100` of 960 -- the haze that blends the flat sky into
+     the photograph at the seam. */
+  .st-hero__horizon {
+    height: 10.417%;
+    object-fit: cover;
+    object-position: center top;
+    top: 34.375%;
+    width: 100%;
+  }
+
+  /*
+   * Contrast scrim. Measured on the rendered page, white type over this band
+   * failed WCAG 1.4.3 everywhere: the nav links sat on the flat sky at 2.22:1
+   * against the 4.5:1 that 14px text needs, and the wordmark crossed a bright
+   * cloud in the photograph at 1.39:1 against the 3:1 that display type needs.
+   *
+   * The wordmark is meant to straddle the horizon, so it spans the flat sky,
+   * the haze and the photograph at once and no single layer can be recoloured
+   * to fix it. One scrim over all three is the only thing that reaches every
+   * pixel behind the type.
+   *
+   * Mixed from the ink the design system already uses over photography
+   * (`--st-scrim-ink`) rather than flat black, so it reads as the same
+   * treatment as the team cards and the donate band.
+   *
+   * The stops are pinned to where the type actually is, measured as a share of
+   * the band's height across breakpoints rather than chosen by eye.
+   *
+   * The .42 plateau runs to 26% because it has to hold the small type at every
+   * width: the navigation sits at 4.6-13% on a desktop, but the bar wraps to
+   * two rows below 56rem and the links drop to 11.8-25%. An earlier step-down
+   * at 18% left them at 4.35:1, short of the 4.5:1 that 14px text needs.
+   *
+   * The .38 plateau then covers the wordmark, which reaches 45.8% at its
+   * lowest. Below that the scrim clears so the skyline, the city and the event
+   * card stay as drawn.
+   */
+  .st-hero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--st-ink-950-rgb) / 0.42) 0%,
+      rgb(var(--st-ink-950-rgb) / 0.42) 26%,
+      rgb(var(--st-ink-950-rgb) / 0.38) 31%,
+      rgb(var(--st-ink-950-rgb) / 0.38) 47%,
+      rgb(var(--st-ink-950-rgb) / 0.14) 62%,
+      rgb(var(--st-ink-950-rgb) / 0) 78%
+    );
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+  }
+
+  .st-hero__content {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+  }
+
+  .st-hero__lockup {
+    align-items: center;
+    color: var(--st-white);
+    display: flex;
+    font-family: var(--st-font-display);
+    font-weight: 400;
+    gap: 0.34em;
+    justify-content: center;
+    line-height: var(--st-lh-tight);
+    margin: 0;
+    padding-inline: var(--st-space-5);
+
+    /* Drawn at 130px. Every other measurement in the lockup is an `em` against
+       this one value -- the mark is 237px against a 130px cap (1.82em), the
+       gutter is 44px (0.34em) -- so the composition scales as a single unit
+       and this is the only line that has to change. */
+    font-size: clamp(1.5rem, 8.6vw, var(--st-size-hero));
+
+    /* `top: 171` in the source, 61px below the navbar. A vw rather than a
+       fixed gap so it tracks the type instead of drifting as the type grows. */
+    margin-block-start: clamp(0.5rem, 4vw, 3.8rem);
+  }
+
+  .st-hero__word {
+    white-space: nowrap;
+  }
+
+  .st-hero__mark {
+    color: var(--st-white);
+    flex-shrink: 0;
+    height: auto;
+    width: 1.82em;
+  }
+
+  .st-hero__card {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    margin-block-start: auto;
+    padding-inline: var(--st-space-5);
+    width: 100%;
+
+    /* `paddingBottom: 142` in the source. */
+    padding-block-end: clamp(var(--st-space-6), 9.9vw, 142px);
+  }
+</style>

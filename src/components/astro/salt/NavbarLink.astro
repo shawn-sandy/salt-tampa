@@ -45,6 +45,13 @@ const { href, active = false, class: className, ...rest } = Astro.props as Props
     white-space: nowrap;
   }
 
+  /* Restated at (0,2,0) to outrank the global `a[href] { color: var(--link-color) }`,
+     whose custom property is undefined -- left to the cascade the link
+     inherits its colour instead of staying white on the photograph. */
+  .st-navlink.st-navlink {
+    color: var(--st-white);
+  }
+
   .st-navlink.is-active,
   .st-navlink:hover {
     opacity: 1;

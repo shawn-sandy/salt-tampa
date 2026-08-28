@@ -24,6 +24,11 @@
   --st-ink-12:#121212;
   --st-ink-09:#091002;
 
+  /* Hero sky. The band behind the skyline photograph is a flat gradient, not
+     the photograph's own sky -- the picture is painted over from the top. */
+  --st-sky-top:#9FB0C0;
+  --st-sky-ground:#A9B7C6;
+
   /* Neutrals */
   --st-white:#FFFFFF;
   --st-black:#000000;
@@ -35,6 +40,9 @@
   --st-shadow-peach-2:#F5AE9E;
 
   /* Overlays */
+  /* The ink channels on their own, so a scrim can be mixed at any strength
+     without restating the colour. Same value as --st-ink-950. */
+  --st-ink-950-rgb:25 25 27;
   --st-scrim-ink:rgba(25,25,27,.49);
   --st-scrim-black:rgba(0,0,0,.63);
   --st-scrim-terracotta:rgba(178,66,26,.7);
