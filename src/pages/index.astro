@@ -173,3 +173,25 @@ const COPYRIGHT = `${new Date().getFullYear()} Salt Tampa Outreach. All rights r
   </main>
   <SaltFooter links={FOOTER_LINKS} copyright={COPYRIGHT} />
 </Base>
+
+<style>
+  /*
+   * The bands butt against each other. `@fpkit/acss` ships two rules that
+   * assume a page of inset content blocks rather than full-bleed bands:
+   *
+   *   *+section   { margin-block-start: 2rem }
+   *   main,footer { padding-block: var(--overlay-padding) }
+   *
+   * Measured, that opened a 32px gap between all seven sections and another
+   * above the hero and below the quote band, and the near-black body ground
+   * (#0D1014) showed through every one of them as a dark stripe. Both rules
+   * are (0,0,1), so `main.st` at (0,1,1) is enough to state otherwise.
+   */
+  main.st {
+    padding-block: 0;
+  }
+
+  main.st > section {
+    margin-block-start: 0;
+  }
+</style>
