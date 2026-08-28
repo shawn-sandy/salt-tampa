@@ -77,6 +77,12 @@ const hasActions = Astro.slots.has('actions')
     font-weight: 700;
     margin: 0;
 
+    /* The repo capitalises every heading. Salt's headings are sentence case in
+       the source file -- "Take a look into our services!", not "Take A Look
+       Into Our Services!" -- and the capitalisation was visibly rewriting the
+       copy at render time while the markup stayed correct. */
+    text-transform: none;
+
     /*
      * The source sets a flat 48px with a 72px line box, which does not fit a
      * 320px viewport. Clamping keeps the drawn size at desktop and scales it

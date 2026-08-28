@@ -86,21 +86,32 @@ const Tag = href ? 'a' : 'button'
     text-wrap: balance;
   }
 
-  .st-button--primary {
-    background: var(--st-surface-button-primary);
+  /*
+   * Doubled to reach (0,2,0). When `href` is set this renders an `<a>`, and the
+   * repo's global stylesheet paints every `a[href]` with
+   * `background-color: var(--link-bg)` and `color: var(--link-color)` at
+   * (0,1,1). Both custom properties are undefined, so those declarations are
+   * invalid at computed-value time and strip the control back to a transparent
+   * ground -- measured on the services band, where both variants rendered as
+   * bare cyan link text with no fill at all.
+   */
+  .st-button--primary.st-button--primary {
+    background-color: var(--st-surface-button-primary);
     color: var(--st-white);
   }
 
-  .st-button--secondary {
-    background: var(--st-surface-button-secondary);
+  .st-button--secondary.st-button--secondary {
+    background-color: var(--st-surface-button-secondary);
     color: var(--st-ink-950);
   }
 
   /* The readme's stated convention: buttons shift their ground one step on
-     hover. Secondary goes #F8F8F8 -> #EAEBEC; primary darkens toward its own
-     overlay colour, which is the terracotta the file already contains. */
+     hover. Secondary goes #F8F8F8 -> #EAEBEC. Primary already rests on the
+     deep terracotta (see --st-surface-button-primary, moved there so white
+     14px labels clear 4.5:1), so hover deepens it another step rather than
+     landing on the colour it already sits at. */
   .st-button--primary:hover {
-    background: var(--st-terracotta-overlay);
+    background-color: color-mix(in srgb, var(--st-surface-button-primary) 85%, black);
   }
 
   .st-button--secondary:hover {

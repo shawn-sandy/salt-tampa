@@ -59,7 +59,11 @@
   --st-surface-sunken:var(--st-paper);
   --st-surface-band:var(--st-terracotta);
   --st-surface-button-secondary:var(--st-ink-050);
-  --st-surface-button-primary:var(--st-terracotta);
+  /* The deeper terracotta, not --st-terracotta. White on #DC7646 measures
+     3.12:1, and a 14px button label needs 4.5:1; on #B2421A it is 5.70:1.
+     Changed on the alias rather than the brand colour so only control fills
+     move -- --st-terracotta still paints the mission band as drawn. */
+  --st-surface-button-primary:var(--st-terracotta-overlay);
   --st-border-hairline:var(--st-sage);
   --st-focus-ring:var(--st-terracotta);
 }

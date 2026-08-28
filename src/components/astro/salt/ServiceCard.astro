@@ -49,10 +49,22 @@ const { title, body, image, imageAlt, class: className } = Astro.props as Props
     width: 100%;
   }
 
-  .st-service__photo {
+  /*
+   * Height comes through `--img-height`, not `height`. The repo's global
+   * stylesheet applies `block-size: var(--img-height)` to every `img[alt]` at
+   * (0,1,1), which outranks a single class and silently discarded the drawn
+   * height -- measured 351px in a 311px slot, the photograph falling back to
+   * its own ratio. The class is doubled to reach (0,2,0).
+   *
+   * Drawn at a flat 311px against a 240px card. Kept as a ratio of the
+   * viewport so the photograph stays close to that at the drawn size and does
+   * not become a 440px-tall slab once the grid drops to one card per row.
+   */
+  .st-service__photo.st-service__photo {
+    --img-height: clamp(12.5rem, 24vw, 311px);
+
     border-radius: var(--st-radius-photo);
     display: block;
-    height: 311px;
     object-fit: cover;
     width: 100%;
   }

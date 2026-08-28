@@ -7,11 +7,12 @@
  * full-bleed landing page cannot live inside that article/sidebar grid.
  * `Base` supplies no `<main>` of its own, so this page provides one.
  *
- * Sections land here one at a time as they are rebuilt responsively. Only the
- * hero exists so far; services, mission, team, donate and testimonial follow.
+ * Sections land here one at a time as they are rebuilt responsively. Hero and
+ * services exist; mission, team, donate and testimonial follow.
  */
 import Base from '#layouts/Base.astro'
 import Hero from '#components/astro/salt/Hero.astro'
+import Services from '#components/astro/salt/Services.astro'
 
 /*
  * Only routes that exist. The source comp shipped `#mission` and `#volunteer`
@@ -19,9 +20,20 @@ import Hero from '#components/astro/salt/Hero.astro'
  * links are added here as their targets land, not before.
  */
 const NAV_LINKS = [
+  { label: 'Services', href: '#services' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact-us' },
 ]
+
+/*
+ * Both routes render a page titled "Contact Us", so there is only one real
+ * destination behind two labels. Volunteer enquiries go to `/message-us` and
+ * general enquiries to `/contact-us` to keep the two buttons distinguishable,
+ * but this wants a decision from the requester -- and a real donate URL, which
+ * is why no donate control is rendered yet.
+ */
+const VOLUNTEER_HREF = '/message-us'
+const CONTACT_HREF = '/contact-us'
 ---
 
 <Base
@@ -30,6 +42,7 @@ const NAV_LINKS = [
   hideHeader
 >
   <main id="main" tabindex="-1" class="st">
-    <Hero links={NAV_LINKS} volunteerHref="/contact-us" />
+    <Hero links={NAV_LINKS} volunteerHref={VOLUNTEER_HREF} />
+    <Services volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
   </main>
 </Base>
