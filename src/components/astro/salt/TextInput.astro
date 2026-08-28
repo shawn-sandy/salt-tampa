@@ -1,0 +1,109 @@
+---
+/**
+ * The 48px sage-ruled field from the footer newsletter block.
+ *
+ * `label` is required and is rendered visually hidden unless `showLabel` is
+ * set. The source relied on the placeholder alone, which disappears on focus
+ * and is not an accessible name.
+ *
+ * @component TextInput
+ * @example
+ * ```astro
+ * <TextInput name="email" type="email" label="Email address" />
+ * ```
+ */
+export type Props = {
+  /** Form field name. */
+  name: string
+  /** Accessible label. Visually hidden unless `showLabel` is true. */
+  label: string
+  showLabel?: boolean
+  type?: string
+  placeholder?: string
+  required?: boolean
+  class?: string
+}
+
+const {
+  name,
+  label,
+  showLabel = false,
+  type = 'text',
+  placeholder,
+  required = false,
+  class: className,
+  ...rest
+} = Astro.props as Props
+
+const id = `st-input-${name}`
+---
+
+<div class:list={['st-field', className]}>
+  <label for={id} class:list={['st-field__label', !showLabel && 'st-visually-hidden']}>{label}</label>
+  <input
+    id={id}
+    name={name}
+    type={type}
+    placeholder={placeholder}
+    required={required}
+    class="st-field__input"
+    {...rest}
+  />
+</div>
+
+<style>
+  .st-field {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--st-space-1);
+    min-width: 0;
+  }
+
+  .st-field__label {
+    color: var(--st-sage);
+    font-family: var(--st-font-utility);
+    font-size: var(--st-size-caption);
+    font-weight: 600;
+  }
+
+  .st-visually-hidden {
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .st-field__input {
+    background: var(--st-white);
+    border: var(--st-hairline);
+    border-radius: var(--st-radius-input);
+    box-sizing: border-box;
+    font-family: var(--st-font-utility);
+    font-size: var(--st-size-body);
+    font-weight: 400;
+    line-height: var(--st-lh-utility);
+    min-height: 48px;
+    padding: var(--st-space-3);
+    width: 100%;
+
+    /*
+     * The source sets the typed value in sage, the same colour it uses for the
+     * placeholder, so entered text and prompt text look identical. Typed input
+     * is ink here and only the placeholder stays sage.
+     */
+    color: var(--st-ink-950);
+  }
+
+  .st-field__input::placeholder {
+    color: var(--st-sage);
+  }
+
+  /* The source sets `outline: none` with nothing in its place. */
+  .st-field__input:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: 1px;
+  }
+</style>

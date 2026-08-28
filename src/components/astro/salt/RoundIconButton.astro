@@ -1,0 +1,80 @@
+---
+/**
+ * The white arrow disc. 36px under the image carousel; the testimonial draws
+ * the same control at 54px.
+ *
+ * `aria-label` is required rather than optional: the button's only content is
+ * an `aria-hidden` glyph, so without a label it is announced as "button" and
+ * nothing else. The source hard-coded "Previous"/"Next", which is wrong as soon
+ * as the control drives something other than a slideshow.
+ *
+ * @component RoundIconButton
+ * @example
+ * ```astro
+ * <RoundIconButton direction="left" label="Previous quote" />
+ * <RoundIconButton direction="right" size={54} label="Next quote" />
+ * ```
+ */
+import Icon from './Icon.astro'
+
+export type Props = {
+  /** Which way the arrow points. */
+  direction?: 'left' | 'right'
+  /** Diameter in px. The glyph scales to 44% of it, as drawn. */
+  size?: number
+  /** Arrow colour. Sage under the carousel, ink-800 on the testimonial. */
+  color?: string
+  /** Accessible name. Required -- the glyph is hidden from assistive tech. */
+  label: string
+  class?: string
+}
+
+const {
+  direction = 'right',
+  size = 36,
+  color = 'var(--st-sage)',
+  label,
+  class: className,
+  ...rest
+} = Astro.props as Props
+---
+
+<button
+  type="button"
+  aria-label={label}
+  class:list={['st-disc', direction === 'left' && 'st-disc--flip', className]}
+  style={`--st-disc-size:${size}px`}
+  {...rest}
+>
+  <Icon name="arrow-forward" size={Math.round(size * 0.44)} color={color} />
+</button>
+
+<style>
+  .st-disc {
+    align-items: center;
+    background: var(--st-white);
+    border: none;
+    border-radius: var(--st-radius-round);
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-flex;
+    height: var(--st-disc-size);
+    justify-content: center;
+    padding: 0;
+    transition: opacity var(--st-dur-fast) var(--st-ease-standard);
+    width: var(--st-disc-size);
+  }
+
+  .st-disc--flip :global(.st-icon) {
+    transform: scaleX(-1);
+  }
+
+  .st-disc:hover {
+    opacity: 0.9;
+  }
+
+  .st-disc:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: 2px;
+  }
+</style>

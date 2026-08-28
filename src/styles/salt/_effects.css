@@ -1,0 +1,15 @@
+/* Salt Tampa Outreach — shadows, overlays, motion. */
+:root{
+  /* Hard offset stack behind the poster ghost button */
+  --st-shadow-offset:4px 4px 0 0 var(--st-shadow-peach-1),8px 8px 0 0 var(--st-shadow-peach-2);
+  /* Event card sitting over photography */
+  --st-shadow-event:0 4px 4px 0 var(--st-black);
+  --st-blur-event:blur(62.3px); /* @kind other */
+  /* Bottom-up scrim that carries the name plate on a team card */
+  --st-scrim-team:linear-gradient(0deg,var(--st-ink-950) 27.08%,var(--st-scrim-ink) 72.4%,rgba(25,25,27,0) 100%);
+  --st-hairline:1px solid var(--st-border-hairline);
+
+  --st-ease-standard:cubic-bezier(.4,0,.2,1); /* @kind other */
+  --st-dur-fast:120ms; /* @kind other */
+  --st-dur-base:200ms; /* @kind other */
+}

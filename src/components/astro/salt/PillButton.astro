@@ -1,0 +1,94 @@
+---
+/**
+ * The white pill: the hero event card's "Volunteer Today" and the navbar's
+ * "Donate" chip, which is the same control at a smaller size.
+ *
+ * @component PillButton
+ * @example
+ * ```astro
+ * <PillButton href="#volunteer">Volunteer Today</PillButton>
+ * <PillButton size="small" href="#donate">Donate</PillButton>
+ * ```
+ */
+export type Props = {
+  /** `small` is the 32px navbar chip; `default` is the 46px hero pill. */
+  size?: 'default' | 'small'
+  href?: string
+  type?: 'button' | 'submit' | 'reset'
+  class?: string
+}
+
+const { size = 'default', href, type = 'button', class: className, ...rest } = Astro.props as Props
+const Tag = href ? 'a' : 'button'
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  class:list={['st-pill', size === 'small' && 'st-pill--small', className]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .st-pill {
+    align-items: center;
+    background: var(--st-white);
+    border: none;
+    border-radius: var(--st-radius-pill);
+    box-sizing: border-box;
+    color: var(--st-ink-09);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--st-font-event);
+    font-size: var(--st-size-body);
+    font-weight: 600;
+    justify-content: center;
+    line-height: var(--st-lh-tight);
+    min-height: 46px;
+    padding: 0 var(--st-space-5);
+    text-decoration: none;
+    transition: opacity var(--st-dur-fast) var(--st-ease-standard);
+
+    /* The source pins this at `min-width: 232px`, which overflows a 320px
+       viewport once the hero's own padding is counted. The intent is a wide
+       pill, not a fixed one, so the floor is expressed as a preferred width
+       that is allowed to shrink. */
+    width: min(232px, 100%);
+  }
+
+  /* The repo's global stylesheet claims `background-color`, `color`,
+     `font-size` and `font-weight` on every `a[href]` at (0,1,1), each through
+     an undefined custom property, so each is invalid at computed-value time
+     and resets the control -- measured on the hero, where the pill rendered as
+     bare text. A lone class is (0,1,0) and loses, so the four are restated
+     here. `--small` needs its own doubled rule for the same reason: its size
+     override is also a single class. */
+  .st-pill.st-pill {
+    background-color: var(--st-white);
+    color: var(--st-ink-09);
+    font-size: var(--st-size-body);
+    font-weight: 600;
+  }
+
+  .st-pill--small.st-pill--small {
+    font-size: var(--st-size-caption);
+  }
+
+  .st-pill--small {
+    font-size: var(--st-size-caption);
+    min-height: 32px;
+    padding: 0 18px;
+    width: auto;
+  }
+
+  .st-pill:hover {
+    opacity: 0.9;
+  }
+
+  .st-pill:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: 2px;
+  }
+</style>

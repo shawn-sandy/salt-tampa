@@ -1,0 +1,164 @@
+---
+/**
+ * A full-bleed photograph under a 70% terracotta wash, with a large Josefin
+ * Sans appeal and one ghost button.
+ *
+ * @component DonateBand
+ * @example
+ * ```astro
+ * import donateBg from '#assets/salt/images/donate-bg.png'
+ * <DonateBand id="donate" image={donateBg} imageAlt="" href="/donate" />
+ * ```
+ */
+import { Image } from 'astro:assets'
+import GhostButton from './GhostButton.astro'
+
+export type Props = {
+  id?: string
+  headline?: string
+  action?: string
+  /** Where the ghost button goes. Omit to render the band without a control. */
+  href?: string
+  image?: ImageMetadata
+  /** Empty string marks the photograph decorative, which it usually is here. */
+  imageAlt?: string
+  /** The 70% terracotta wash, or the 63% black one. */
+  wash?: 'terracotta' | 'black'
+  /** Heading level, 1-6. Defaults to 2. */
+  level?: 1 | 2 | 3 | 4 | 5 | 6
+  class?: string
+}
+
+const {
+  id,
+  /* "Tampa Bay" -- the source reads "Tampa bay", which the repo's global
+     heading capitalisation happened to paper over until it was turned off. */
+  headline = 'We can continue to serve the Tampa Bay community with your help',
+  action = 'Donate',
+  href,
+  image,
+  imageAlt = '',
+  wash = 'terracotta',
+  level = 2,
+  class: className,
+} = Astro.props as Props
+
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+---
+
+<section id={id} class:list={['st', 'st-donate', className]}>
+  {
+    image && (
+      <Image
+        src={image}
+        alt={imageAlt}
+        widths={[768, 1280, 1920, 2400]}
+        sizes="100vw"
+        class="st-donate__photo"
+      />
+    )
+  }
+  <div class:list={['st-donate__wash', `st-donate__wash--${wash}`]}></div>
+  <div class="st-donate__content">
+    <Tag class="st-donate__headline">{headline}</Tag>
+    {action && href && <GhostButton href={href}>{action}</GhostButton>}
+  </div>
+</section>
+
+<style>
+  .st-donate {
+    align-items: center;
+    background: var(--st-white);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: var(--st-space-12) var(--st-space-10);
+    position: relative;
+    width: 100%;
+
+    /*
+     * Drawn 900px tall. A floor rather than a fixed height: the headline is the
+     * longest single string on the page and wraps to five or six lines on a
+     * phone, which a fixed height would clip.
+     */
+    min-height: 900px;
+  }
+
+  /*
+   * Sized and cropped through the repo's image contract. `src/styles/index.css`
+   * drives every `img[alt]` from custom properties at (0,1,1), which outranks a
+   * single class: measured, `height: 100%` was discarded and the photograph
+   * stood 1898px tall inside a 900px band, and `object-position` was reset to
+   * the centre. The class is doubled to reach (0,2,0).
+   */
+  .st-donate__photo.st-donate__photo {
+    --img-height: 100%;
+    --img-object-fit: cover;
+
+    /* The source places the crop at `50% 80.578%`, low in the frame. */
+    --img-object-position: 50% 80%;
+
+    inset: 0;
+    position: absolute;
+    width: 100%;
+  }
+
+  .st-donate__wash {
+    inset: 0;
+    position: absolute;
+  }
+
+  .st-donate__wash--terracotta {
+    background: var(--st-scrim-terracotta);
+  }
+
+  .st-donate__wash--black {
+    background: var(--st-scrim-black);
+  }
+
+  .st-donate__content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-10);
+    max-width: 100%;
+    position: relative;
+    width: 1029px;
+  }
+
+  .st-donate__headline {
+    align-self: stretch;
+    color: var(--st-white);
+    font-family: var(--st-font-poster);
+    font-weight: 700;
+    letter-spacing: var(--st-track-donate);
+    margin: 0;
+    text-align: center;
+    text-wrap: pretty;
+
+    /* The repo capitalises every heading, which rendered this appeal as "We
+       Can Continue To Serve The Tampa Bay Community With Your Help". The
+       source sets it in sentence case. */
+    text-transform: none;
+
+    /*
+     * Drawn at 86px with an 88px line box. The line box becomes a ratio so it
+     * tracks the clamped size instead of leaving 88px of leading under a 32px
+     * headline.
+     */
+    font-size: clamp(2rem, 0.6rem + 7vw, var(--st-size-donate));
+    line-height: 1.02;
+  }
+
+  @media (max-width: 48rem) {
+    .st-donate {
+      min-height: 0;
+      padding: var(--st-space-11) var(--st-space-5);
+    }
+
+    .st-donate__content {
+      gap: var(--st-space-8);
+    }
+  }
+</style>

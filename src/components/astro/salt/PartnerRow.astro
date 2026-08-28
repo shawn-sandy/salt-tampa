@@ -1,0 +1,96 @@
+---
+/**
+ * Partner marks on white under a large heading.
+ *
+ * The four marks the Figma file shipped with are placeholders -- "Logofy",
+ * "LOGO company", "logocompany" and "Partner" -- and the readme says so. Pass
+ * real partners or do not render this row.
+ *
+ * The heading is the file's single use of Neutrif Pro, a commercial face with
+ * no Google Fonts equivalent. `--st-font-partners` falls back to Poppins.
+ *
+ * @component PartnerRow
+ * @example
+ * ```astro
+ * <PartnerRow logos={[{ src: partnerOne, alt: 'Trinity Cafe' }]} />
+ * ```
+ */
+import { Image } from 'astro:assets'
+
+export type Logo = {
+  src: ImageMetadata | string
+  /** Organisation name. Required -- a partner mark is not decorative. */
+  alt: string
+  /** Rendered height in px; width follows the aspect ratio. */
+  height?: number
+}
+
+export type Props = {
+  heading?: string
+  logos: Logo[]
+  /** Heading level, 1-6. Defaults to 2. */
+  level?: 1 | 2 | 3 | 4 | 5 | 6
+  class?: string
+}
+
+const { heading = 'Our Partners', logos, level = 2, class: className } = Astro.props as Props
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+---
+
+<div class:list={['st-partners', className]}>
+  {heading && <Tag class="st-partners__heading">{heading}</Tag>}
+  <ul class="st-partners__row">
+    {
+      logos.map(logo => (
+        <li class="st-partners__item" style={`--st-logo-height:${logo.height ?? 40}px`}>
+          {typeof logo.src === 'string' ? (
+            <img src={logo.src} alt={logo.alt} class="st-partners__logo" />
+          ) : (
+            <Image src={logo.src} alt={logo.alt} class="st-partners__logo" />
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .st-partners {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+  }
+
+  .st-partners__heading {
+    color: var(--st-ink-1d);
+    font-family: var(--st-font-partners);
+    font-weight: 700;
+    line-height: var(--st-lh-partners);
+    margin: 0;
+    text-align: center;
+
+    /* Drawn at 54px with `white-space: nowrap`, which overflows a phone. */
+    font-size: clamp(1.75rem, 0.9rem + 4.25vw, var(--st-size-partners));
+  }
+
+  .st-partners__row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-6) var(--st-space-12);
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .st-partners__logo {
+    display: block;
+    height: var(--st-logo-height);
+    max-width: 100%;
+    object-fit: contain;
+    width: auto;
+  }
+</style>

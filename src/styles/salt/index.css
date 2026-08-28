@@ -1,0 +1,25 @@
+/*
+ * Salt Tampa Outreach design tokens.
+ *
+ * Imported from the "Salt Tampa Outreach Design System" folder, which
+ * transcribes them from the source Figma frame (Salt TPA OUTPOST.fig, page
+ * `final`, node 119:413).
+ *
+ * Every token is namespaced `--st-`. The source ships them unprefixed, and 14
+ * of them collide by name with tokens already declared in src/styles/index.css
+ * -- `--paper`, `--radius-none`, and the whole `--space-1` .. `--space-12`
+ * scale. The two spacing scales are unrelated (`--space-9` is 36px here and
+ * 64px there), so importing them unprefixed would silently reflow every
+ * existing page. The prefix is applied mechanically to all 116 tokens rather
+ * than to the 14 known collisions, so a token added upstream later cannot
+ * reintroduce the problem.
+ *
+ * Webfonts are NOT imported here. The source loads six Google Fonts families
+ * through an @import in tokens/fonts.css; this project self-hosts its faces and
+ * declares them in the document head. See docs/plans/port-salt-tampa-landing-page.md.
+ */
+@import './_colors.css';
+@import './_typography.css';
+@import './_spacing.css';
+@import './_effects.css';
+@import './_base.css';

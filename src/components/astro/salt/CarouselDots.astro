@@ -1,0 +1,81 @@
+---
+/**
+ * The sage discs under the image carousel.
+ *
+ * `count` is the number of slides. The source's caller passed
+ * `Math.max(images.length - 1, 1)`, which rendered four dots for a five-slide
+ * carousel; the arithmetic is not reproduced here, and callers pass the real
+ * slide count.
+ *
+ * Rendered as a tablist so the dots announce themselves as a set with a
+ * selected member rather than as a row of unlabelled buttons.
+ *
+ * @component CarouselDots
+ * @example
+ * ```astro
+ * <CarouselDots count={5} active={0} label="Outreach photographs" />
+ * ```
+ */
+export type Props = {
+  /** Number of slides. One dot each. */
+  count: number
+  /** Zero-based index of the current slide. */
+  active?: number
+  /** Diameter in px. */
+  size?: number
+  /** Accessible name for the group. */
+  label?: string
+  class?: string
+}
+
+const { count, active = 0, size = 16, label = 'Choose a slide', class: className } = Astro.props as Props
+---
+
+<div
+  class:list={['st-dots', className]}
+  role="tablist"
+  aria-label={label}
+  style={`--st-dot-size:${size}px`}
+>
+  {
+    Array.from({ length: count }).map((_, i) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={i === active ? 'true' : 'false'}
+        aria-label={`Slide ${i + 1} of ${count}`}
+        class:list={['st-dots__dot', i === active && 'is-active']}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .st-dots {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .st-dots__dot {
+    background: var(--st-sage);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    height: var(--st-dot-size);
+    opacity: 0.45;
+    padding: 0;
+    transition: opacity var(--st-dur-base) var(--st-ease-standard);
+    width: var(--st-dot-size);
+  }
+
+  .st-dots__dot.is-active {
+    opacity: 1;
+  }
+
+  .st-dots__dot:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: 3px;
+  }
+</style>

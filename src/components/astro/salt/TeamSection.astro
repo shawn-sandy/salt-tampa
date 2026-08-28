@@ -1,0 +1,140 @@
+---
+/**
+ * The team band: a centred heading with two calls to action over a row of
+ * portrait cards on the white ground.
+ *
+ * The source lays the cards out as a fixed `flex-direction: row` with a 39px
+ * gap; here they are an auto-fit grid whose tracks are capped at the drawn
+ * 224px, so the row centres and wraps instead of stretching. Capping matters
+ * more than usual while the roster is short -- a `1fr` track would blow a
+ * single card up to the full measure.
+ *
+ * @component TeamSection
+ * @example
+ * ```astro
+ * <TeamSection volunteerHref="/message-us" contactHref="/contact-us" />
+ * ```
+ */
+import SectionHeading from './SectionHeading.astro'
+import TeamCard from './TeamCard.astro'
+import Button from './Button.astro'
+
+import niehel from '#assets/salt/images/team-niehel.jpg'
+
+export type Props = {
+  /** Where "Become a Volunteer" goes. Omit to drop the button. */
+  volunteerHref?: string
+  /** Where "Contact Us" goes. Omit to drop the button. */
+  contactHref?: string
+  class?: string
+}
+
+const { volunteerHref, contactHref, class: className } = Astro.props as Props
+
+/*
+ * Only members with a photograph of themselves.
+ *
+ * The source lists four, but three of the four images are not portraits of the
+ * person named. `team-andrea.jpg` and `team-holly.jpg` are the same group
+ * photograph of six volunteers, and Oscar's entry points at
+ * `outreach-tent.jpg`, which shows barbers at work and is already the
+ * photograph on the Barber service card. Cropping a head out of a group shot
+ * and captioning it with a name and a job title asserts who that person is, so
+ * those three are held back rather than guessed at.
+ *
+ * Niehel is verified: the same man appears in the group photograph wearing a
+ * name badge.
+ *
+ * Add the other three here once real portraits exist -- nothing else needs to
+ * change.
+ */
+const TEAM = [{ name: 'Niehel', title: 'Program Director', image: niehel }]
+---
+
+<section id="team" class:list={['st-team-section', className]}>
+  <div class="st-team-section__inner">
+    <SectionHeading
+      heading="Meet our team members"
+      paragraph="The people behind Salt Tampa's mobile outreach."
+      maxWidth={1152}
+    >
+      {
+        (volunteerHref || contactHref) && (
+          <Fragment slot="actions">
+            {volunteerHref && (
+              <Button variant="secondary" href={volunteerHref}>
+                Become a Volunteer
+              </Button>
+            )}
+            {contactHref && (
+              <Button variant="primary" href={contactHref}>
+                Contact Us
+              </Button>
+            )}
+          </Fragment>
+        )
+      }
+    </SectionHeading>
+
+    <ul class="st-team-section__grid" role="list">
+      {
+        TEAM.map(member => (
+          <li>
+            <TeamCard name={member.name} title={member.title} image={member.image} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .st-team-section {
+    background: var(--st-surface-page);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    /* Drawn at 55px/106px. The inline figure was a way of centring a fixed
+       1228px column in a 1440px stage; the measure below does that job now, so
+       the padding only has to keep the content off the edge. */
+    padding-block: clamp(2.5rem, 7vw, 55px);
+    padding-inline: var(--st-space-5);
+  }
+
+  .st-team-section__inner {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    max-width: var(--st-container-narrow);
+    width: 100%;
+
+    /* Drawn at a flat 53px between the heading and the row. */
+    gap: clamp(var(--st-space-6), 4vw, var(--st-space-8));
+  }
+
+  /* See the note on the list in Services: `role="list"` is restated because
+     Safari drops the semantics once the marker is removed. */
+  .st-team-section__grid {
+    display: grid;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    /* Tracks are capped at the drawn 224px rather than `1fr`, so a short
+       roster stays card-sized and centred instead of stretching across the
+       whole measure. */
+    gap: clamp(var(--st-space-5), 3vw, var(--st-space-7));
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 224px));
+  }
+
+  /* The repo's list styles add an inline-start padding and a bottom margin to
+     every `li`, which would inset each card inside its own track. */
+  .st-team-section__grid > li {
+    margin: 0;
+    padding: 0;
+  }
+</style>

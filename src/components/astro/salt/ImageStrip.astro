@@ -1,0 +1,171 @@
+---
+/**
+ * The shingled photo strip on white: overlapping frames, each nudged a couple
+ * of degrees off square.
+ *
+ * Named `ImageStrip`, not `ImageCarousel`, because the source component is not
+ * a carousel. It renders every image at once and never reads its `index` prop
+ * for anything except which dot to highlight, so its dots and arrows moved
+ * nothing -- and its caller passed `count={images.length - 1}`, drawing four
+ * dots for five photographs.
+ *
+ * Here the strip is a scroll-snap row. That makes the photographs the source
+ * pushed off the left edge (`left: -289px`) actually reachable on a phone, and
+ * it needs no client JavaScript. The fake dots are not reproduced; use
+ * `CarouselDots` if a real slideshow is ever built.
+ *
+ * @component ImageStrip
+ * @example
+ * ```astro
+ * <ImageStrip images={[{ src: one, alt: 'Volunteers sorting clothes' }]} />
+ * ```
+ */
+import { Image } from 'astro:assets'
+
+export type StripImage = {
+  src: ImageMetadata
+  /** Describes the photograph. Empty string only if purely decorative. */
+  alt: string
+}
+
+export type Props = {
+  images: StripImage[]
+  /** Accessible name for the scrollable region. */
+  label?: string
+  class?: string
+}
+
+const {
+  images,
+  label = 'Photographs from our outreach days',
+  class: className,
+} = Astro.props as Props
+---
+
+<section class:list={['st', 'st-strip', className]}>
+  {
+    /* tabindex makes the scroll container reachable by keyboard. A scrollable
+      region that cannot be focused cannot be scrolled without a mouse. */
+  }
+  <ul class="st-strip__row" tabindex="0" role="group" aria-label={label}>
+    {
+      images.map((img, i) => (
+        <li
+          class:list={[
+            'st-strip__item',
+            i % 2 === 0 ? 'st-strip__item--ccw' : 'st-strip__item--cw',
+          ]}
+        >
+          {/* Cropped to the frame on the server rather than resized to its
+              width and cropped again by `object-fit`. Asking for 494 wide gives
+              back whatever height the source ratio implies -- a 2400x1108
+              panorama came back 494x228, which `cover` then had to blow up 1.6x
+              to fill a 363-tall frame. `fit` hands the crop to sharp, so every
+              frame arrives at exactly the size it is drawn at. */}
+          <Image
+            src={img.src}
+            alt={img.alt}
+            width={494}
+            height={363}
+            fit="cover"
+            densities={[1, 2]}
+            class="st-strip__photo"
+          />
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .st-strip {
+    background: var(--st-white);
+    box-sizing: border-box;
+    padding-block: var(--st-space-11);
+    width: 100%;
+  }
+
+  .st-strip__row {
+    align-items: center;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    overflow-x: auto;
+    padding: var(--st-space-5) var(--st-space-10);
+    scroll-snap-type: x mandatory;
+
+    /* Stated rather than left to the `row` initial value: something in the
+       global cascade sets `column` on this list, and the strip silently
+       stacked into two rotated frames on top of each other. A plain class
+       declaration is enough to win it back, so the source rule is no more
+       specific than a class -- it was not findable in either the repo's
+       compiled stylesheet or `@fpkit/acss`, and Astro's dev-injected sheets
+       are not enumerable, so it is named here by its effect, not its origin. */
+    flex-direction: row;
+
+    /* `safe` matters: a plain `center` on an overflowing scroll container
+       pushes the first frame off the left edge with no way to scroll back to
+       it. With `safe`, centring applies only while the strip fits, and it
+       falls back to flex-start once there are enough photographs to scroll. */
+    justify-content: safe center;
+
+    /* The shingle. The source uses a -108px margin between 494px frames. */
+    gap: 0;
+  }
+
+  .st-strip__item {
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    width: min(494px, 80vw);
+  }
+
+  .st-strip__item + .st-strip__item {
+    margin-inline-start: -108px;
+  }
+
+  .st-strip__item--ccw {
+    transform: rotate(-2.2deg);
+  }
+
+  .st-strip__item--cw {
+    transform: rotate(2.2deg);
+  }
+
+  /* Shaped through the repo's image contract, with the class doubled to reach
+     (0,2,0). `@fpkit/acss` drives every `img[alt]` from custom properties at
+     (0,1,1), so a lone class loses: `aspect-ratio` fell back to the package
+     default of `auto 2/3`, whose `auto` keyword hands the frame back to each
+     photograph's natural shape, so the frames come out at whatever height each
+     source file happens to be and the shingle stops lining up. */
+  .st-strip__photo.st-strip__photo {
+    --img-aspect-ratio: 494 / 363;
+    --img-display: block;
+    --img-height: auto;
+    --img-object-fit: cover;
+
+    width: 100%;
+  }
+
+  .st-strip__row:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: -2px;
+  }
+
+  /* The overlap is a visual flourish that costs readability on a small screen,
+     where two shingled photos leave very little of each one showing. */
+  @media (max-width: 40rem) {
+    .st-strip__row {
+      gap: var(--st-space-4);
+      padding-inline: var(--st-space-5);
+    }
+
+    .st-strip__item + .st-strip__item {
+      margin-inline-start: 0;
+    }
+
+    .st-strip__item--ccw,
+    .st-strip__item--cw {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,178 @@
+---
+/**
+ * The site footer: wordmark and link row on the left, newsletter on the right,
+ * then a sage hairline and the legal row.
+ *
+ * The source ships `"2023 Ddsgnr. All right reserved."` as the copyright -- the
+ * design template author's name, the wrong year and a typo. There is no default
+ * here; `copyright` must be supplied.
+ *
+ * @component SaltFooter
+ * @example
+ * ```astro
+ * <SaltFooter
+ *   copyright="2026 Salt Tampa Outreach. All rights reserved."
+ *   newsletterAction="/api/subscribe"
+ *   links={[{ label: 'Donate', href: '/donate' }]}
+ * />
+ * ```
+ */
+import Wordmark from './Wordmark.astro'
+import FooterLink from './FooterLink.astro'
+import NewsletterForm from './NewsletterForm.astro'
+
+export type FooterNavLink = {
+  label: string
+  href: string
+}
+
+export type Props = {
+  links?: FooterNavLink[]
+  legal?: FooterNavLink[]
+  /** Required. The source's default names the wrong organisation. */
+  copyright: string
+  /** Where the newsletter posts. Omit to render the footer without the form. */
+  newsletterAction?: string
+  class?: string
+}
+
+const {
+  links = [],
+  legal = [],
+  copyright,
+  newsletterAction,
+  class: className,
+} = Astro.props as Props
+---
+
+<footer class:list={['st', 'st-footer', className]}>
+  <div class="st-footer__top">
+    <div class="st-footer__brand">
+      <Wordmark variant="footer" />
+      {
+        links.length > 0 && (
+          <nav class="st-footer__links" aria-label="Footer">
+            {links.map(link => (
+              <FooterLink href={link.href}>{link.label}</FooterLink>
+            ))}
+          </nav>
+        )
+      }
+    </div>
+    {newsletterAction && <NewsletterForm action={newsletterAction} />}
+  </div>
+  <div class="st-footer__bottom">
+    <hr class="st-footer__rule" />
+    <div class="st-footer__legal">
+      {
+        legal.length > 0 && (
+          <nav class="st-footer__legal-links" aria-label="Legal">
+            {legal.map(link => (
+              <FooterLink variant="legal" href={link.href}>
+                {link.label}
+              </FooterLink>
+            ))}
+          </nav>
+        )
+      }
+      <p class="st-footer__copyright">{copyright}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .st-footer {
+    align-items: center;
+    background: var(--st-white);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-9);
+    padding: var(--st-footer-pad);
+    width: 100%;
+  }
+
+  /*
+   * `@fpkit/acss` ships `footer > div { display: flex; align-items: center;
+   * justify-content: center; min-height: 5rem; text-align: center }`. Both
+   * rows here are direct div children of `<footer>`, so it centred them and
+   * `text-align` inherited on down -- measured, the legal row shrank to its
+   * content and sat mid-band, and every string in the footer came back
+   * `text-align: center`. The rule is only (0,0,2), so a single class wins;
+   * these four properties are stated rather than left to the initial value.
+   */
+  .st-footer__top,
+  .st-footer__bottom {
+    justify-content: flex-start;
+    min-height: 0;
+    text-align: start;
+  }
+
+  .st-footer__top {
+    align-items: flex-start;
+    align-self: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-10);
+    justify-content: space-between;
+  }
+
+  .st-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-6);
+  }
+
+  .st-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-6);
+
+    /* Otherwise the row inherits a `space-between` from the cascade and the
+       five links spread edge to edge instead of sitting under the wordmark. */
+    justify-content: flex-start;
+  }
+
+  .st-footer__bottom {
+    align-items: stretch;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-6);
+  }
+
+  .st-footer__rule {
+    background: var(--st-sage);
+    border: none;
+    height: 1px;
+    margin: 0;
+  }
+
+  .st-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-5);
+    justify-content: space-between;
+  }
+
+  .st-footer__legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-5);
+  }
+
+  .st-footer__copyright {
+    color: var(--st-text-footer);
+    font-family: var(--st-font-utility);
+    font-size: var(--st-size-caption);
+    font-weight: 400;
+    line-height: var(--st-lh-utility);
+    margin: 0;
+  }
+
+  @media (max-width: 48rem) {
+    .st-footer {
+      padding: var(--st-space-9) var(--st-space-5);
+    }
+  }
+</style>

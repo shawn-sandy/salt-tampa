@@ -1,0 +1,152 @@
+---
+/**
+ * A team portrait with a bottom-up ink scrim carrying the name plate and two
+ * social marks.
+ *
+ * The social marks are real links here. The source drew them as bare `<Icon>`
+ * glyphs with no href and no label, so they looked like controls and were not
+ * reachable; a member with no `facebook`/`linkedin` prop now renders no marks
+ * at all rather than dead ones.
+ *
+ * @component TeamCard
+ * @example
+ * ```astro
+ * import holly from '#assets/salt/images/team-holly.jpg'
+ * <TeamCard name="Holly" title="Fundraising Manager" image={holly} />
+ * ```
+ */
+import { Image } from 'astro:assets'
+import Icon from './Icon.astro'
+
+export type Props = {
+  name: string
+  /** Role, shown under the name. */
+  title: string
+  image: ImageMetadata
+  /** Defaults to "<name>, <title>". */
+  imageAlt?: string
+  facebook?: string
+  linkedin?: string
+  class?: string
+}
+
+const { name, title, image, imageAlt, facebook, linkedin, class: className } = Astro.props as Props
+---
+
+<article class:list={['st-team', className]}>
+  <Image
+    src={image}
+    alt={imageAlt ?? `${name}, ${title}`}
+    widths={[224, 448, 672]}
+    sizes="(max-width: 40rem) 45vw, 224px"
+    class="st-team__photo"
+  />
+  <div class="st-team__plate">
+    <p class="st-team__name">{name}</p>
+    <p class="st-team__role">{title}</p>
+    {
+      (facebook || linkedin) && (
+        <div class="st-team__socials">
+          {facebook && (
+            <a href={facebook} class="st-team__social" aria-label={`${name} on Facebook`}>
+              <Icon name="facebook" size={16} color="var(--st-white)" />
+            </a>
+          )}
+          {linkedin && (
+            <a href={linkedin} class="st-team__social" aria-label={`${name} on LinkedIn`}>
+              <Icon name="linkedin" size={16} color="var(--st-white)" />
+            </a>
+          )}
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .st-team {
+    border-radius: var(--st-radius-card);
+    overflow: hidden;
+    position: relative;
+
+    /* Drawn 224x584. Held as a ratio so the card can grow or shrink with its
+       grid track instead of forcing a 224px column at every width. */
+    aspect-ratio: 224 / 584;
+    width: 100%;
+  }
+
+  /* Height comes through `--img-height`, and the class is doubled to reach
+     (0,2,0). The repo applies `block-size: var(--img-height)` to every
+     `img[alt]` at (0,1,1), which outranks a single class: measured, the
+     portrait filled 336px of a 584px card and left the lower third of the
+     frame empty behind the name plate. */
+  .st-team__photo.st-team__photo {
+    --img-height: 100%;
+
+    left: 0;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .st-team__plate {
+    align-items: center;
+    background: var(--st-scrim-team);
+    bottom: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-2);
+    justify-content: flex-end;
+    left: 0;
+    padding: var(--st-space-4) var(--st-space-5);
+    position: absolute;
+    right: 0;
+
+    /* The source fixes this at 112px, which clips a two-line role. */
+    min-height: 112px;
+  }
+
+  .st-team__name {
+    color: var(--st-white);
+    font-family: var(--st-font-ui);
+    font-size: var(--st-size-name);
+    font-weight: 700;
+    line-height: var(--st-lh-lead);
+    margin: 0;
+    text-align: center;
+  }
+
+  .st-team__role {
+    color: var(--st-ink-100);
+    font-family: var(--st-font-ui);
+    font-size: var(--st-size-caption);
+    font-weight: 500;
+    line-height: var(--st-lh-caption);
+    margin: 0;
+    text-align: center;
+  }
+
+  .st-team__socials {
+    display: flex;
+    gap: var(--st-space-4);
+    justify-content: center;
+    margin-block-start: var(--st-space-1);
+  }
+
+  .st-team__social {
+    align-items: center;
+    display: inline-flex;
+
+    /* The glyph is 16px; the hit area is not. */
+    min-height: 24px;
+    min-width: 24px;
+    justify-content: center;
+  }
+
+  .st-team__social:focus-visible {
+    outline: 2px solid var(--st-white);
+    outline-offset: 2px;
+  }
+</style>

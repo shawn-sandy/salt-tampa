@@ -1,0 +1,114 @@
+---
+/**
+ * Inter 700/48 heading with an 18/28 lead paragraph and an optional action row.
+ *
+ * `level` exists because the source hard-coded `<h2>`. A page may need this
+ * stack as an `<h1>` (the Salt landing page has no other candidate), and the
+ * heading outline must not depend on which section happens to render first.
+ *
+ * @component SectionHeading
+ * @example
+ * ```astro
+ * <SectionHeading heading="Take a look at our services" paragraph="...">
+ *   <Button slot="actions" href="/volunteer">Become a Volunteer</Button>
+ * </SectionHeading>
+ * ```
+ */
+export type Props = {
+  heading: string
+  paragraph?: string
+  /** Heading level, 1-6. Defaults to 2. */
+  level?: 1 | 2 | 3 | 4 | 5 | 6
+  align?: 'center' | 'left'
+  /** Measure cap in px. */
+  maxWidth?: number
+  class?: string
+}
+
+const {
+  heading,
+  paragraph,
+  level = 2,
+  align = 'center',
+  maxWidth = 880,
+  class: className,
+} = Astro.props as Props
+
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+const hasActions = Astro.slots.has('actions')
+---
+
+<div
+  class:list={['st-heading', align === 'left' && 'st-heading--left', className]}
+  style={`--st-heading-max:${maxWidth}px`}
+>
+  <Tag class="st-heading__title">{heading}</Tag>
+  {paragraph && <p class="st-heading__lead">{paragraph}</p>}
+  {
+    hasActions && (
+      <div class="st-heading__actions">
+        <slot name="actions" />
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .st-heading {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--st-space-4);
+    justify-content: center;
+    max-width: var(--st-heading-max);
+    text-align: center;
+    width: 100%;
+  }
+
+  .st-heading--left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .st-heading__title {
+    align-self: stretch;
+    color: var(--st-text-heading);
+    font-family: var(--st-font-ui);
+    font-weight: 700;
+    margin: 0;
+
+    /* The repo capitalises every heading. Salt's headings are sentence case in
+       the source file -- "Take a look into our services!", not "Take A Look
+       Into Our Services!" -- and the capitalisation was visibly rewriting the
+       copy at render time while the markup stayed correct. */
+    text-transform: none;
+
+    /*
+     * The source sets a flat 48px with a 72px line box, which does not fit a
+     * 320px viewport. Clamping keeps the drawn size at desktop and scales it
+     * down below that; the line box becomes a ratio so it tracks the size
+     * instead of staying at 72px under a 30px heading.
+     */
+    font-size: clamp(1.875rem, 1.15rem + 3.6vw, var(--st-size-heading));
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .st-heading__lead {
+    align-self: stretch;
+    color: var(--st-text-muted);
+    font-family: var(--st-font-ui);
+    font-size: var(--st-size-lead);
+    font-weight: 400;
+    line-height: var(--st-lh-lead);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .st-heading__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-4);
+    justify-content: inherit;
+  }
+</style>

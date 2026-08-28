@@ -1,0 +1,56 @@
+---
+/**
+ * The sage-outlined 48px button that sits beside the newsletter field.
+ *
+ * @component OutlineButton
+ * @example
+ * ```astro
+ * <OutlineButton type="submit">Subscribe</OutlineButton>
+ * ```
+ */
+export type Props = {
+  href?: string
+  type?: 'button' | 'submit' | 'reset'
+  class?: string
+}
+
+const { href, type = 'button', class: className, ...rest } = Astro.props as Props
+const Tag = href ? 'a' : 'button'
+---
+
+<Tag href={href} type={href ? undefined : type} class:list={['st-outline', className]} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .st-outline {
+    align-items: center;
+    background: transparent;
+    border: var(--st-hairline);
+    border-radius: var(--st-radius-input);
+    box-sizing: border-box;
+    color: var(--st-sage);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--st-font-utility);
+    font-size: var(--st-size-body);
+    font-weight: 400;
+    gap: var(--st-space-1);
+    justify-content: center;
+    line-height: var(--st-lh-utility);
+    min-height: 48px;
+    padding: var(--st-space-3) var(--st-space-5);
+    text-decoration: none;
+    transition: background var(--st-dur-base) var(--st-ease-standard);
+    white-space: nowrap;
+  }
+
+  .st-outline:hover {
+    background: var(--st-ink-050);
+  }
+
+  .st-outline:focus-visible {
+    outline: 2px solid var(--st-focus-ring);
+    outline-offset: 2px;
+  }
+</style>

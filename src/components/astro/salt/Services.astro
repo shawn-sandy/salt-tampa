@@ -1,0 +1,169 @@
+---
+/**
+ * The services band: a centred heading with two calls to action over a row of
+ * three photographed service cards, on the sunken paper ground.
+ *
+ * The source lays the cards out as a fixed `flex-direction: row` at a literal
+ * 880px with `space-between`, which cannot reflow. Here they are an auto-fit
+ * grid: three across while there is room for them, then two, then one. At the
+ * drawn width the arithmetic lands on the same 240px card the comp specifies.
+ *
+ * The three entries live here rather than arriving as props. They are this
+ * section's content, tied to these three photographs; the calls to action are
+ * props because only the page knows where they should go.
+ *
+ * @component Services
+ * @example
+ * ```astro
+ * <Services volunteerHref="/message-us" contactHref="/contact-us" />
+ * ```
+ */
+import SectionHeading from './SectionHeading.astro'
+import ServiceCard from './ServiceCard.astro'
+import Button from './Button.astro'
+
+import clothes from '#assets/salt/images/service-clothes.jpg'
+import barber from '#assets/salt/images/outreach-tent.jpg'
+import shower from '#assets/salt/images/service-shower.jpg'
+
+export type Props = {
+  /** Where "Become a Volunteer" goes. Omit to drop the button. */
+  volunteerHref?: string
+  /** Where "Contact Us" goes. Omit to drop the button. */
+  contactHref?: string
+  class?: string
+}
+
+const { volunteerHref, contactHref, class: className } = Astro.props as Props
+
+/*
+ * Copy corrected against the source, which shipped three separate errors:
+ * "We prodive many services during out saturdays at trinity cafe" (two typos
+ * and two missing capitals), a Clothes entry ending in the sentence fragment
+ * "second Saturday of the month!", and a Barber entry missing the "to" in
+ * "styling to help you look".
+ *
+ * Alt text is written from the photographs themselves. `outreach-tent.jpg` is
+ * misleadingly named -- it shows barbers at work, so it belongs on this card
+ * despite the filename.
+ */
+const SERVICES = [
+  {
+    title: 'Clothes',
+    image: clothes,
+    imageAlt:
+      'Volunteers handing out folded jeans and clothing from a table under a canopy, with bags of clothes lined up underneath',
+    body: 'Find clean clothes at our mobile station. We offer a variety of sizes and styles, so everyone can find something that fits and feels good. Available every second Saturday of the month.',
+  },
+  {
+    title: 'Barber',
+    image: barber,
+    imageAlt:
+      'A barber in gloves trimming a seated man’s hair under a canopy, with a second barber working at a chair behind him',
+    body: 'Our skilled barbers provide free haircuts, beard trims and styling to help you look and feel your best. Join us every second Saturday of the month.',
+  },
+  {
+    title: 'Shower',
+    image: shower,
+    imageAlt:
+      'Salt’s restroom and shower trailer parked beside a canopy, with volunteers and a table of folded towels alongside',
+    body: 'Salt’s mobile shower unit offers a clean, private space to refresh. We provide toiletries and towels, ensuring a comfortable experience. Available every second Saturday of the month.',
+  },
+]
+---
+
+<section id="services" class:list={['st-services', className]}>
+  <div class="st-services__inner">
+    <SectionHeading
+      heading="Take a look into our services!"
+      paragraph="We provide many services on our Saturdays at Trinity Cafe. Here are our main three."
+    >
+      {
+        (volunteerHref || contactHref) && (
+          <Fragment slot="actions">
+            {volunteerHref && (
+              <Button variant="secondary" href={volunteerHref}>
+                Become a Volunteer
+              </Button>
+            )}
+            {contactHref && (
+              <Button variant="primary" href={contactHref}>
+                Contact Us
+              </Button>
+            )}
+          </Fragment>
+        )
+      }
+    </SectionHeading>
+
+    <ul class="st-services__grid" role="list">
+      {
+        SERVICES.map(service => (
+          <li>
+            <ServiceCard
+              title={service.title}
+              body={service.body}
+              image={service.image}
+              imageAlt={service.imageAlt}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .st-services {
+    background: var(--st-surface-sunken);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    /* The repo gives `main > section` a 2rem inline padding. The band sets its
+       own so the measure below is the only thing deciding the gutter. */
+    padding-block: clamp(2.5rem, 8vw, var(--st-section-pad-y));
+    padding-inline: var(--st-space-5);
+  }
+
+  .st-services__inner {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    max-width: var(--st-container);
+    width: 100%;
+
+    /* Drawn at a flat 80px between the heading and the cards. */
+    gap: clamp(var(--st-space-9), 6vw, var(--st-space-10));
+  }
+
+  /*
+   * A list, because it is one: three siblings of the same kind. `role="list"`
+   * is restated because the reset below removes the marker, and Safari drops
+   * a list from the accessibility tree once `list-style: none` is set.
+   */
+  .st-services__grid {
+    display: grid;
+    list-style: none;
+    margin: 0;
+    max-width: var(--st-content-services);
+    padding: 0;
+    width: 100%;
+
+    /* Three across, then two, then one -- the comp's fixed three-across row
+       cannot survive a phone. At the drawn 880px measure with the 80px gutter
+       the tracks resolve to 240px, which is the card width in the file. */
+    gap: clamp(var(--st-space-6), 6vw, var(--st-space-10));
+    grid-template-columns: repeat(auto-fit, minmax(13.75rem, 1fr));
+  }
+
+  /* The repo's list styles put an 8px inline-start padding and a bottom margin
+     on every `li`, which is right for prose and wrong for grid cells -- it
+     inset each card inside its own track and left the row 8px out of step with
+     the heading above it. */
+  .st-services__grid > li {
+    margin: 0;
+    padding: 0;
+  }
+</style>

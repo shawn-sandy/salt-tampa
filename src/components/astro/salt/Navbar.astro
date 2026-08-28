@@ -1,0 +1,116 @@
+---
+/**
+ * The transparent header laid over the hero photograph. The source has no
+ * scrolled or solid state, so neither does this.
+ *
+ * At narrow widths the row wraps and centres rather than collapsing into a
+ * drawer. A hamburger is a disclosure widget -- a button, a panel, focus
+ * trapping, an escape handler and client JS -- and five items do not need one.
+ * If the nav grows past what wrapping can hold, that is when to build it.
+ *
+ * @component Navbar
+ * @example
+ * ```astro
+ * <Navbar links={[{ label: 'Services', href: '#services' }]} ctaHref="/donate" />
+ * ```
+ */
+import Wordmark from './Wordmark.astro'
+import NavbarLink from './NavbarLink.astro'
+import PillButton from './PillButton.astro'
+
+export type NavLink = {
+  label: string
+  /** Must point at something that exists -- the source shipped two links to
+      anchors (`#mission`, `#volunteer`) that were never on the page. */
+  href: string
+}
+
+export type Props = {
+  links?: NavLink[]
+  cta?: string
+  /** Omit to render the bar without a call to action. */
+  ctaHref?: string
+  /** Accessible name for the `<nav>`. */
+  label?: string
+  class?: string
+}
+
+const {
+  links = [],
+  cta = 'Donate',
+  ctaHref,
+  label = 'Main',
+  class: className,
+} = Astro.props as Props
+---
+
+<div class:list={['st-navbar', className]}>
+  <div class="st-navbar__inner">
+    <a href="/" class="st-navbar__brand" aria-label="Salt Tampa Outreach, home">
+      <Wordmark variant="nav" />
+    </a>
+    <nav class="st-navbar__nav" aria-label={label}>
+      {links.map(link => <NavbarLink href={link.href}>{link.label}</NavbarLink>)}
+      {cta && ctaHref && <PillButton size="small" href={ctaHref}>{cta}</PillButton>}
+    </nav>
+  </div>
+</div>
+
+<style>
+  .st-navbar {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    padding: var(--st-space-7) var(--st-space-5) 30px;
+    width: 100%;
+  }
+
+  /* `max-width` rather than `width` for the measure. As a fixed width this
+     asked for 1334px no matter how little room there was, and that demand
+     propagated outward: the hero's grid track grew to fit it and the bar
+     overhung the viewport, pushing the last nav item off-screen at 1280px.
+     A capped full-width box can never ask for more than its parent has. */
+  .st-navbar__inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-4);
+    justify-content: space-between;
+    max-width: var(--st-container-wide);
+    min-width: 0;
+    width: 100%;
+  }
+
+  .st-navbar__brand {
+    text-decoration: none;
+  }
+
+  .st-navbar__brand:focus-visible {
+    outline: 2px solid var(--st-white);
+    outline-offset: 4px;
+  }
+
+  .st-navbar__nav {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--st-space-6);
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 56rem) {
+    .st-navbar__inner,
+    .st-navbar__nav {
+      justify-content: center;
+    }
+
+    .st-navbar {
+      padding-block: var(--st-space-5);
+    }
+
+    .st-navbar__nav {
+      gap: var(--st-space-3);
+    }
+  }
+</style>
