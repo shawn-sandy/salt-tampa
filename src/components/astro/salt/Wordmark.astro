@@ -29,8 +29,17 @@ const { variant = 'nav', color, class: className } = Astro.props as Props
 
 {
   variant === 'footer' ? (
-    <div class:list={['st-wordmark', 'st-wordmark--footer', className]} style={color ? `--st-wordmark-color:${color}` : undefined}>
-      <svg width="23.158" height="20" viewBox="0 0 23.158 20" aria-hidden="true" class="st-wordmark__glyph">
+    <div
+      class:list={['st-wordmark', 'st-wordmark--footer', className]}
+      style={color ? `--st-wordmark-color:${color}` : undefined}
+    >
+      <svg
+        width="23.158"
+        height="20"
+        viewBox="0 0 23.158 20"
+        aria-hidden="true"
+        class="st-wordmark__glyph"
+      >
         <path
           d="M 15.893 2.426 C 15.542 1.577 14.328 1.611 14.025 2.478 L 11.549 9.567 C 11.263 10.386 10.141 10.477 9.727 9.715 L 7.362 5.369 C 6.954 4.619 5.855 4.692 5.55 5.49 L 0.519 18.643 C 0.269 19.297 0.752 20 1.453 20 L 21.662 20 C 22.375 20 22.859 19.276 22.587 18.618 L 15.893 2.426 Z"
           fill-rule="nonzero"
@@ -39,7 +48,10 @@ const { variant = 'nav', color, class: className } = Astro.props as Props
       <span class="st-wordmark__name">Salt Tampa Outreach</span>
     </div>
   ) : (
-    <div class:list={['st-wordmark', 'st-wordmark--nav', className]} style={color ? `--st-wordmark-color:${color}` : undefined}>
+    <div
+      class:list={['st-wordmark', 'st-wordmark--nav', className]}
+      style={color ? `--st-wordmark-color:${color}` : undefined}
+    >
       <span class="st-wordmark__word">SALT</span>
       <span class="st-wordmark__word">TAMPA</span>
     </div>
@@ -58,7 +70,7 @@ const { variant = 'nav', color, class: className } = Astro.props as Props
   }
 
   .st-wordmark--footer {
-    color: var(--st-wordmark-color, var(--st-sage));
+    color: var(--st-wordmark-color, var(--st-text-footer));
     gap: 2px;
   }
 

@@ -1,75 +1,80 @@
 /* Salt Tampa Outreach — color. Values transcribed from the source .fig. */
-:root{
+:root {
   /* Brand */
-  --st-sage:#5E8F7E;            /* footer type, hairlines, form borders, carousel dots */
-  --st-terracotta:#DC7646;      /* mission band, primary button */
-  --st-sand:#EAE0C7;            /* eyebrow type on the terracotta band */
-  --st-terracotta-overlay:#B2421A;
+  --st-sage: #5e8f7e; /* footer type, hairlines, form borders, carousel dots */
+  --st-terracotta: #dc7646; /* mission band, primary button */
+  --st-sand: #eae0c7; /* eyebrow type on the terracotta band */
+  --st-terracotta-overlay: #b2421a;
+  --st-sage-text: #507a6b; /* the same sage darkened for type on white */
 
   /* Ink ramp (Figma "gray color blue") */
-  --st-ink-950:#19191B;
-  --st-ink-900:#1E1F21;
-  --st-ink-800:#3B3D41;
-  --st-ink-700:#5A5C62;
-  --st-ink-600:#787A82;
-  --st-ink-400:#ACAEB4;
-  --st-ink-300:#C0C2C6;
-  --st-ink-200:#D5D7D9;
-  --st-ink-100:#EAEBEC;
-  --st-ink-050:#F8F8F8;
+  --st-ink-950: #19191b;
+  --st-ink-900: #1e1f21;
+  --st-ink-800: #3b3d41;
+  --st-ink-700: #5a5c62;
+  --st-ink-600: #787a82;
+  --st-ink-400: #acaeb4;
+  --st-ink-300: #c0c2c6;
+  --st-ink-200: #d5d7d9;
+  --st-ink-100: #eaebec;
+  --st-ink-050: #f8f8f8;
 
   /* Literal darks used for photo captions and partner marks */
-  --st-ink-1d:#1D1D1D;
-  --st-ink-22:#222222;
-  --st-ink-12:#121212;
-  --st-ink-09:#091002;
+  --st-ink-1d: #1d1d1d;
+  --st-ink-22: #222222;
+  --st-ink-12: #121212;
+  --st-ink-09: #091002;
 
   /* Hero sky. The band behind the skyline photograph is a flat gradient, not
      the photograph's own sky -- the picture is painted over from the top. */
-  --st-sky-top:#9FB0C0;
-  --st-sky-ground:#A9B7C6;
+  --st-sky-top: #9fb0c0;
+  --st-sky-ground: #a9b7c6;
 
   /* Neutrals */
-  --st-white:#FFFFFF;
-  --st-black:#000000;
-  --st-paper:#FDFDFB;                /* services section ground */
-  --st-paper-quote:#E3E3E3;          /* testimonial type over photography */
+  --st-white: #ffffff;
+  --st-black: #000000;
+  --st-paper: #fdfdfb; /* services section ground */
+  --st-paper-quote: #e3e3e3; /* testimonial type over photography */
 
   /* Ghost-button offset stack */
-  --st-shadow-peach-1:#F1876F;
-  --st-shadow-peach-2:#F5AE9E;
+  --st-shadow-peach-1: #f1876f;
+  --st-shadow-peach-2: #f5ae9e;
 
   /* Overlays */
   /* The ink channels on their own, so a scrim can be mixed at any strength
      without restating the colour. Same value as --st-ink-950. */
-  --st-ink-950-rgb:25 25 27;
-  --st-scrim-ink:rgba(25,25,27,.49);
-  --st-scrim-black:rgba(0,0,0,.63);
-  --st-scrim-terracotta:rgba(178,66,26,.7);
+  --st-ink-950-rgb: 25 25 27;
+  --st-scrim-ink: rgba(25, 25, 27, 0.49);
+  --st-scrim-black: rgba(0, 0, 0, 0.63);
+  --st-scrim-terracotta: rgba(178, 66, 26, 0.7);
 
   /* Semantic aliases */
-  --st-text-body:var(--st-black);
-  --st-text-muted:var(--st-ink-700);
-  --st-text-heading:var(--st-ink-950);
-  --st-text-inverse:var(--st-white);
-  --st-text-on-terracotta:var(--st-white);
-  --st-text-eyebrow-on-terracotta:var(--st-sand);
-  --st-text-footer:var(--st-sage);
-  --st-surface-page:var(--st-white);
-  --st-surface-sunken:var(--st-paper);
+  --st-text-body: var(--st-black);
+  --st-text-muted: var(--st-ink-700);
+  --st-text-heading: var(--st-ink-950);
+  --st-text-inverse: var(--st-white);
+  --st-text-on-terracotta: var(--st-white);
+  --st-text-eyebrow-on-terracotta: var(--st-sand);
+  /* Measured on white: --st-sage is 3.68:1, short of the 4.5:1 that 14px and
+     16px footer type needs. --st-sage-text is 4.84:1. Changed on the alias so
+     only type moves -- --st-sage still draws the hairline, the field borders
+     and the carousel dots, where 3.68:1 clears the 3:1 non-text bar. */
+  --st-text-footer: var(--st-sage-text);
+  --st-surface-page: var(--st-white);
+  --st-surface-sunken: var(--st-paper);
   /* The deeper terracotta, not --st-terracotta. Measured on the mission band:
      the sand eyebrow on #DC7646 is 2.38:1 and cannot reach the 3:1 large-text
      floor at any size, and white sat at 3.12:1 with 4% to spare. On #B2421A
      sand is 4.34:1 and white 5.70:1, so both keep the colours the design
      assigns them. The alternative was dropping the sand eyebrow for white,
      which passes only while the label stays above 24px. */
-  --st-surface-band:var(--st-terracotta-overlay);
-  --st-surface-button-secondary:var(--st-ink-050);
+  --st-surface-band: var(--st-terracotta-overlay);
+  --st-surface-button-secondary: var(--st-ink-050);
   /* The deeper terracotta, not --st-terracotta. White on #DC7646 measures
      3.12:1, and a 14px button label needs 4.5:1; on #B2421A it is 5.70:1.
      Changed on the alias rather than the brand colour so only control fills
      move -- --st-terracotta still paints the mission band as drawn. */
-  --st-surface-button-primary:var(--st-terracotta-overlay);
-  --st-border-hairline:var(--st-sage);
-  --st-focus-ring:var(--st-terracotta);
+  --st-surface-button-primary: var(--st-terracotta-overlay);
+  --st-border-hairline: var(--st-sage);
+  --st-focus-ring: var(--st-terracotta);
 }

@@ -19,6 +19,7 @@ import TeamSection from '#components/astro/salt/TeamSection.astro'
 import ImageStrip from '#components/astro/salt/ImageStrip.astro'
 import DonateBand from '#components/astro/salt/DonateBand.astro'
 import Testimonial from '#components/astro/salt/Testimonial.astro'
+import SaltFooter from '#components/astro/salt/Footer.astro'
 
 import donateBg from '#assets/salt/images/donate-bg.png'
 import volunteers from '#assets/salt/images/team-andrea.jpg'
@@ -94,12 +95,42 @@ const MISSION =
 
 const VISION =
   'That Every Metropolitan Area in the US has a Comprehensive Outreach Center for People Experiencing Homelessness'
+
+/*
+ * The same destinations as the navbar, plus the donate appeal. The source
+ * footer carries a "Privacy Policy" link and a newsletter form; neither is
+ * reproduced, because neither has anywhere to go:
+ *
+ * - there is no privacy policy page in this repo, and a legal link that 404s
+ *   is worse than an absent one;
+ * - there is no subscribe endpoint. `NewsletterForm` requires an `action` for
+ *   exactly this reason -- the source's form called `preventDefault()` and
+ *   fired a toast, so it looked like it worked and collected nothing. Omitting
+ *   `newsletterAction` renders the footer without it.
+ *
+ * Both come back the moment a route exists: add `legal` and `newsletterAction`.
+ */
+const FOOTER_LINKS = [
+  { label: 'Services', href: '#services' },
+  { label: 'Mission', href: '#mission' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: CONTACT_HREF },
+  { label: 'Donate', href: '#donate' },
+]
+
+/*
+ * Resolved per request rather than hardcoded, so the year cannot go stale.
+ * The source ships "2023 Ddsgnr. All right reserved." -- the design template
+ * author's name, a dead year and a typo ("right" for "rights").
+ */
+const COPYRIGHT = `${new Date().getFullYear()} Salt Tampa Outreach. All rights reserved.`
 ---
 
 <Base
   pageTitle="Salt Tampa Outreach"
   pageDescription="Sharing Christ's love by serving the unsheltered through mobile outreach centers in Tampa."
   hideHeader
+  hideFooter
 >
   <main id="main" tabindex="-1" class="st">
     <Hero links={NAV_LINKS} volunteerHref={VOLUNTEER_HREF} donateHref="#donate" />
@@ -140,4 +171,5 @@ const VISION =
       imageAlt="Salt Tampa volunteers gathered on the street before a Saturday outreach"
     />
   </main>
+  <SaltFooter links={FOOTER_LINKS} copyright={COPYRIGHT} />
 </Base>

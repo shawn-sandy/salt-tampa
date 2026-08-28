@@ -25,7 +25,7 @@ const { href, variant = 'primary', class: className, ...rest } = Astro.props as 
 
 <style>
   .st-footerlink {
-    color: var(--st-sage);
+    color: var(--st-text-footer);
     font-family: var(--st-font-utility);
     line-height: var(--st-lh-utility);
     transition: opacity var(--st-dur-fast) var(--st-ease-standard);
@@ -41,6 +41,29 @@ const { href, variant = 'primary', class: className, ...rest } = Astro.props as 
     font-size: var(--st-size-caption);
     font-weight: 400;
     text-decoration: underline;
+  }
+
+  /*
+   * Restated at (0,2,0), the same fix the four other link-rendered controls
+   * needed. The global `a[href]` rule claims `background-color`, `color`,
+   * `font-size` and `font-weight` at (0,1,1) through undefined custom
+   * properties, so each is invalid at computed-value time and resets. Measured
+   * before this rule, the footer links rendered #6BB9C9 blue at 400 weight --
+   * 2.23:1 on white -- instead of sage 600.
+   */
+  .st-footerlink.st-footerlink {
+    background-color: transparent;
+    color: var(--st-text-footer);
+  }
+
+  .st-footerlink--primary.st-footerlink--primary {
+    font-size: var(--st-size-body);
+    font-weight: 600;
+  }
+
+  .st-footerlink--legal.st-footerlink--legal {
+    font-size: var(--st-size-caption);
+    font-weight: 400;
   }
 
   /* The primary row carries no underline at rest, so hover has to supply the

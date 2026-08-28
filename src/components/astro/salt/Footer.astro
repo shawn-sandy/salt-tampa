@@ -92,6 +92,22 @@ const {
     width: 100%;
   }
 
+  /*
+   * `@fpkit/acss` ships `footer > div { display: flex; align-items: center;
+   * justify-content: center; min-height: 5rem; text-align: center }`. Both
+   * rows here are direct div children of `<footer>`, so it centred them and
+   * `text-align` inherited on down -- measured, the legal row shrank to its
+   * content and sat mid-band, and every string in the footer came back
+   * `text-align: center`. The rule is only (0,0,2), so a single class wins;
+   * these four properties are stated rather than left to the initial value.
+   */
+  .st-footer__top,
+  .st-footer__bottom {
+    justify-content: flex-start;
+    min-height: 0;
+    text-align: start;
+  }
+
   .st-footer__top {
     align-items: flex-start;
     align-self: stretch;
@@ -111,9 +127,14 @@ const {
     display: flex;
     flex-wrap: wrap;
     gap: var(--st-space-6);
+
+    /* Otherwise the row inherits a `space-between` from the cascade and the
+       five links spread edge to edge instead of sitting under the wordmark. */
+    justify-content: flex-start;
   }
 
   .st-footer__bottom {
+    align-items: stretch;
     align-self: stretch;
     display: flex;
     flex-direction: column;
@@ -141,7 +162,7 @@ const {
   }
 
   .st-footer__copyright {
-    color: var(--st-sage);
+    color: var(--st-text-footer);
     font-family: var(--st-font-utility);
     font-size: var(--st-size-caption);
     font-weight: 400;

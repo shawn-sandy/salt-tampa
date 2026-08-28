@@ -28,6 +28,8 @@ type Props = {
   showBreadcrumb?: boolean
   breadcrumbRoutes?: routeItem[]
   hideHeader?: boolean
+  /** Suppress the kit footer, for a page that supplies its own. */
+  hideFooter?: boolean
 }
 
 const showBreadcrumb = Astro.props.showBreadcrumb === undefined ? true : Astro.props.showBreadcrumb
@@ -35,7 +37,7 @@ const showBreadcrumb = Astro.props.showBreadcrumb === undefined ? true : Astro.p
 // Get authentication state from locals
 const { userId } = Astro.locals
 
-const { pageTitle, pageDescription, pageImageUrl, hideHeader } = Astro.props
+const { pageTitle, pageDescription, pageImageUrl, hideHeader, hideFooter } = Astro.props
 ---
 
 <html lang="en">
@@ -151,7 +153,7 @@ const { pageTitle, pageDescription, pageImageUrl, hideHeader } = Astro.props
       )
     }
     <slot />
-    <Footer />
+    {!hideFooter && <Footer />}
 
     <!-- PWA Install Prompt -->
     <!-- {isPWAEnabled && <PWAInstallPrompt />} -->
