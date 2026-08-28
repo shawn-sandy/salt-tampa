@@ -15,6 +15,7 @@ import Hero from '#components/astro/salt/Hero.astro'
 import Services from '#components/astro/salt/Services.astro'
 import MissionBand from '#components/astro/salt/MissionBand.astro'
 import MissionStatement from '#components/astro/salt/MissionStatement.astro'
+import TeamSection from '#components/astro/salt/TeamSection.astro'
 
 /*
  * Only routes that exist. The source comp shipped `#mission` and `#volunteer`
@@ -65,5 +66,6 @@ const VISION =
       <MissionStatement label="Mission" statement={MISSION} />
       <MissionStatement label="Vision" statement={VISION} />
     </MissionBand>
+    <TeamSection volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
   </main>
 </Base>

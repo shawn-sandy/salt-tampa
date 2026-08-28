@@ -75,8 +75,14 @@ const { name, title, image, imageAlt, facebook, linkedin, class: className } = A
     width: 100%;
   }
 
-  .st-team__photo {
-    height: 100%;
+  /* Height comes through `--img-height`, and the class is doubled to reach
+     (0,2,0). The repo applies `block-size: var(--img-height)` to every
+     `img[alt]` at (0,1,1), which outranks a single class: measured, the
+     portrait filled 336px of a 584px card and left the lower third of the
+     frame empty behind the name plate. */
+  .st-team__photo.st-team__photo {
+    --img-height: 100%;
+
     left: 0;
     object-fit: cover;
     position: absolute;
