@@ -17,8 +17,10 @@ import MissionBand from '#components/astro/salt/MissionBand.astro'
 import MissionStatement from '#components/astro/salt/MissionStatement.astro'
 import TeamSection from '#components/astro/salt/TeamSection.astro'
 import DonateBand from '#components/astro/salt/DonateBand.astro'
+import Testimonial from '#components/astro/salt/Testimonial.astro'
 
 import donateBg from '#assets/salt/images/donate-bg.png'
+import volunteers from '#assets/salt/images/team-andrea.jpg'
 
 /*
  * Only routes that exist. The source comp shipped `#mission` and `#volunteer`
@@ -75,11 +77,38 @@ const VISION =
   <main id="main" tabindex="-1" class="st">
     <Hero links={NAV_LINKS} volunteerHref={VOLUNTEER_HREF} donateHref="#donate" />
     <Services volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
+    {
+      /*
+       * Mission here, Vision in the quote band below. The source puts both on
+       * this band AND cycles both through the quote band, so a faithful port
+       * would print the same two statements twice within three sections. One
+       * each keeps every word of the source copy on the page and says nothing
+       * twice.
+       */
+    }
     <MissionBand id="mission">
       <MissionStatement label="Mission" statement={MISSION} />
-      <MissionStatement label="Vision" statement={VISION} />
     </MissionBand>
     <TeamSection volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
     <DonateBand id="donate" image={donateBg} href={DONATE_HREF} />
+    {
+      /*
+       * Labelled "Our Vision", not "Testimonials". The design calls this the
+       * testimonial block, but no testimonial exists anywhere in the source --
+       * no quotation, no speaker, no attribution; the kit only ever
+       * demonstrates it with the mission statement. Calling a vision statement
+       * a testimonial would assert that somebody said it.
+       *
+       * When a real quote and speaker arrive, pass `statement` and
+       * `attribution` and set the label back -- the component renders a
+       * `<figcaption>` for exactly that.
+       */
+    }
+    <Testimonial
+      label="Our Vision"
+      statement={VISION}
+      image={volunteers}
+      imageAlt="Salt Tampa volunteers gathered on the street before a Saturday outreach"
+    />
   </main>
 </Base>

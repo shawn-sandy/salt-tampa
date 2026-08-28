@@ -77,10 +77,15 @@ const {
     min-height: 960px;
   }
 
-  .st-quote__photo {
-    height: 100%;
+  /* Sized through `--img-height`, with the class doubled to reach (0,2,0).
+     The repo applies `block-size: var(--img-height)` to every `img[alt]` at
+     (0,1,1), which outranks a single class: measured, the photograph stood
+     1898px tall inside a 960px band. */
+  .st-quote__photo.st-quote__photo {
+    --img-height: 100%;
+    --img-object-fit: cover;
+
     inset: 0;
-    object-fit: cover;
     position: absolute;
     width: 100%;
   }
