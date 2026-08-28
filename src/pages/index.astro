@@ -16,11 +16,38 @@ import Services from '#components/astro/salt/Services.astro'
 import MissionBand from '#components/astro/salt/MissionBand.astro'
 import MissionStatement from '#components/astro/salt/MissionStatement.astro'
 import TeamSection from '#components/astro/salt/TeamSection.astro'
+import ImageStrip from '#components/astro/salt/ImageStrip.astro'
 import DonateBand from '#components/astro/salt/DonateBand.astro'
 import Testimonial from '#components/astro/salt/Testimonial.astro'
 
 import donateBg from '#assets/salt/images/donate-bg.png'
 import volunteers from '#assets/salt/images/team-andrea.jpg'
+import gymLineup from '#assets/salt/images/carousel-1.jpg'
+import trailerBriefing from '#assets/salt/images/carousel-2.jpg'
+
+/*
+ * Two photographs, not the kit's four.
+ *
+ * `carousel-3.jpg` is a stock still-life of a leaf on a white studio
+ * background -- nothing to do with Tampa or outreach -- so it is left out
+ * rather than passed off as a photograph of this work. The kit's own demo
+ * captions it "Guests sharing a meal at Trinity Cafe", which it plainly is not.
+ *
+ * The remaining candidates are already on this page: `outreach-tent.jpg` is the
+ * barber service card and `team-andrea.jpg` is the quote band. Repeating either
+ * a few hundred pixels further down reads as a thin photo library, so the strip
+ * runs at two until more real photographs exist. Add them to this array.
+ */
+const STRIP = [
+  {
+    src: gymLineup,
+    alt: 'Volunteers in red-striped serving aprons lined up across a school gym, bagged donations stacked along the wall behind them',
+  },
+  {
+    src: trailerBriefing,
+    alt: 'A volunteer with a microphone briefing the team in front of the Salt Tampa trailer, its chalkboard inviting people to step inside',
+  },
+]
 
 /*
  * Only routes that exist. The source comp shipped `#mission` and `#volunteer`
@@ -89,6 +116,8 @@ const VISION =
     <MissionBand id="mission">
       <MissionStatement label="Mission" statement={MISSION} />
     </MissionBand>
+    {/* The source places the photo strip directly after the mission band. */}
+    <ImageStrip images={STRIP} label="Photographs from Salt Tampa outreach days" />
     <TeamSection volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
     <DonateBand id="donate" image={donateBg} href={DONATE_HREF} />
     {

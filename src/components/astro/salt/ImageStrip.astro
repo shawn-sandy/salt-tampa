@@ -35,21 +35,40 @@ export type Props = {
   class?: string
 }
 
-const { images, label = 'Photographs from our outreach days', class: className } = Astro.props as Props
+const {
+  images,
+  label = 'Photographs from our outreach days',
+  class: className,
+} = Astro.props as Props
 ---
 
 <section class:list={['st', 'st-strip', className]}>
-  {/* tabindex makes the scroll container reachable by keyboard. A scrollable
-      region that cannot be focused cannot be scrolled without a mouse. */}
+  {
+    /* tabindex makes the scroll container reachable by keyboard. A scrollable
+      region that cannot be focused cannot be scrolled without a mouse. */
+  }
   <ul class="st-strip__row" tabindex="0" role="group" aria-label={label}>
     {
       images.map((img, i) => (
-        <li class:list={['st-strip__item', i % 2 === 0 ? 'st-strip__item--ccw' : 'st-strip__item--cw']}>
+        <li
+          class:list={[
+            'st-strip__item',
+            i % 2 === 0 ? 'st-strip__item--ccw' : 'st-strip__item--cw',
+          ]}
+        >
+          {/* Cropped to the frame on the server rather than resized to its
+              width and cropped again by `object-fit`. Asking for 494 wide gives
+              back whatever height the source ratio implies -- a 2400x1108
+              panorama came back 494x228, which `cover` then had to blow up 1.6x
+              to fill a 363-tall frame. `fit` hands the crop to sharp, so every
+              frame arrives at exactly the size it is drawn at. */}
           <Image
             src={img.src}
             alt={img.alt}
-            widths={[494, 988]}
-            sizes="(max-width: 40rem) 80vw, 494px"
+            width={494}
+            height={363}
+            fit="cover"
+            densities={[1, 2]}
             class="st-strip__photo"
           />
         </li>
@@ -75,6 +94,21 @@ const { images, label = 'Photographs from our outreach days', class: className }
     padding: var(--st-space-5) var(--st-space-10);
     scroll-snap-type: x mandatory;
 
+    /* Stated rather than left to the `row` initial value: something in the
+       global cascade sets `column` on this list, and the strip silently
+       stacked into two rotated frames on top of each other. A plain class
+       declaration is enough to win it back, so the source rule is no more
+       specific than a class -- it was not findable in either the repo's
+       compiled stylesheet or `@fpkit/acss`, and Astro's dev-injected sheets
+       are not enumerable, so it is named here by its effect, not its origin. */
+    flex-direction: row;
+
+    /* `safe` matters: a plain `center` on an overflowing scroll container
+       pushes the first frame off the left edge with no way to scroll back to
+       it. With `safe`, centring applies only while the strip fits, and it
+       falls back to flex-start once there are enough photographs to scroll. */
+    justify-content: safe center;
+
     /* The shingle. The source uses a -108px margin between 494px frames. */
     gap: 0;
   }
@@ -97,11 +131,18 @@ const { images, label = 'Photographs from our outreach days', class: className }
     transform: rotate(2.2deg);
   }
 
-  .st-strip__photo {
-    aspect-ratio: 494 / 363;
-    display: block;
-    height: auto;
-    object-fit: cover;
+  /* Shaped through the repo's image contract, with the class doubled to reach
+     (0,2,0). `@fpkit/acss` drives every `img[alt]` from custom properties at
+     (0,1,1), so a lone class loses: `aspect-ratio` fell back to the package
+     default of `auto 2/3`, whose `auto` keyword hands the frame back to each
+     photograph's natural shape, so the frames come out at whatever height each
+     source file happens to be and the shingle stops lining up. */
+  .st-strip__photo.st-strip__photo {
+    --img-aspect-ratio: 494 / 363;
+    --img-display: block;
+    --img-height: auto;
+    --img-object-fit: cover;
+
     width: 100%;
   }
 
