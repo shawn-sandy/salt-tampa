@@ -58,17 +58,22 @@ const Tag = href ? 'a' : 'button'
     width: min(232px, 100%);
   }
 
-  /* The repo's global stylesheet paints every `a[href]` with
-     `background-color: var(--link-bg)` and `color: var(--link-color)`. Both
-     custom properties are undefined, so those declarations are invalid at
-     computed-value time and reset the control to a transparent background
-     with an inherited colour -- measured on the hero, where the pill rendered
-     as bare text. That rule is (0,1,1) and a lone class is (0,1,0), so the
-     two properties it claims are restated here at (0,2,0). The rest of the
-     control's paint is uncontested and stays in the rule above. */
+  /* The repo's global stylesheet claims `background-color`, `color`,
+     `font-size` and `font-weight` on every `a[href]` at (0,1,1), each through
+     an undefined custom property, so each is invalid at computed-value time
+     and resets the control -- measured on the hero, where the pill rendered as
+     bare text. A lone class is (0,1,0) and loses, so the four are restated
+     here. `--small` needs its own doubled rule for the same reason: its size
+     override is also a single class. */
   .st-pill.st-pill {
     background-color: var(--st-white);
     color: var(--st-ink-09);
+    font-size: var(--st-size-body);
+    font-weight: 600;
+  }
+
+  .st-pill--small.st-pill--small {
+    font-size: var(--st-size-caption);
   }
 
   .st-pill--small {

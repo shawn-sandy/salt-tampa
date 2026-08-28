@@ -53,6 +53,24 @@ const Tag = href ? 'a' : 'button'
   }
 
   /*
+   * Doubled to reach (0,2,0). With `href` set this is an `<a>`, and the repo's
+   * global stylesheet claims four properties on every `a[href]` at (0,1,1) --
+   * `background-color`, `color`, `font-size` and `font-weight` -- through
+   * custom properties that are all undefined. Each declaration is therefore
+   * invalid at computed-value time and resets the control: measured, the label
+   * came out cyan at 16px/400 instead of white Josefin Sans 700/20.
+   *
+   * All four are restated here, the transparent ground included, so the button
+   * does not depend on a global staying broken.
+   */
+  .st-ghost.st-ghost {
+    background-color: transparent;
+    color: var(--st-white);
+    font-size: var(--st-size-ghost);
+    font-weight: 700;
+  }
+
+  /*
    * The readme's stated press convention: the offset stack collapses toward the
    * button. Implemented as a shadow change plus an equal translate so the
    * button's outer edge stays put and only the peach steps move.

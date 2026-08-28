@@ -88,13 +88,19 @@ const Tag = href ? 'a' : 'button'
 
   /*
    * Doubled to reach (0,2,0). When `href` is set this renders an `<a>`, and the
-   * repo's global stylesheet paints every `a[href]` with
-   * `background-color: var(--link-bg)` and `color: var(--link-color)` at
-   * (0,1,1). Both custom properties are undefined, so those declarations are
-   * invalid at computed-value time and strip the control back to a transparent
-   * ground -- measured on the services band, where both variants rendered as
-   * bare cyan link text with no fill at all.
+   * repo's global stylesheet claims four properties on every `a[href]` at
+   * (0,1,1) -- `background-color`, `color`, `font-size` and `font-weight` --
+   * each through an undefined custom property. Every one is therefore invalid
+   * at computed-value time and resets the control: measured on the services
+   * band, both variants rendered as bare cyan text at 16px/400 with no fill.
+   *
+   * A lone class is (0,1,0) and loses to all four, so each is restated here.
    */
+  .st-button.st-button {
+    font-size: var(--st-size-caption);
+    font-weight: 500;
+  }
+
   .st-button--primary.st-button--primary {
     background-color: var(--st-surface-button-primary);
     color: var(--st-white);

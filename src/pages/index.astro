@@ -16,6 +16,9 @@ import Services from '#components/astro/salt/Services.astro'
 import MissionBand from '#components/astro/salt/MissionBand.astro'
 import MissionStatement from '#components/astro/salt/MissionStatement.astro'
 import TeamSection from '#components/astro/salt/TeamSection.astro'
+import DonateBand from '#components/astro/salt/DonateBand.astro'
+
+import donateBg from '#assets/salt/images/donate-bg.png'
 
 /*
  * Only routes that exist. The source comp shipped `#mission` and `#volunteer`
@@ -33,11 +36,21 @@ const NAV_LINKS = [
  * Both routes render a page titled "Contact Us", so there is only one real
  * destination behind two labels. Volunteer enquiries go to `/message-us` and
  * general enquiries to `/contact-us` to keep the two buttons distinguishable,
- * but this wants a decision from the requester -- and a real donate URL, which
- * is why no donate control is rendered yet.
+ * but this wants a decision from the requester.
  */
 const VOLUNTEER_HREF = '/message-us'
 const CONTACT_HREF = '/contact-us'
+
+/*
+ * INTERIM. There is no giving URL anywhere in the repo and no donate route, so
+ * the appeal points at the contact page: someone who wants to give can still
+ * reach a human. It is the wrong destination for a button labelled "Donate"
+ * and needs replacing with the real giving link before launch -- one line.
+ *
+ * The navbar chip is a different case: it scrolls to the appeal itself, which
+ * is what the source did and is a real destination either way.
+ */
+const DONATE_HREF = '/contact-us'
 
 /*
  * Verbatim from the source. The design system's readme is explicit that this
@@ -60,12 +73,13 @@ const VISION =
   hideHeader
 >
   <main id="main" tabindex="-1" class="st">
-    <Hero links={NAV_LINKS} volunteerHref={VOLUNTEER_HREF} />
+    <Hero links={NAV_LINKS} volunteerHref={VOLUNTEER_HREF} donateHref="#donate" />
     <Services volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
     <MissionBand id="mission">
       <MissionStatement label="Mission" statement={MISSION} />
       <MissionStatement label="Vision" statement={VISION} />
     </MissionBand>
     <TeamSection volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
+    <DonateBand id="donate" image={donateBg} href={DONATE_HREF} />
   </main>
 </Base>

@@ -31,7 +31,9 @@ export type Props = {
 
 const {
   id,
-  headline = 'We can continue to serve the Tampa bay community with your help',
+  /* "Tampa Bay" -- the source reads "Tampa bay", which the repo's global
+     heading capitalisation happened to paper over until it was turned off. */
+  headline = 'We can continue to serve the Tampa Bay community with your help',
   action = 'Donate',
   href,
   image,
@@ -83,13 +85,21 @@ const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
     min-height: 900px;
   }
 
-  .st-donate__photo {
-    height: 100%;
-    inset: 0;
-    object-fit: cover;
+  /*
+   * Sized and cropped through the repo's image contract. `src/styles/index.css`
+   * drives every `img[alt]` from custom properties at (0,1,1), which outranks a
+   * single class: measured, `height: 100%` was discarded and the photograph
+   * stood 1898px tall inside a 900px band, and `object-position` was reset to
+   * the centre. The class is doubled to reach (0,2,0).
+   */
+  .st-donate__photo.st-donate__photo {
+    --img-height: 100%;
+    --img-object-fit: cover;
 
     /* The source places the crop at `50% 80.578%`, low in the frame. */
-    object-position: 50% 80%;
+    --img-object-position: 50% 80%;
+
+    inset: 0;
     position: absolute;
     width: 100%;
   }
@@ -126,6 +136,11 @@ const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
     margin: 0;
     text-align: center;
     text-wrap: pretty;
+
+    /* The repo capitalises every heading, which rendered this appeal as "We
+       Can Continue To Serve The Tampa Bay Community With Your Help". The
+       source sets it in sentence case. */
+    text-transform: none;
 
     /*
      * Drawn at 86px with an 88px line box. The line box becomes a ratio so it
