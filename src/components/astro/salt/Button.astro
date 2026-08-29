@@ -3,10 +3,11 @@
  * The workhorse button: 40px tall, 12px radius, Inter 500/14, with a trailing
  * chevron 8px after the label.
  *
- * Renders an `<a>` when `href` is supplied and a `<button>` otherwise, so the
- * element matches what the control actually does. The source component took an
- * `as` prop and could render an `<a>` with no `href`; that combination is not
- * focusable and is not reproduced here.
+ * Renders an `<a>` when `href` is supplied and the control is enabled, and a
+ * `<button>` otherwise, so the element matches what the control actually does.
+ * A disabled control is always a `<button disabled>`, never a live link. The
+ * source component took an `as` prop and could render an `<a>` with no `href`;
+ * that combination is not focusable and is not reproduced here.
  *
  * Hover, active and focus states are additions. The source is authored in
  * inline React style objects, which cannot express any of them.
@@ -18,7 +19,7 @@
  * <Button variant="secondary" icon="none" type="submit">Subscribe</Button>
  * ```
  */
-import Icon from './Icon.astro'
+import Icon from '#components/astro/salt/Icon.astro'
 
 export type Props = {
   /** `primary` is the terracotta fill; `secondary` is the near-white one. */
@@ -43,14 +44,20 @@ const {
   ...rest
 } = Astro.props as Props
 
-const Tag = href ? 'a' : 'button'
+/*
+ * A disabled link is not a link. `aria-disabled` alone leaves the `href` live,
+ * so pointer and keyboard users could still follow it; falling back to a real
+ * `<button disabled>` is the only form the browser actually refuses to
+ * activate.
+ */
+const isLink = Boolean(href) && !disabled
+const Tag = isLink ? 'a' : 'button'
 ---
 
 <Tag
-  href={href}
-  type={href ? undefined : type}
-  disabled={href ? undefined : disabled}
-  aria-disabled={href && disabled ? 'true' : undefined}
+  href={isLink ? href : undefined}
+  type={isLink ? undefined : type}
+  disabled={isLink ? undefined : disabled}
   class:list={['st-button', `st-button--${variant}`, className]}
   {...rest}
 >
@@ -129,8 +136,7 @@ const Tag = href ? 'a' : 'button'
     outline-offset: 2px;
   }
 
-  .st-button[disabled],
-  .st-button[aria-disabled='true'] {
+  .st-button[disabled] {
     cursor: not-allowed;
     opacity: 0.4;
   }

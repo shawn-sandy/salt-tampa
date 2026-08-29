@@ -1,34 +1,34 @@
 /* Salt Tampa Outreach — spacing, radii, layout. Values as drawn in the .fig. */
-:root{
-  --st-space-1:8px;
-  --st-space-2:10px;
-  --st-space-3:12px;
-  --st-space-4:16px;
-  --st-space-5:24px;
-  --st-space-6:32px;
-  --st-space-7:39px;
-  --st-space-8:53px;
-  --st-space-9:64px;
-  --st-space-10:80px;
-  --st-space-11:100px;
-  --st-space-12:112px;
+:root {
+  --st-space-1: 8px;
+  --st-space-2: 10px;
+  --st-space-3: 12px;
+  --st-space-4: 16px;
+  --st-space-5: 24px;
+  --st-space-6: 32px;
+  --st-space-7: 39px;
+  --st-space-8: 53px;
+  --st-space-9: 64px;
+  --st-space-10: 80px;
+  --st-space-11: 100px;
+  --st-space-12: 112px;
 
-  --st-radius-input:5px;
-  --st-radius-pill:10px;
-  --st-radius-card:12px;
-  --st-radius-photo:20px;
-  --st-radius-hero:45px;
-  --st-radius-round:37px;
-  --st-radius-none:0px;
+  --st-radius-input: 5px;
+  --st-radius-pill: 10px;
+  --st-radius-card: 12px;
+  --st-radius-photo: 20px;
+  --st-radius-hero: 45px;
+  --st-radius-round: 37px;
+  --st-radius-none: 0px;
 
   /* Layout */
-  --st-page-width:1440px;
-  --st-container-wide:1334px;   /* navbar content */
-  --st-container:1200px;        /* mission + services shell */
-  --st-container-narrow:1152px; /* team header */
-  --st-content:1080px;          /* hero card column */
-  --st-content-narrow:1020px;   /* mission / testimonial measure */
-  --st-content-services:880px;
-  --st-section-pad-y:64px;
-  --st-footer-pad:80px;
+  --st-page-width: 1440px;
+  --st-container-wide: 1334px; /* navbar content */
+  --st-container: 1200px; /* mission + services shell */
+  --st-container-narrow: 1152px; /* team header */
+  --st-content: 1080px; /* hero card column */
+  --st-content-narrow: 1020px; /* mission / testimonial measure */
+  --st-content-services: 880px;
+  --st-section-pad-y: 64px;
+  --st-footer-pad: 80px;
 }

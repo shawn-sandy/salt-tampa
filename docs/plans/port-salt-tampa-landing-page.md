@@ -182,38 +182,43 @@ Rebuilding them responsively is step 5, and it is a layout redesign rather than 
   which photograph is passed. Marked up as `<figure>`/`<blockquote>`.
 - `SectionHeading` and `PartnerRow` take a `level`, so the page can own its heading outline.
 
-**Verification status -- rendering is UNVERIFIED**
+**Verification status -- the build passes; browser rendering is still UNVERIFIED**
 
-`npx astro build` and `astro dev` both fail in this worktree before any project source is read:
+The production build runs. On PR #1 (commit `fa96746`) the `Build (node)`, `Build (vercel)` and
+`Build (netlify)` jobs and the `Type-check, unit, and e2e tests` job all passed.
 
-```
+An earlier revision of this section recorded `npx astro build` and `astro dev` failing during
+config load with `Tsconfig not found astro/tsconfigs/base`:
+
+```text
 [astro] Unable to load your Astro config
 Tsconfig not found astro/tsconfigs/base
   at async EnvironmentPluginContainer.resolveId (node_modules/astro/node_modules/vite/...)
 ```
 
-This is pre-existing and unrelated to the import -- `tsconfig.json`, `astro.config.mjs` and
-`package.json` are untouched, and the failure happens during config load. Investigated: Node
-resolves `astro/tsconfigs/base` correctly, `get-tsconfig` parses `tsconfig.json` correctly, and
-removing the `extends` key entirely produces the identical error, so the reference is not coming
-from the project's own tsconfig. Not chased further.
+That was a local worktree condition, not a defect in the import -- `tsconfig.json`,
+`astro.config.mjs` and `package.json` were untouched throughout, and CI builds the same commit
+cleanly. Kept here only so the diagnostic is recognisable if it recurs locally.
 
-What *was* verified:
+What *is* verified:
 
-- All 24 components and the specimen page compile with zero diagnostics, run through
-  `@astrojs/compiler-rs` directly.
+- The production build succeeds on three adapters, and type-check and the unit and e2e suites pass.
+- All 24 components and the specimen page compile with zero diagnostics.
 - Every `--st-` token referenced by a component resolves to a definition.
 - Zero token-name collisions against `src/styles/index.css`.
 
-Still unverified until the build runs: rendered layout, reflow at the four widths, contrast, axe,
-and total page weight. Do not treat the import as done until a browser has loaded `/salt-kit`.
+Still unverified: rendered layout, reflow at the four widths, contrast, axe, and total page weight.
+A green build proves the page compiles and ships, not that it looks right -- the e2e suite that
+passed does not yet contain a Salt home page spec (`e2e/salt-tampa-home.spec.ts` is still
+unwritten, see `tests` below). Do not treat the layout work as done until a browser has loaded `/`
+and `/salt-kit` at the four widths.
 
 ## steps
 
 1. **Copy the token layer into `src/styles/salt/` and reconcile the collisions.**
    Copy `tokens/{colors,typography,spacing,effects}.css` from the design system. Rename the two
    colliding names (`--paper`, and any `--ink*` overlap with `src/styles/index.css`) to
-   `--salt-paper` / `--salt-ink-*` so the existing pages keep their current values, then import the
+   `--st-paper` / `--st-ink-*` so the existing pages keep their current values, then import the
    files from `src/styles/index.scss`.
    *Why:* the tokens are the reusable half of the design system, and an unreconciled `--paper`
    silently re-tints every existing route.
@@ -248,8 +253,8 @@ and total page weight. Do not treat the import as done until a browser has loade
    *Verify:* `npm run type-check` passes, and every component renders in isolation via a scratch
    route with visible focus rings under keyboard tab.
 
-5. **Rebuild the four section components responsively.**
-   `Hero`, `Services`, `TeamSection` and the three bands (`DonateBand`, `ImageCarousel`,
+5. **Rebuild the six section components responsively.**
+   `Hero`, `Services`, `TeamSection` and the three bands (`DonateBand`, `ImageStrip`,
    `Testimonial`). Replace every fixed `height` and absolute `top`/`left` with intrinsic sizing:
    the hero becomes a grid with the skyline as a background layer sized in `vh`/`aspect-ratio`, the
    service and team rows become auto-fit grids, and the carousel becomes a horizontal

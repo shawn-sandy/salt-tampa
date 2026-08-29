@@ -16,6 +16,13 @@
 export type Props = {
   /** Small uppercase eyebrow. Uppercasing is done by CSS, not by the writer. */
   label?: string
+  /**
+   * Heading level for `label`, 1-6. Defaults to 2. The label names the section
+   * ("Mission", "Our Vision"), so it is a heading and must be reachable by
+   * heading navigation; the level is the page's to choose, as with
+   * `SectionHeading`.
+   */
+  labelLevel?: 1 | 2 | 3 | 4 | 5 | 6
   statement: string
   /** Overrides the sand label colour -- the testimonial uses a light grey. */
   labelColor?: string
@@ -27,19 +34,22 @@ export type Props = {
 
 const {
   label,
+  labelLevel = 2,
   statement,
   labelColor = 'var(--st-text-eyebrow-on-terracotta)',
   statementColor = 'var(--st-white)',
   align = 'center',
   class: className,
 } = Astro.props as Props
+
+const LabelTag = `h${labelLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 ---
 
 <div
   class:list={['st-mission', align === 'left' && 'st-mission--left', className]}
   style={`--st-mission-label:${labelColor};--st-mission-text:${statementColor}`}
 >
-  {label && <p class="st-mission__label">{label}</p>}
+  {label && <LabelTag class="st-mission__label">{label}</LabelTag>}
   <p class="st-mission__statement">{statement}</p>
 </div>
 

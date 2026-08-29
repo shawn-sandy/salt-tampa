@@ -8,11 +8,11 @@ import Header from '#components/astro/Header.astro'
 
 import { SITE_DESCRIPTION, SITE_TITLE } from '#utils/site-config'
 import '@fpkit/acss/styles'
-import '../styles/index.css'
+import '#styles/index.css'
 // Salt Tampa design tokens. Every name is `--st-` prefixed and the file
 // declares no element selectors outside `.st`, so importing it globally is
 // inert on routes that do not opt in. See src/styles/salt/index.css.
-import '../styles/salt/index.css'
+import '#styles/salt/index.css'
 import { Show, UserButton, SignInButton } from '@clerk/astro/components'
 const isPWAEnabled = import.meta.env.PWA_ENABLED === 'true' || false
 // types
@@ -30,6 +30,12 @@ type Props = {
   hideHeader?: boolean
   /** Suppress the kit footer, for a page that supplies its own. */
   hideFooter?: boolean
+  /**
+   * Suppress the kit navigation, for a page that supplies its own. The Salt
+   * home page renders its nav inside `Hero`; without this it would ship two
+   * navigation landmarks and two competing sets of the same links.
+   */
+  hideNav?: boolean
 }
 
 const showBreadcrumb = Astro.props.showBreadcrumb === undefined ? true : Astro.props.showBreadcrumb
@@ -37,7 +43,7 @@ const showBreadcrumb = Astro.props.showBreadcrumb === undefined ? true : Astro.p
 // Get authentication state from locals
 const { userId } = Astro.locals
 
-const { pageTitle, pageDescription, pageImageUrl, hideHeader, hideFooter } = Astro.props
+const { pageTitle, pageDescription, pageImageUrl, hideHeader, hideFooter, hideNav } = Astro.props
 ---
 
 <html lang="en">
@@ -104,37 +110,41 @@ const { pageTitle, pageDescription, pageImageUrl, hideHeader, hideFooter } = Ast
     <!-- Offline Status Indicator -->
     <!-- <OfflineIndicator /> -->
 
-    <Navigation>
-      {
-        /*
-         * Authenticated-only links render into the default slot, which sits
-         * inside the navigation popover panel. The `userId` check is what
-         * keeps them out of an anonymous response — the popover is
-         * presentational and never an access-control mechanism (CWE-602).
-         */
-        userId && (
-          <ul data-nav-account>
-            <li>
-              <a href="/dashboard">Dashboard</a>
-            </li>
-            <li>
-              <a href="/profile">Profile</a>
+    {
+      !hideNav && (
+        <Navigation>
+          {
+            /*
+             * Authenticated-only links render into the default slot, which sits
+             * inside the navigation popover panel. The `userId` check is what
+             * keeps them out of an anonymous response — the popover is
+             * presentational and never an access-control mechanism (CWE-602).
+             */
+            userId && (
+              <ul data-nav-account>
+                <li>
+                  <a href="/dashboard">Dashboard</a>
+                </li>
+                <li>
+                  <a href="/profile">Profile</a>
+                </li>
+              </ul>
+            )
+          }
+
+          <ul slot="login">
+            <li class="clerk-user-button">
+              <Show when="signed-in">
+                <UserButton />
+              </Show>
+              <Show when="signed-out">
+                <SignInButton mode="modal" />
+              </Show>
             </li>
           </ul>
-        )
-      }
-
-      <ul slot="login">
-        <li class="clerk-user-button">
-          <Show when="signed-in">
-            <UserButton />
-          </Show>
-          <Show when="signed-out">
-            <SignInButton mode="modal" />
-          </Show>
-        </li>
-      </ul>
-    </Navigation>
+        </Navigation>
+      )
+    }
 
     {
       !hideHeader && (
