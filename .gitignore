@@ -37,3 +37,5 @@ backup-docs/
 # Only .impeccable/live/config.json is durable project config and stays tracked.
 .impeccable/live/*
 !.impeccable/live/config.json
+# Generated hook cache (machine-specific: absolute worktree paths, per-session state).
+.impeccable/hook.cache.json

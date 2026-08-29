@@ -7,6 +7,48 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import type { Database } from '#libs/database.types'
 
 /**
+ * The shape Clerk uses for its structured API errors. Only the fields the JWT
+ * template check reads are modelled -- Clerk does not export a type for this,
+ * and widening it would claim more than we can verify.
+ */
+type ClerkApiError = {
+  clerkError?: boolean
+  errors?: Array<{ code?: string; longMessage?: string }>
+}
+
+const JWT_TEMPLATE_MISSING = 'No JWT template exists with name'
+
+/**
+ * Detects a missing Clerk JWT template, which Clerk reports two different ways:
+ * as an `Error` with a descriptive message (development/local) and as a
+ * structured API error object carrying a `clerkError` flag (production/API).
+ * Both are checked so the graceful fallback to anonymous access is reliable
+ * across Clerk SDK versions and environments.
+ *
+ * Narrowing from `unknown` rather than typing the catch binding as `any` keeps
+ * the property reads checked; a caught value is genuinely unknown until proven
+ * otherwise.
+ */
+const isJwtTemplateError = (err: unknown): boolean => {
+  if (err instanceof Error && err.message.includes(JWT_TEMPLATE_MISSING)) {
+    return true
+  }
+
+  if (typeof err !== 'object' || err === null) {
+    return false
+  }
+
+  const { clerkError, errors } = err as ClerkApiError
+  const first = errors?.[0]
+
+  return (
+    Boolean(clerkError) &&
+    first?.code === 'resource_not_found' &&
+    Boolean(first?.longMessage?.includes(JWT_TEMPLATE_MISSING))
+  )
+}
+
+/**
  * Custom React hook for managing authenticated Supabase client with Clerk integration.
  *
  * This hook bridges Clerk authentication with Supabase by obtaining JWT tokens from Clerk
@@ -96,25 +138,8 @@ export function useSupabase() {
         try {
           token = await session.getToken({ template: 'supabase' })
           tokenRef.current = token
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-          /**
-           * Dual error detection pattern for Clerk JWT template availability.
-           *
-           * Clerk returns errors in two formats depending on context:
-           * 1. Standard Error instances with descriptive messages (development/local)
-           * 2. Structured API error objects with clerkError flag (production/API calls)
-           *
-           * This dual check ensures reliable detection across all Clerk SDK versions
-           * and deployment environments, preventing false negatives during error handling.
-           */
-          const isJwtTemplateError =
-            (err instanceof Error && err.message.includes('No JWT template exists with name')) ||
-            (err?.clerkError &&
-              err?.errors?.[0]?.code === 'resource_not_found' &&
-              err?.errors?.[0]?.longMessage?.includes('No JWT template exists with name'))
-
-          if (isJwtTemplateError) {
+        } catch (err: unknown) {
+          if (isJwtTemplateError(err)) {
             console.warn(
               'Clerk JWT template "supabase" not configured. Using anonymous access.',
               'To enable authenticated operations, create a JWT template named "supabase" in your Clerk Dashboard.',
@@ -201,16 +226,9 @@ export function useSupabase() {
             tokenRef.current = newToken
             await initClient()
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
+        } catch (err: unknown) {
           // Silently handle JWT template errors to avoid spamming logs
-          const isJwtTemplateError =
-            (err instanceof Error && err.message.includes('No JWT template exists with name')) ||
-            (err?.clerkError &&
-              err?.errors?.[0]?.code === 'resource_not_found' &&
-              err?.errors?.[0]?.longMessage?.includes('No JWT template exists with name'))
-
-          if (!isJwtTemplateError) {
+          if (!isJwtTemplateError(err)) {
             console.error('Failed to refresh Supabase token:', err)
           }
         }

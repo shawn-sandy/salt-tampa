@@ -14,9 +14,9 @@
  * <Navbar links={[{ label: 'Services', href: '#services' }]} ctaHref="/donate" />
  * ```
  */
-import Wordmark from './Wordmark.astro'
-import NavbarLink from './NavbarLink.astro'
-import PillButton from './PillButton.astro'
+import Wordmark from '#components/astro/salt/Wordmark.astro'
+import NavbarLink from '#components/astro/salt/NavbarLink.astro'
+import PillButton from '#components/astro/salt/PillButton.astro'
 
 export type NavLink = {
   label: string
@@ -51,7 +51,13 @@ const {
     </a>
     <nav class="st-navbar__nav" aria-label={label}>
       {links.map(link => <NavbarLink href={link.href}>{link.label}</NavbarLink>)}
-      {cta && ctaHref && <PillButton size="small" href={ctaHref}>{cta}</PillButton>}
+      {
+        cta && ctaHref && (
+          <PillButton size="small" href={ctaHref}>
+            {cta}
+          </PillButton>
+        )
+      }
     </nav>
   </div>
 </div>

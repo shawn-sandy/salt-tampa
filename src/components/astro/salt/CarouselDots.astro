@@ -7,8 +7,11 @@
  * carousel; the arithmetic is not reproduced here, and callers pass the real
  * slide count.
  *
- * Rendered as a tablist so the dots announce themselves as a set with a
- * selected member rather than as a row of unlabelled buttons.
+ * These are position indicators, not controls: nothing here selects a slide,
+ * so nothing here is focusable. The dots are decorative and the position is
+ * carried by a visually hidden sentence, which is what a screen reader
+ * actually needs. An earlier version rendered `role="tab"` buttons that did
+ * nothing when activated -- a focus stop that leads nowhere.
  *
  * @component CarouselDots
  * @example
@@ -23,29 +26,19 @@ export type Props = {
   active?: number
   /** Diameter in px. */
   size?: number
-  /** Accessible name for the group. */
+  /** Names what is being paged through, used in the hidden position sentence. */
   label?: string
   class?: string
 }
 
-const { count, active = 0, size = 16, label = 'Choose a slide', class: className } = Astro.props as Props
+const { count, active = 0, size = 16, label = 'Slides', class: className } = Astro.props as Props
 ---
 
-<div
-  class:list={['st-dots', className]}
-  role="tablist"
-  aria-label={label}
-  style={`--st-dot-size:${size}px`}
->
+<div class:list={['st-dots', className]} style={`--st-dot-size:${size}px`}>
+  <p class="st-dots__position">{`${label}: showing ${active + 1} of ${count}`}</p>
   {
     Array.from({ length: count }).map((_, i) => (
-      <button
-        type="button"
-        role="tab"
-        aria-selected={i === active ? 'true' : 'false'}
-        aria-label={`Slide ${i + 1} of ${count}`}
-        class:list={['st-dots__dot', i === active && 'is-active']}
-      />
+      <span aria-hidden="true" class:list={['st-dots__dot', i === active && 'is-active']} />
     ))
   }
 </div>
@@ -58,24 +51,28 @@ const { count, active = 0, size = 16, label = 'Choose a slide', class: className
     gap: 15px;
   }
 
+  /* Read by assistive technology, never painted. */
+  .st-dots__position {
+    clip-path: inset(50%);
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
   .st-dots__dot {
     background: var(--st-sage);
-    border: none;
     border-radius: 50%;
-    cursor: pointer;
+    display: block;
+    flex: none;
     height: var(--st-dot-size);
     opacity: 0.45;
-    padding: 0;
-    transition: opacity var(--st-dur-base) var(--st-ease-standard);
     width: var(--st-dot-size);
   }
 
   .st-dots__dot.is-active {
     opacity: 1;
-  }
-
-  .st-dots__dot:focus-visible {
-    outline: 2px solid var(--st-focus-ring);
-    outline-offset: 3px;
   }
 </style>
