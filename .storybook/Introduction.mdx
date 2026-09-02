@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Introduction" />
+
+# astro-basics component workshop
+
+This Storybook renders the **React** components in `src/components/react` and
+`src/components/dashboard` in isolation, with live controls, generated prop
+tables and an accessibility panel.
+
+## What is (and is not) here
+
+| Component type              | Location                   | In Storybook             |
+| --------------------------- | -------------------------- | ------------------------ |
+| React (client)              | `src/components/react`     | Yes                      |
+| Dashboard React (protected) | `src/components/dashboard` | Yes, with mocked props   |
+| Astro (server-rendered)     | `src/components/astro`     | No — see the guide below |
+
+Astro components are server-rendered and have no Storybook framework, so they
+are documented in the Starlight guide at `/guide/components` instead.
+
+## Running it
+
+```bash
+npm run storybook        # dev server on http://localhost:6006
+npm run build-storybook  # static build into storybook-static/
+```
+
+## Writing a story
+
+Stories live next to their component as `<Component>.stories.tsx` and follow
+the project's normal rules:
+
+- Import the component through its `#` path alias, never a relative path.
+- Type the default export with `satisfies Meta<typeof Component>` and each
+  story with `StoryObj<typeof meta>` so args stay type-checked by
+  `npm run type-check`.
+- Prefer components that take plain props. Anything that reads Clerk session
+  state or the database should have that data passed in as props, or be given a
+  presentational sibling (see `ContactForm` and `view/ContactFormView`).
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
+import RoleBadge from '#components/react/RoleBadge'
+
+const meta = {
+  title: 'React/RoleBadge',
+  component: RoleBadge,
+  args: { role: 'member' },
+} satisfies Meta<typeof RoleBadge>
+
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Admin: Story = { args: { role: 'admin' } }
+```
+
+## Accessibility
+
+The `@storybook/addon-a11y` panel runs axe against every story. Violations are
+reported but do not fail the story; treat them as review items alongside the
+`wcag-compliance-reviewer` skill.
