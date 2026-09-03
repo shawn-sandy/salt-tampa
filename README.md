@@ -140,6 +140,10 @@ npm run dev          # Start Astro development server
 npm run start        # Start dev server with Sass watcher
 npm run sass         # Watch and compile SCSS files
 
+# Component Workshop
+npm run storybook        # Start Storybook on port 6006
+npm run build-storybook  # Build static Storybook to storybook-static/
+
 # Build & Deploy
 npm run build        # Build for production
 npm run preview      # Preview production build

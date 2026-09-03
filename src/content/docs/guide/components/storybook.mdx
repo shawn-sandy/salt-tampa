@@ -1,0 +1,159 @@
+---
+title: Storybook
+description: Develop, document and accessibility-test the React component library in isolation.
+---
+
+import { Aside, Code, Steps, Tabs, TabItem } from '@astrojs/starlight/components'
+
+Storybook renders the project's **React** components in isolation, with live
+controls, generated prop tables and an automated accessibility audit.
+
+- **Version:** Storybook 10.6 with the `@storybook/react-vite` framework
+- **Config:** `.storybook/`
+- **Stories:** co-located as `src/components/**/*.stories.tsx`
+
+## Running Storybook
+
+<Tabs>
+  <TabItem label="Develop">
+    <Code code="npm run storybook" lang="bash" />
+    Starts the dev server on [http://localhost:6006](http://localhost:6006) with hot reload.
+  </TabItem>
+  <TabItem label="Build">
+    <Code code="npm run build-storybook" lang="bash" />
+    Produces a static build in `storybook-static/`, which is git-ignored.
+  </TabItem>
+</Tabs>
+
+## What is covered
+
+| Component type          | Location                   | In Storybook            |
+| ----------------------- | -------------------------- | ----------------------- |
+| React (client)          | `src/components/react`     | Yes                     |
+| Astro (server-rendered) | `src/components/astro`     | No                      |
+| Dashboard (protected)   | `src/components/dashboard` | No — all `.astro` today |
+
+<Aside type="note" title="Astro components are not in Storybook">
+  Storybook has no framework for `.astro` files. They are server-rendered and frequently depend on
+  `Astro.locals`, so they are documented in these guide pages instead. When an Astro component wraps
+  a React island, write the story for the island.
+</Aside>
+
+## Writing a story
+
+Stories live next to the component they cover and follow the project's normal
+conventions — `#` path aliases, and full type safety.
+
+```tsx title="src/components/react/RoleBadge.stories.tsx"
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
+import RoleBadge from '#components/react/RoleBadge'
+
+const meta = {
+  title: 'React/RoleBadge',
+  component: RoleBadge,
+  args: { role: 'member' },
+} satisfies Meta<typeof RoleBadge>
+
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Admin: Story = { args: { role: 'admin' } }
+```
+
+<Steps>
+
+1. **Import through the `#` alias.** Relative imports are not allowed, in stories
+   as anywhere else.
+
+2. **Type both ends.** Use `satisfies Meta<typeof Component>` on the default
+   export and `StoryObj<typeof meta>` for each story. Stories live under `src/`,
+   so `npm run type-check` verifies that every story's `args` match the
+   component's props.
+
+3. **Keep stories prop-driven.** A component that reads Clerk session state or
+   the database should take that data as props, or have a presentational sibling
+   to story instead — see `ContactForm` and `view/ContactFormView`.
+
+</Steps>
+
+### Components that read the URL
+
+`@fpkit/react`'s `Breadcrumb` derives its trail from `window.location.pathname`
+and treats its `routes` prop only as a lookup table for segment names. Inside
+Storybook the pathname is always `/iframe.html`, so
+`astro-breadcrumb.stories.tsx` wraps its stories in an `atPath()` decorator that
+patches the URL during the first render and restores it on unmount:
+
+```tsx
+const atPath = (pathname: string): Decorator =>
+  function AtPathDecorator(Story) {
+    const [originalUrl] = useState(() => {
+      const previous = `${window.location.pathname}${window.location.search}`
+      window.history.pushState(null, '', `${pathname}${window.location.search}`)
+      return previous
+    })
+
+    useEffect(
+      () => () => {
+        window.history.replaceState(null, '', originalUrl)
+      },
+      [originalUrl]
+    )
+
+    return <Story />
+  }
+```
+
+Reuse this pattern for any component that reads from `window.location`.
+
+## Styling
+
+`.storybook/preview.ts` loads the same three stylesheets as
+`src/layouts/Base.astro`, so components render identically in both places:
+
+```ts title=".storybook/preview.ts"
+import '@fpkit/acss/styles'
+import '../src/styles/index.scss'
+import '../src/styles/salt/index.css'
+```
+
+The SCSS **source** is imported rather than the compiled `src/styles/index.css`,
+so Storybook never depends on `npm run sass:build` having run first.
+
+## Accessibility
+
+`@storybook/addon-a11y` runs axe against every story and reports findings in the
+**Accessibility** panel. It is configured with `a11y: { test: 'todo' }`, so
+violations are surfaced without failing the story. Treat them as review items
+alongside the `wcag-compliance-reviewer` skill.
+
+## Configuration notes
+
+<Aside type="caution" title="Storybook uses its own Vite config">
+  The root `vite.config.ts` wraps `getViteConfig()` from `astro/config`, which boots the entire
+  Astro pipeline. If Storybook picks it up, the Astro build takes over and Storybook emits an
+  **empty bundle while still reporting success**. `.storybook/main.ts` therefore sets
+  `framework.options.builder.viteConfigPath` to `.storybook/vite.config.ts`.
+</Aside>
+
+That standalone config also restates the project's `#*` path aliases, which
+Storybook cannot read from `astro.config.mjs`. Each top-level `src/` directory is
+aliased individually rather than with a catch-all `#*` pattern, so `#`-prefixed
+subpath imports inside `node_modules` packages keep resolving against their own
+`package.json`.
+
+<Aside type="tip" title="Adding a directory under src/">
+  Add it to the `SRC_ALIASES` array in `.storybook/vite.config.ts`, or imports from it will fail to
+  resolve in Storybook only.
+</Aside>
+
+Story globs are scoped to `src/components` on purpose. A broader `src/**/*.mdx`
+glob sweeps in the Starlight content collection under `src/content`, which
+Storybook cannot index.
+
+## Further reading
+
+- [Storybook integration reference](https://github.com/shawn-sandy/astro-basics/blob/main/project-docs/04-integrations/storybook/README.md)
+- [Storybook documentation](https://storybook.js.org/docs)

@@ -257,6 +257,16 @@ export default [
     },
   },
 
+  // Storybook configuration files (Node context)
+  {
+    files: ['.storybook/**/*.ts', '.storybook/**/*.tsx'],
+    languageOptions: {
+      globals: {
+        URL: 'readonly',
+      },
+    },
+  },
+
   // Ignore patterns
   {
     ignores: [
@@ -264,8 +274,10 @@ export default [
       'node_modules/**',
       '.astro/**',
       '.vercel/**',
+      '.netlify/**',
       'playwright-report/**',
       'test-results/**',
+      'storybook-static/**',
       '*.d.ts',
       '**/*.astro', // Temporarily ignore all Astro files until parser issues are resolved
     ],

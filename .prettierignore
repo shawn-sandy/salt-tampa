@@ -20,3 +20,6 @@ docs/LINTING_GUIDE.md
 docs/PRD/authentication-system-prd.md
 src/content/docs/2-customizing.mdx
 src/content/posts/mdx-example.mdx
+
+# Storybook static build output
+storybook-static/
