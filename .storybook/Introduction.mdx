@@ -4,17 +4,17 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # astro-basics component workshop
 
-This Storybook renders the **React** components in `src/components/react` and
-`src/components/dashboard` in isolation, with live controls, generated prop
-tables and an accessibility panel.
+This Storybook renders the **React** components in `src/components/react` in
+isolation, with live controls, generated prop tables and an accessibility
+panel.
 
 ## What is (and is not) here
 
-| Component type              | Location                   | In Storybook             |
-| --------------------------- | -------------------------- | ------------------------ |
-| React (client)              | `src/components/react`     | Yes                      |
-| Dashboard React (protected) | `src/components/dashboard` | Yes, with mocked props   |
-| Astro (server-rendered)     | `src/components/astro`     | No — see the guide below |
+| Component type          | Location                   | In Storybook             |
+| ----------------------- | -------------------------- | ------------------------ |
+| React (client)          | `src/components/react`     | Yes                      |
+| Astro (server-rendered) | `src/components/astro`     | No — see the guide below |
+| Dashboard (protected)   | `src/components/dashboard` | No — all `.astro` today  |
 
 Astro components are server-rendered and have no Storybook framework, so they
 are documented in the Starlight guide at `/guide/components` instead.

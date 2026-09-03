@@ -11,13 +11,20 @@
  */
 
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 import AstroBreadcrumb from '#components/react/astro-breadcrumb'
 
 /**
  * Simulates the browser being on `pathname` while a story is mounted, then
  * restores Storybook's own URL on unmount.
+ *
+ * The patch runs in a layout effect rather than during render: layout effects
+ * all fire before any passive effect, so the URL is in place before the
+ * breadcrumb's own mount effect reads `window.location.pathname`, without
+ * making the render phase impure. `replaceState` is used rather than
+ * `pushState` so repeated mounts — React Strict Mode remounts every component
+ * once in development — cannot stack up history entries.
  *
  * The story's `?id=` query string is preserved so Storybook can still resolve
  * the story on reload.
@@ -27,21 +34,18 @@ import AstroBreadcrumb from '#components/react/astro-breadcrumb'
  */
 const atPath = (pathname: string): Decorator =>
   function AtPathDecorator(Story) {
-    // Patch the URL during the first render — before the breadcrumb's mount
-    // effect reads `window.location.pathname` — and remember the URL to put
-    // back when the story unmounts.
-    const [originalUrl] = useState(() => {
-      const previous = `${window.location.pathname}${window.location.search}`
-      window.history.pushState(null, '', `${pathname}${window.location.search}`)
-      return previous
-    })
+    const originalUrl = useRef<string | null>(null)
 
-    useEffect(
-      () => () => {
-        window.history.replaceState(null, '', originalUrl)
-      },
-      [originalUrl]
-    )
+    useLayoutEffect(() => {
+      originalUrl.current = `${window.location.pathname}${window.location.search}`
+      window.history.replaceState(null, '', `${pathname}${window.location.search}`)
+
+      return () => {
+        if (originalUrl.current !== null) {
+          window.history.replaceState(null, '', originalUrl.current)
+        }
+      }
+    }, [])
 
     return <Story />
   }

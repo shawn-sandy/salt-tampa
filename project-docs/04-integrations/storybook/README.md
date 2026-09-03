@@ -19,11 +19,11 @@ npm run build-storybook  # Produce a static build in storybook-static/
 
 ## What is covered
 
-| Component type              | Location                   | In Storybook            |
-| --------------------------- | -------------------------- | ----------------------- |
-| React (client)              | `src/components/react`     | Yes                     |
-| Dashboard React (protected) | `src/components/dashboard` | Yes, with mocked props  |
-| Astro (server-rendered)     | `src/components/astro`     | No — see the note below |
+| Component type          | Location                   | In Storybook            |
+| ----------------------- | -------------------------- | ----------------------- |
+| React (client)          | `src/components/react`     | Yes                     |
+| Astro (server-rendered) | `src/components/astro`     | No — see the note below |
+| Dashboard (protected)   | `src/components/dashboard` | No — all `.astro` today |
 
 Storybook has no framework for Astro components. `.astro` files are
 server-rendered and often depend on `Astro.locals`, so they are documented in
@@ -110,6 +110,19 @@ Requirements:
   or the database should receive that data as props, or have a presentational
   sibling to story instead (see `ContactForm` and `view/ContactFormView`).
 
+### Components that submit forms
+
+`ContactForm.stories.tsx` uses a `preventNativeSubmit` decorator that replaces
+`HTMLFormElement.prototype.submit` with a no-op while a story is mounted.
+`ContactForm` calls `form.submit()` directly, which is a native DOM call that
+`preventDefault()` cannot stop.
+
+That stops the POST only. On valid input the component then assigns
+`window.location.href = '/success'`, which still navigates the preview iframe —
+page code cannot intercept that assignment. The `ValidationErrors` and
+`InvalidEmail` stories drive the form through `play` functions and never reach
+that branch, so they exercise the validation summary in place.
+
 ### Components that read the URL
 
 `@fpkit/react`'s `Breadcrumb` builds its trail from `window.location.pathname`
@@ -118,6 +131,15 @@ Storybook the pathname is always `/iframe.html`, so
 `astro-breadcrumb.stories.tsx` uses an `atPath()` decorator that patches the URL
 during the first render and restores it on unmount. Reuse that pattern for any
 component that reads location.
+
+## Documenting Storybook in the Starlight guide
+
+`src/content/docs/guide/components/storybook.mdx` uses Starlight's `<Code>`
+component for the commands inside `<Tabs>`, not Markdown fences. Prettier
+collapses a fenced block that is indented inside JSX onto a single line
+(` ```bash npm run storybook ``` `), which stops it rendering as a code block.
+For the same reason, avoid `{/* ... */}` MDX comments in that file — Prettier
+rewrites the asterisks as Markdown emphasis and produces invalid MDX.
 
 ## Accessibility
 

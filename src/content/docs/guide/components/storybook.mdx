@@ -16,22 +16,22 @@ controls, generated prop tables and an automated accessibility audit.
 
 <Tabs>
   <TabItem label="Develop">
-    ```bash npm run storybook ``` Starts the dev server on
-    [http://localhost:6006](http://localhost:6006) with hot reload.
+    <Code code="npm run storybook" lang="bash" />
+    Starts the dev server on [http://localhost:6006](http://localhost:6006) with hot reload.
   </TabItem>
   <TabItem label="Build">
-    ```bash npm run build-storybook ``` Produces a static build in `storybook-static/`, which is
-    git-ignored.
+    <Code code="npm run build-storybook" lang="bash" />
+    Produces a static build in `storybook-static/`, which is git-ignored.
   </TabItem>
 </Tabs>
 
 ## What is covered
 
-| Component type              | Location                   | In Storybook           |
-| --------------------------- | -------------------------- | ---------------------- |
-| React (client)              | `src/components/react`     | Yes                    |
-| Dashboard React (protected) | `src/components/dashboard` | Yes, with mocked props |
-| Astro (server-rendered)     | `src/components/astro`     | No                     |
+| Component type          | Location                   | In Storybook            |
+| ----------------------- | -------------------------- | ----------------------- |
+| React (client)          | `src/components/react`     | Yes                     |
+| Astro (server-rendered) | `src/components/astro`     | No                      |
+| Dashboard (protected)   | `src/components/dashboard` | No — all `.astro` today |
 
 <Aside type="note" title="Astro components are not in Storybook">
   Storybook has no framework for `.astro` files. They are server-rendered and frequently depend on

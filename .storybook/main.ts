@@ -1,10 +1,10 @@
 /**
  * Storybook configuration for astro-basics.
  *
- * Storybook renders the project's React components (`src/components/react`,
- * `src/components/dashboard`) through the Vite builder. Astro (`.astro`)
- * components are server-rendered and are not supported by Storybook — document
- * those in the Starlight guide instead.
+ * Storybook renders the project's React components (`src/components/react`)
+ * through the Vite builder. Astro (`.astro`) components — including everything
+ * in `src/components/astro` and `src/components/dashboard` — are server-rendered
+ * and are not supported by Storybook; document those in the Starlight guide.
  *
  * @module .storybook/main
  */
