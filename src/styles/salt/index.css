@@ -23,3 +23,10 @@
 @import './_spacing.css';
 @import './_effects.css';
 @import './_base.css';
+
+/*
+ * The homepage `--salt-*` layer. Separate from the `--st-*` files above: see
+ * the header of _salt-tokens.css for why the two sets are not merged.
+ */
+@import './_salt-tokens.css';
+@import './_salt-patterns.css';

@@ -1,0 +1,165 @@
+/*
+ * Salt Tampa homepage design tokens (`--salt-*`).
+ *
+ * Transcribed from the Claude Design canvas "Salt Tampa Homepage.html", whose
+ * readable source is the 50 KB template inside its `<script
+ * type="__bundler/template">` tag. The canvas declares 41 tokens; all 41 are
+ * reproduced here.
+ *
+ * This set is deliberately SEPARATE from the `--st-*` set in the sibling files
+ * of this folder. The two describe different generations of the same brand at
+ * materially different scales -- 14px body against 16px, a 34px section
+ * heading against 48px, a 10px photo radius against 20px. Folding them
+ * together would silently reflow the shipped home page, which renders on
+ * `--st-*`. No variable name is shared between the two, so both can coexist.
+ *
+ * DEVIATIONS FROM THE DESIGN FILE -- every one is listed inline below, next to
+ * the drawn value it replaces. There are two kinds:
+ *
+ *   1. Legibility floor (2 tokens). The design's two smallest sizes sit below
+ *      the 12px floor this library ships.
+ *   2. Measured contrast failures (5 tokens, plus 1 addition). Every ratio
+ *      below was measured with axe-core against the rendered Storybook page,
+ *      not estimated. The design's terracotta carries white 13px button labels
+ *      and 16px band copy at 3.23:1 where WCAG 1.4.3 asks for 4.5:1, and its
+ *      badge text sits at 4.33:1 on its own tint. Each colour is darkened by
+ *      the SMALLEST amount that clears the threshold, so the palette stays
+ *      recognisably itself.
+ *
+ * @module styles/salt/_salt-tokens
+ */
+:root {
+  /* Brand */
+
+  /*
+   * DEVIATION -- contrast. The design draws this at #d97347, which carries
+   * white text at only 3.23:1. Darkened to the lightest value on the same hue
+   * that reaches 4.5:1; measured at 4.61:1 against white.
+   */
+  --salt-orange: #b25e3a; /* primary action, accents; design: #d97347 */
+  --salt-orange-hover: #9f4e2c; /* 5.83:1 with white; design: #c25f36 */
+  --salt-orange-tint: #fdf0e9; /* badge background */
+
+  /*
+   * DEVIATION -- contrast. The design draws this at #b8542c, which reads at
+   * 4.33:1 on --salt-orange-tint. Measured at 4.53:1 after darkening.
+   */
+  --salt-orange-deep: #b3522b; /* badge text; design: #b8542c */
+  --salt-green: #2f6b5e; /* footer wordmark */
+
+  /*
+   * DEVIATION -- contrast. The design draws this at #5e8f7e, which carries the
+   * white gallery arrows at 3.68:1. Measured at 4.52:1 after darkening.
+   */
+  --salt-sage: #547f70; /* gallery carousel arrows; design: #5e8f7e */
+  --salt-sage-hover: #456d5e; /* 5.83:1 with white; design: #4d7a6a */
+
+  /* Neutrals */
+  --salt-ink: #18181b; /* headings */
+  --salt-body: #71717a; /* body copy */
+  --salt-muted: #a1a1aa; /* legal, counters */
+  --salt-slate: #52525b; /* footer links */
+  --salt-graphite: #3f3f46; /* secondary button label */
+  --salt-line: #e4e4e7; /* hairlines */
+  --salt-line-strong: #d4d4d8; /* input borders */
+  --salt-surface: #fff;
+  --salt-surface-alt: #f4f4f5; /* button hover */
+
+  /* Overlays (photo scrims) */
+  --salt-scrim-hero: linear-gradient(
+    180deg,
+    rgb(20, 32, 45, 0.3) 0%,
+    rgb(20, 32, 45, 0.05) 30%,
+    rgb(20, 32, 45, 0.1) 62%,
+    rgb(20, 32, 45, 0.42) 100%
+  );
+
+  /*
+   * DEVIATION -- contrast. The design draws this at 0.42 alpha. Measured
+   * against the lightest pixel of the donate photograph, that leaves the 16px
+   * body copy at 3.46:1. At 0.58 the same measurement reads 4.52:1.
+   */
+  --salt-scrim-flat: rgb(16, 20, 26, 0.58); /* design: 0.42 alpha */
+
+  /*
+   * ADDITION -- not in the design, which leaves the navigation bar fully
+   * transparent over the hero photograph. White 13px links over an arbitrary
+   * photograph have no guaranteed contrast at all; axe measured them at 1.09:1
+   * against the page ground. This backdrop puts a floor under them: composited
+   * over the lightest possible photograph it still reads 5.44:1.
+   */
+  --salt-scrim-header: rgb(16, 20, 26, 0.62);
+  --salt-scrim-caption: linear-gradient(
+    180deg,
+    rgb(9, 12, 16, 0) 0%,
+    rgb(9, 12, 16, 0.82) 55%,
+    rgb(9, 12, 16, 0.94) 100%
+  );
+
+  /*
+   * ADDITION -- not in the design. --salt-scrim-hero covers the whole
+   * photograph and is deliberately light at the top so the skyline reads, but
+   * that leaves the hero's own white text at 1.39:1 over a bright sky
+   * (measured against the lightest pixel under it). This second scrim darkens
+   * only the band the text actually sits in, where the same measurement then
+   * reads 4.5:1 or better, and leaves the top of the photograph alone.
+   */
+  --salt-scrim-hero-text: linear-gradient(
+    180deg,
+    rgb(20, 32, 45, 0) 25%,
+    rgb(20, 32, 45, 0.75) 60%
+  );
+  --salt-scrim-quote: linear-gradient(
+    180deg,
+    rgb(12, 16, 22, 0.2) 0%,
+    rgb(12, 16, 22, 0.55) 70%,
+    rgb(12, 16, 22, 0.72) 100%
+  );
+
+  /* Type */
+  --salt-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /*
+   * DEVIATION -- legibility floor. The design draws this at 10.5px.
+   * It carries the footer's legal row and the copyright line, which are the
+   * smallest running text on the page. A design system that ships a sub-12px
+   * floor makes it permanent on every page built on it.
+   */
+  --salt-text-xs: 12px; /* legal; design: 10.5px */
+
+  /*
+   * DEVIATION -- legibility floor. The design draws this at 12.5px.
+   * It carries service-card body copy and the footer navigation, which is
+   * running prose rather than a label.
+   */
+  --salt-text-sm: 14px; /* card body, footer links; design: 12.5px */
+  --salt-text-base: 14px; /* section intro */
+  --salt-text-md: 16px; /* mission + vision copy */
+  --salt-text-ui: 13px; /* nav, buttons */
+  --salt-text-card: 15px; /* card titles */
+  --salt-text-h2: 34px; /* section headings */
+  --salt-text-h2-sm: 30px; /* orange band, partners */
+  --salt-text-display: 46px; /* donate headline */
+  --salt-text-logo: 104px; /* hero SALT TAMPA */
+
+  /* Radius */
+  --salt-radius-sm: 4px; /* photo cards, inputs */
+  --salt-radius-md: 6px; /* buttons */
+  --salt-radius-lg: 10px; /* service photos */
+  --salt-radius-full: 9999px; /* pills, round arrows */
+
+  /* Layout */
+  --salt-gutter: 40px; /* horizontal page padding */
+  --salt-section-y: 88px; /* standard section top padding */
+  --salt-max-narrow: 720px; /* mission + vision */
+  --salt-max-content: 980px; /* card grids, partners */
+  --salt-max-wide: 1080px; /* footer */
+
+  /* Elevation */
+  --salt-shadow-btn: 0 1px 2px rgb(0, 0, 0, 0.12);
+
+  /* Minimum pointer target, WCAG 2.5.8. The design draws its round
+   * previous/next controls at 34px; the visual size is kept and the hit box is
+   * grown to this value with a centred overlay. */
+  --salt-target-min: 44px;
+}

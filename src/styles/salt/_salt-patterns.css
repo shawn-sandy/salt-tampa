@@ -1,0 +1,1037 @@
+/*
+ * Salt Tampa homepage pattern classes (`.salt-*`).
+ *
+ * Every component under src/components/react/salt/ styles itself from this
+ * file. Values come from _salt-tokens.css; nothing here hard-codes a colour or
+ * a size that a token already names.
+ *
+ * DOUBLED SELECTORS -- `.salt-x.salt-x` is not a typo. `@fpkit/acss` declares
+ * `a[href] { background-color; border-radius; color; font-size; font-weight }`
+ * at specificity (0,1,1). A single class is (0,1,0) and loses all five; the
+ * measurement is recorded in the plan's Decisions section. Doubling the class
+ * reaches (0,2,0) and wins. Only classes that can land on an `<a href>` are
+ * doubled; `<button>` and `<span>` patterns need no such help, because a bare
+ * element selector is only (0,0,1).
+ *
+ * @module styles/salt/_salt-patterns
+ */
+
+/* ── Page shell ─────────────────────────────────────────────────────────── */
+
+.salt-page {
+  background: var(--salt-surface);
+  color: var(--salt-ink);
+  font-family: var(--salt-font);
+}
+
+.salt-section {
+  padding: var(--salt-section-y) var(--salt-gutter) 96px;
+}
+
+/* ── Action: one control, four flavours ─────────────────────────────────── */
+
+.salt-action.salt-action {
+  align-items: center;
+  border: 0;
+  border-radius: var(--salt-radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: var(--salt-text-ui);
+  font-weight: 500;
+  gap: 8px;
+  height: 34px;
+  justify-content: center;
+  padding: 0 20px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.salt-action.salt-action:focus-visible {
+  outline: 2px solid var(--salt-ink);
+  outline-offset: 2px;
+}
+
+.salt-action--solid.salt-action--solid {
+  background-color: var(--salt-orange);
+  box-shadow: var(--salt-shadow-btn);
+  color: var(--salt-surface);
+}
+
+.salt-action--solid.salt-action--solid:hover:not([disabled]) {
+  background-color: var(--salt-orange-hover);
+}
+
+.salt-action--ghost.salt-action--ghost {
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--salt-graphite);
+  padding: 0 6px;
+}
+
+.salt-action--ghost.salt-action--ghost:hover:not([disabled]) {
+  color: var(--salt-ink);
+}
+
+.salt-action--light.salt-action--light {
+  background-color: var(--salt-surface);
+  box-shadow: var(--salt-shadow-btn);
+  color: var(--salt-graphite);
+}
+
+.salt-action--light.salt-action--light:hover:not([disabled]) {
+  background-color: var(--salt-surface-alt);
+  color: var(--salt-ink);
+}
+
+.salt-action--pill.salt-action--pill {
+  background-color: var(--salt-surface);
+  border-radius: var(--salt-radius-full);
+  color: var(--salt-slate);
+  padding: 0 22px;
+}
+
+.salt-action--pill.salt-action--pill:hover:not([disabled]) {
+  background-color: var(--salt-surface-alt);
+  color: var(--salt-ink);
+}
+
+.salt-action.salt-action[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.salt-action__arrow {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ── Badge ──────────────────────────────────────────────────────────────── */
+
+.salt-badge {
+  align-items: center;
+  background-color: var(--salt-orange-tint);
+  border-radius: var(--salt-radius-full);
+  color: var(--salt-orange-deep);
+  display: inline-flex;
+  font-size: var(--salt-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── IconButton ─────────────────────────────────────────────────────────── */
+
+/*
+ * Doubled for the same reason the action control is, and measured the same
+ * way: `@fpkit/acss` styles `button[type]` at (0,1,1), and plain `button` adds
+ * `padding-inline: calc(font-size * 1.5)`. A single class lost both -- the
+ * control measured 45x34px with 22.5px of side padding instead of the drawn
+ * 34x34px circle, and its fill came from acss rather than from the tone
+ * modifier.
+ */
+.salt-icon-button.salt-icon-button {
+  align-items: center;
+  border: 0;
+  border-radius: var(--salt-radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  flex: none;
+  font-family: inherit;
+  font-size: 14px;
+  height: 34px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  position: relative;
+  width: 34px;
+}
+
+/*
+ * The design draws these at 34px. WCAG 2.5.8 asks for a 44x44px pointer
+ * target, so the drawn circle is kept and an invisible, centred overlay grows
+ * the hit box to `--salt-target-min` without moving anything on screen.
+ */
+.salt-icon-button.salt-icon-button::after {
+  content: '';
+  height: var(--salt-target-min);
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--salt-target-min);
+}
+
+.salt-icon-button.salt-icon-button:focus-visible {
+  outline: 2px solid var(--salt-ink);
+  outline-offset: 3px;
+}
+
+.salt-icon-button--orange.salt-icon-button--orange {
+  background-color: var(--salt-orange);
+  color: var(--salt-surface);
+}
+
+.salt-icon-button--orange.salt-icon-button--orange:hover {
+  background-color: var(--salt-orange-hover);
+}
+
+.salt-icon-button--sage.salt-icon-button--sage {
+  background-color: var(--salt-sage);
+  color: var(--salt-surface);
+}
+
+.salt-icon-button--sage.salt-icon-button--sage:hover {
+  background-color: var(--salt-sage-hover);
+}
+
+.salt-icon-button--outline.salt-icon-button--outline {
+  background-color: rgb(255, 255, 255, 0.12);
+  border: 1px solid rgb(255, 255, 255, 0.55);
+  color: var(--salt-surface);
+}
+
+.salt-icon-button--outline.salt-icon-button--outline:hover {
+  background-color: var(--salt-orange);
+  border-color: var(--salt-orange);
+}
+
+.salt-icon-button--outline.salt-icon-button--outline:focus-visible {
+  outline-color: var(--salt-surface);
+}
+
+/* ── ImageSlot ──────────────────────────────────────────────────────────── */
+
+.salt-image-slot {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.salt-image-slot--rounded {
+  border-radius: var(--salt-radius-lg);
+}
+
+.salt-image-slot--rect {
+  border-radius: 0;
+}
+
+.salt-image-slot__img {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.salt-image-slot--cover .salt-image-slot__img {
+  object-fit: cover;
+}
+
+.salt-image-slot--contain .salt-image-slot__img {
+  object-fit: contain;
+}
+
+.salt-image-slot__empty {
+  align-items: center;
+  background-color: var(--salt-surface-alt);
+  border: 1px dashed var(--salt-line-strong);
+  border-radius: inherit;
+  box-sizing: border-box;
+  color: var(--salt-slate);
+  display: flex;
+  font-size: var(--salt-text-xs);
+  height: 100%;
+  justify-content: center;
+  padding: 8px;
+  text-align: center;
+  width: 100%;
+}
+
+/* ── Wordmark ───────────────────────────────────────────────────────────── */
+
+.salt-wordmark.salt-wordmark {
+  align-items: center;
+  background-color: transparent;
+  color: currentcolor;
+  display: inline-flex;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.salt-wordmark__glyph {
+  fill: currentcolor;
+  flex: none;
+}
+
+.salt-wordmark__word {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.salt-wordmark--nav.salt-wordmark--nav {
+  color: var(--salt-surface);
+}
+
+.salt-wordmark--nav .salt-wordmark__word {
+  font-size: 20px;
+}
+
+.salt-wordmark--footer.salt-wordmark--footer {
+  color: var(--salt-green);
+}
+
+.salt-wordmark--footer .salt-wordmark__word {
+  font-size: 18px;
+}
+
+/* ── SocialLinks ────────────────────────────────────────────────────────── */
+
+.salt-social {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.salt-social__link.salt-social__link {
+  align-items: center;
+  background-color: transparent;
+  border-radius: var(--salt-radius-full);
+  display: inline-flex;
+  height: var(--salt-target-min);
+  justify-content: center;
+  width: var(--salt-target-min);
+}
+
+.salt-social--light .salt-social__link.salt-social__link {
+  color: rgb(255, 255, 255, 0.9);
+}
+
+.salt-social--light .salt-social__link.salt-social__link:hover {
+  color: var(--salt-surface);
+}
+
+.salt-social--dark .salt-social__link.salt-social__link {
+  color: var(--salt-slate);
+}
+
+.salt-social--dark .salt-social__link.salt-social__link:hover {
+  color: var(--salt-ink);
+}
+
+/* ── SectionIntro ───────────────────────────────────────────────────────── */
+
+.salt-section-intro {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0 auto;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.salt-section-intro__heading {
+  color: var(--salt-ink);
+  font-size: var(--salt-text-h2);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.salt-section-intro__lead {
+  color: var(--salt-body);
+  font-size: var(--salt-text-base);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 640px;
+  text-wrap: pretty;
+}
+
+.salt-section-intro__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* ── ServiceCard + grid ─────────────────────────────────────────────────── */
+
+.salt-card-grid {
+  display: grid;
+  gap: 44px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 56px auto 0;
+  max-width: var(--salt-max-content);
+}
+
+.salt-service-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.salt-service-card__media {
+  height: 250px;
+  position: relative;
+}
+
+.salt-service-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.salt-service-card__title-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.salt-service-card__title {
+  color: var(--salt-ink);
+  font-size: var(--salt-text-card);
+  font-weight: 700;
+  margin: 0;
+}
+
+.salt-service-card__body {
+  color: var(--salt-body);
+  font-size: var(--salt-text-sm);
+  line-height: 1.6;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* ── MissionPanel ───────────────────────────────────────────────────────── */
+
+.salt-mission-band {
+  background: var(--salt-orange);
+  color: var(--salt-surface);
+  padding: 96px var(--salt-gutter);
+}
+
+.salt-mission-band__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  margin: 0 auto;
+  max-width: var(--salt-max-narrow);
+}
+
+.salt-mission {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.salt-mission__heading {
+  color: var(--salt-surface);
+  font-size: var(--salt-text-h2-sm);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-align: center;
+}
+
+.salt-mission__body {
+  color: var(--salt-surface);
+  font-size: var(--salt-text-md);
+  line-height: 1.7;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* ── Team ───────────────────────────────────────────────────────────────── */
+
+.salt-team-slider {
+  align-items: center;
+  display: grid;
+  gap: 44px;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  margin: 52px auto 0;
+  max-width: 900px;
+}
+
+.salt-team-card {
+  border-radius: var(--salt-radius-sm);
+  height: 400px;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.salt-team-card__photo {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.salt-team-card__caption {
+  align-items: center;
+  background: var(--salt-scrim-caption);
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  left: 0;
+  padding: 24px 16px 12px;
+  position: absolute;
+  right: 0;
+}
+
+.salt-team-card__name {
+  color: var(--salt-surface);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.salt-team-card__role {
+  color: var(--salt-surface);
+  font-size: 12px;
+}
+
+.salt-team-bio {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+.salt-team-bio__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.salt-team-bio__name {
+  color: var(--salt-ink);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.salt-team-bio__role {
+  color: var(--salt-orange-deep);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.salt-team-bio__text {
+  color: var(--salt-body);
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 0;
+  text-wrap: pretty;
+  white-space: pre-line;
+}
+
+.salt-team-bio__controls {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.salt-team-bio__counter {
+  color: var(--salt-slate);
+  font-size: 12px;
+}
+
+/* ── TestimonialPanel ───────────────────────────────────────────────────── */
+
+.salt-testimonial {
+  border-radius: var(--salt-radius-sm);
+  height: 460px;
+  margin: 0 auto;
+  max-width: var(--salt-max-content);
+  overflow: hidden;
+  position: relative;
+}
+
+.salt-testimonial__scrim {
+  background: var(--salt-scrim-quote);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.salt-testimonial__content {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inset: 0;
+  justify-content: flex-end;
+  padding: 48px;
+  position: absolute;
+}
+
+.salt-testimonial__eyebrow {
+  color: var(--salt-surface);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.salt-testimonial__quote {
+  color: var(--salt-surface);
+  font-size: var(--salt-text-h2-sm);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0;
+  max-width: 760px;
+  text-wrap: pretty;
+}
+
+.salt-testimonial__controls {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+/* ── GalleryStrip ───────────────────────────────────────────────────────── */
+
+.salt-gallery {
+  overflow: hidden;
+  padding: var(--salt-section-y) 0 64px;
+}
+
+.salt-gallery__tiles {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  width: 100%;
+}
+
+.salt-gallery__tile {
+  background-color: var(--salt-surface-alt);
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 2px 14px rgb(0, 0, 0, 0.1);
+  flex: 1 1 0;
+  height: 400px;
+  min-width: 0;
+}
+
+.salt-gallery__controls {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+/* ── PartnerGrid ────────────────────────────────────────────────────────── */
+
+.salt-partners {
+  padding: 24px var(--salt-gutter) var(--salt-section-y);
+}
+
+.salt-partners__inner {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  margin: 0 auto;
+  max-width: var(--salt-max-content);
+}
+
+.salt-partners__heading {
+  color: var(--salt-ink);
+  font-size: var(--salt-text-h2-sm);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.salt-partners__grid {
+  align-items: center;
+  display: grid;
+  gap: 40px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
+  width: 100%;
+}
+
+.salt-partners__slot {
+  height: 56px;
+  position: relative;
+  width: 100%;
+}
+
+/* ── SiteHeader ─────────────────────────────────────────────────────────── */
+
+.salt-header {
+  align-items: center;
+  background: var(--salt-scrim-header);
+  color: var(--salt-surface);
+  display: flex;
+  gap: 32px;
+  justify-content: space-between;
+  left: 0;
+  padding: 22px var(--salt-gutter);
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
+}
+
+.salt-header__nav {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 34px;
+  justify-content: flex-end;
+}
+
+.salt-header__link.salt-header__link {
+  align-items: center;
+  background-color: transparent;
+  color: var(--salt-surface);
+  display: inline-flex;
+  font-size: var(--salt-text-ui);
+  font-weight: 500;
+  min-height: var(--salt-target-min);
+  text-decoration: none;
+}
+
+.salt-header__link.salt-header__link:hover {
+  text-decoration: underline;
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+
+.salt-hero {
+  background: var(--salt-slate);
+  min-height: 460px;
+  overflow: hidden;
+  position: relative;
+}
+
+.salt-hero__image {
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center top;
+  position: absolute;
+  width: 100%;
+}
+
+.salt-hero__scrim {
+  background: var(--salt-scrim-hero);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.salt-hero__content {
+  align-items: center;
+  background: var(--salt-scrim-hero-text);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-end;
+  min-height: 460px;
+  padding: 120px var(--salt-gutter) 48px;
+  position: relative;
+  text-align: center;
+}
+
+/*
+ * The design sizes hero type in `cqw`, which renders the eyebrow at roughly
+ * five pixels on a 320px phone. Fixed sizes replace it; see step 11.
+ */
+.salt-hero__eyebrow {
+  color: var(--salt-surface);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.salt-hero__headline {
+  color: var(--salt-surface);
+  font-size: 40px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.salt-hero__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* ── DonateBand ─────────────────────────────────────────────────────────── */
+
+.salt-donate {
+  background: var(--salt-slate);
+  min-height: 420px;
+  overflow: hidden;
+  position: relative;
+}
+
+.salt-donate__image {
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
+}
+
+.salt-donate__scrim {
+  background: var(--salt-scrim-flat);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.salt-donate__content {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: var(--salt-max-narrow);
+  min-height: 420px;
+  padding: 72px var(--salt-gutter);
+  position: relative;
+  text-align: center;
+}
+
+.salt-donate__heading {
+  color: var(--salt-surface);
+  font-size: var(--salt-text-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.salt-donate__body {
+  color: var(--salt-surface);
+  font-size: var(--salt-text-md);
+  line-height: 1.7;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* ── SiteFooter ─────────────────────────────────────────────────────────── */
+
+.salt-footer {
+  background: var(--salt-surface);
+  border-top: 1px solid var(--salt-line);
+  padding: 56px var(--salt-gutter) 28px;
+}
+
+.salt-footer__top {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: var(--salt-max-wide);
+}
+
+.salt-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+.salt-footer__nav {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.salt-footer__link.salt-footer__link {
+  align-items: center;
+  background-color: transparent;
+  color: var(--salt-slate);
+  display: inline-flex;
+  font-size: var(--salt-text-sm);
+  font-weight: 400;
+  min-height: var(--salt-target-min);
+  text-decoration: none;
+}
+
+.salt-footer__link.salt-footer__link:hover {
+  color: var(--salt-ink);
+  text-decoration: underline;
+}
+
+.salt-footer__legal {
+  align-items: center;
+  border-top: 1px solid var(--salt-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: space-between;
+  margin: 40px auto 0;
+  max-width: var(--salt-max-wide);
+  padding-top: 20px;
+}
+
+.salt-footer__legal-nav {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.salt-footer__legal-link.salt-footer__legal-link {
+  align-items: center;
+  background-color: transparent;
+  color: var(--salt-body);
+  display: inline-flex;
+  font-size: var(--salt-text-xs);
+  font-weight: 400;
+  min-height: var(--salt-target-min);
+  text-decoration: underline;
+}
+
+.salt-footer__legal-link.salt-footer__legal-link:hover {
+  color: var(--salt-ink);
+}
+
+.salt-footer__copyright {
+  color: var(--salt-body);
+  font-size: var(--salt-text-xs);
+}
+
+/* ── Slide motion ───────────────────────────────────────────────────────── */
+
+/*
+ * The design specifies no motion. An instant content swap at this size reads
+ * as a glitch, so slides cross-fade -- but only for people who have not asked
+ * their system for reduced motion. Everything lives inside the
+ * `no-preference` query, so under `reduce` no transition is declared at all
+ * and `transition-duration` computes to `0s`.
+ *
+ * `@starting-style` supplies the "from" value, so the fade needs no JavaScript
+ * state: each slide carries a React `key`, so a change remounts the element
+ * and the browser animates it in from `opacity: 0`.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .salt-slide {
+    transition: opacity 240ms ease;
+  }
+
+  @starting-style {
+    .salt-slide {
+      opacity: 0;
+    }
+  }
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (width <= 900px) {
+  .salt-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .salt-team-slider {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .salt-partners__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width <= 640px) {
+  .salt-card-grid {
+    gap: 32px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .salt-section,
+  .salt-partners {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .salt-header {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .salt-header__nav {
+    gap: 18px;
+  }
+
+  .salt-hero__content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .salt-hero__headline {
+    font-size: 28px;
+  }
+
+  .salt-donate__heading {
+    font-size: 32px;
+  }
+
+  .salt-testimonial__content {
+    padding: 24px;
+  }
+
+  .salt-testimonial__quote {
+    font-size: 22px;
+  }
+
+  .salt-gallery__tile {
+    height: 260px;
+  }
+}
+
+/*
+ * Phone widths. The hero's two calls to action fit side by side at 320px only
+ * because their labels are short; stacking them makes the layout independent
+ * of the copy and gives each a full-width target.
+ */
+@media (width <= 420px) {
+  .salt-hero__actions {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .salt-partners__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
