@@ -2,10 +2,22 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["astro", "dev", "--port", "4327"],
+      "port": 4327
+    },
+    {
       "name": "storybook",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "storybook", "--", "--no-open", "--quiet"],
       "port": 6006
+    },
+    {
+      "name": "storybook-wt",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["storybook", "dev", "-p", "6017", "--no-open", "--quiet"],
+      "port": 6017
     }
   ]
 }
