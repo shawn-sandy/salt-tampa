@@ -67,13 +67,20 @@ const NAV_LINKS = [
 ]
 
 /*
- * INTERIM. There is no giving URL anywhere in the repo and no donate route, so
- * the appeal's button points at the contact page: someone who wants to give
- * can still reach a human. It is the wrong destination for a button labelled
- * "Donate" and needs replacing with the real giving link before launch.
+ * INTERIM, and the label says so.
  *
- * The navbar chip is a different case: it scrolls to the appeal itself, which
- * is what the design does and is a real destination either way.
+ * There is no giving URL anywhere in this repo and no donate route, so the
+ * appeal's button points at the contact page: someone who wants to give can
+ * still reach a human. A button labelled "Donate" that opens a general contact
+ * form promises a giving flow that does not exist, so the design's label is
+ * not used here -- `actionLabel` reads "Contact us to give" until there is
+ * something to send people to.
+ *
+ * When the real giving URL arrives, set it here and restore `actionLabel` to
+ * the design's "Donate". Two lines.
+ *
+ * The navbar chip is a different case and keeps the design's wording: it
+ * scrolls to the appeal on this page, which is a real destination.
  */
 const DONATE_HREF = CONTACT_HREF
 
@@ -176,6 +183,29 @@ const COPYRIGHT = `${new Date().getFullYear()} Salt Tampa Outreach. All rights r
   <main id="main" tabindex="-1" class="salt-page">
     {
       /*
+       * The page's `<h1>`, and the only one.
+       *
+       * Neither the design nor the library provides a heading here: the design
+       * draws the hero headline as a bare `<div>` and `Hero` renders it as a
+       * `<p>`, so a page built from these components alone has no `<h1>` at
+       * all and its outline starts at `<h2>`. That is a defect on its own --
+       * a screen-reader user gets no name for the document -- and it is what
+       * `e2e/astro-v7-upgrade.spec.ts` catches.
+       *
+       * "Every 2nd Saturday" is not the answer: it is an event schedule, not
+       * what this page is about, and promoting it to `<h1>` would repaint it
+       * in the display face (`.salt-hero__headline` sets no `font-family`, so
+       * it currently inherits the body sans and an `<h1>` would not).
+       *
+       * The page's real title is the organisation, which the design renders
+       * as the wordmark in the hero bar -- a shared component used by every
+       * route, so it cannot own an `<h1>` of its own. It is stated here
+       * instead, and hidden visually rather than from assistive technology.
+       */
+    }
+    <h1 class="salt-page__title">Salt Tampa Outreach</h1>
+    {
+      /*
        * The navigation bar is a named slot rather than markup of its own: it is
        * absolutely positioned over the hero photograph, so `Hero` renders it
        * inside its own positioned section.
@@ -267,7 +297,7 @@ const COPYRIGHT = `${new Date().getFullYear()} Salt Tampa Outreach. All rights r
     }
     <DonateBand
       actionHref={DONATE_HREF}
-      actionLabel="Donate"
+      actionLabel="Contact us to give"
       heading="We can continue to serve the Tampa Bay community with your help"
       imageSrc={donateBg}
     />
@@ -329,5 +359,28 @@ const COPYRIGHT = `${new Date().getFullYear()} Salt Tampa Outreach. All rights r
    */
   main.salt-page :global(:is(h1, h2, h3)) {
     text-transform: none;
+  }
+
+  /*
+   * The `<h1>` above, removed from the visual design but not from the
+   * accessibility tree or the document outline.
+   *
+   * Clipped to a 1px box rather than `display: none` or `visibility: hidden`,
+   * both of which take it out of the accessibility tree entirely and would
+   * leave the page nameless again -- the failure this element exists to fix.
+   * No `.sr-only` utility ships in this project or in `@fpkit/acss`, so the
+   * rule is stated here; promote it to `src/styles/` the moment a second
+   * caller needs it.
+   */
+  .salt-page__title {
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   }
 </style>
