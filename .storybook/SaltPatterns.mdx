@@ -1,0 +1,234 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Salt/Design tokens" />
+
+export const Swatch = ({ token, note }) => (
+  <tr>
+    <td style={{ padding: '6px 12px 6px 0', verticalAlign: 'middle' }}>
+      <span
+        style={{
+          background: `var(${token})`,
+          border: '1px solid var(--salt-line-strong)',
+          borderRadius: '4px',
+          display: 'inline-block',
+          height: '28px',
+          verticalAlign: 'middle',
+          width: '52px',
+        }}
+      />
+    </td>
+    <td style={{ padding: '6px 12px 6px 0', fontFamily: 'monospace' }}>{token}</td>
+    <td style={{ padding: '6px 0', color: 'var(--salt-slate)' }}>{note}</td>
+  </tr>
+)
+
+export const TypeRow = ({ token, note }) => (
+  <tr>
+    <td style={{ padding: '10px 12px 10px 0', verticalAlign: 'baseline' }}>
+      <span style={{ fontSize: `var(${token})`, lineHeight: 1.2 }}>Salt Tampa</span>
+    </td>
+    <td style={{ padding: '10px 12px 10px 0', fontFamily: 'monospace' }}>{token}</td>
+    <td style={{ padding: '10px 0', color: 'var(--salt-slate)' }}>{note}</td>
+  </tr>
+)
+
+export const BoxRow = ({ token, note, radius }) => (
+  <tr>
+    <td style={{ padding: '6px 12px 6px 0', verticalAlign: 'middle' }}>
+      <span
+        style={{
+          background: 'var(--salt-surface-alt)',
+          border: '1px solid var(--salt-line-strong)',
+          borderRadius: radius ? `var(${token})` : undefined,
+          display: 'inline-block',
+          height: '32px',
+          verticalAlign: 'middle',
+          width: radius ? '52px' : `var(${token})`,
+        }}
+      />
+    </td>
+    <td style={{ padding: '6px 12px 6px 0', fontFamily: 'monospace' }}>{token}</td>
+    <td style={{ padding: '6px 0', color: 'var(--salt-slate)' }}>{note}</td>
+  </tr>
+)
+
+# Salt Tampa design tokens
+
+Every value the Salt patterns use resolves to one of the tokens below. They are
+transcribed from the design canvas `Salt Tampa Homepage.html` and live in
+`src/styles/salt/_salt-tokens.css`; the classes that consume them live beside
+it in `_salt-patterns.css`.
+
+This set is deliberately **separate** from the older `--st-*` tokens in the same
+folder. The two describe different generations of the same brand at materially
+different scales — 14px body against 16px, a 34px section heading against 48px,
+a 10px photo radius against 20px. Merging them would silently reflow the shipped
+home page, which renders on `--st-*`. No variable name is shared, so both sets
+coexist.
+
+## Deviations from the design file
+
+Everything is transcribed verbatim except the entries below. Each carries the
+same note in the token file itself. Every ratio quoted here was **measured**
+with axe-core against the rendered page, not estimated.
+
+### Legibility floor
+
+| Token            | Design | Here   | Why                                                                                               |
+| ---------------- | ------ | ------ | ------------------------------------------------------------------------------------------------- |
+| `--salt-text-xs` | 10.5px | `12px` | Carries the footer's legal row. A sub-12px floor would become permanent on every page built here. |
+| `--salt-text-sm` | 12.5px | `14px` | Carries service-card body copy — running prose, not a label.                                      |
+
+### Measured contrast
+
+The design's terracotta carries white 13px button labels and 16px band copy at
+**3.23:1** where WCAG 1.4.3 asks for 4.5:1, and its badge text sits at
+**4.33:1** on its own tint. Each colour below is darkened by the _smallest_
+amount that clears the threshold, so the palette stays recognisably itself.
+
+| Token                 | Design    | Here      | Measured after     |
+| --------------------- | --------- | --------- | ------------------ |
+| `--salt-orange`       | `#d97347` | `#b25e3a` | 4.61:1 with white  |
+| `--salt-orange-hover` | `#c25f36` | `#9f4e2c` | 5.83:1 with white  |
+| `--salt-orange-deep`  | `#b8542c` | `#b3522b` | 4.53:1 on the tint |
+| `--salt-sage`         | `#5e8f7e` | `#547f70` | 4.52:1 with white  |
+| `--salt-sage-hover`   | `#4d7a6a` | `#456d5e` | 5.83:1 with white  |
+| `--salt-scrim-flat`   | 0.42      | `0.58`    | 5.48:1 donate body |
+
+Two scrims are **additions**, because axe cannot judge text over a photograph
+and the real measurements were far worse than the drawing suggests. Sampling
+the lightest pixel under each text run, the hero's white copy measured
+**1.39:1** and the header's links **1.09:1**. `--salt-scrim-header` puts a
+backdrop under the navigation bar and `--salt-scrim-hero-text` darkens only the
+band the hero's text sits in, leaving the top of the photograph alone. The same
+measurement afterwards reads 8.3:1 and 8.6:1.
+
+`--salt-muted` (`#a1a1aa`, 2.56:1 on white) is transcribed verbatim because no
+pattern uses it. Do not put text in it without darkening it first.
+
+## Brand
+
+<table>
+  <tbody>
+    <Swatch note="Primary action and accents" token="--salt-orange" />
+    <Swatch note="Primary action, hover" token="--salt-orange-hover" />
+    <Swatch note="Badge background" token="--salt-orange-tint" />
+    <Swatch note="Badge text" token="--salt-orange-deep" />
+    <Swatch note="Footer wordmark" token="--salt-green" />
+    <Swatch note="Gallery carousel arrows" token="--salt-sage" />
+    <Swatch note="Gallery arrows, hover" token="--salt-sage-hover" />
+  </tbody>
+</table>
+
+## Neutrals
+
+<table>
+  <tbody>
+    <Swatch note="Headings" token="--salt-ink" />
+    <Swatch note="Body copy" token="--salt-body" />
+    <Swatch note="Legal text and counters" token="--salt-muted" />
+    <Swatch note="Footer links" token="--salt-slate" />
+    <Swatch note="Secondary button label" token="--salt-graphite" />
+    <Swatch note="Hairlines" token="--salt-line" />
+    <Swatch note="Input borders" token="--salt-line-strong" />
+    <Swatch note="Page surface" token="--salt-surface" />
+    <Swatch note="Button hover surface" token="--salt-surface-alt" />
+  </tbody>
+</table>
+
+## Photo scrims
+
+Four overlays sit between a photograph and the text on top of it.
+
+<table>
+  <tbody>
+    <Swatch note="Hero, four-stop vertical gradient" token="--salt-scrim-hero" />
+    <Swatch note="Flat wash, used on the donate band" token="--salt-scrim-flat" />
+    <Swatch note="Team photo caption, bottom-weighted" token="--salt-scrim-caption" />
+    <Swatch note="Testimonial panel" token="--salt-scrim-quote" />
+  </tbody>
+</table>
+
+## Type scale
+
+<table>
+  <tbody>
+    <TypeRow note="Legal row — raised from the drawn 10.5px" token="--salt-text-xs" />
+    <TypeRow note="Card body, footer links — raised from the drawn 12.5px" token="--salt-text-sm" />
+    <TypeRow note="Nav and buttons" token="--salt-text-ui" />
+    <TypeRow note="Section intro" token="--salt-text-base" />
+    <TypeRow note="Card titles" token="--salt-text-card" />
+    <TypeRow note="Mission and vision copy" token="--salt-text-md" />
+    <TypeRow note="Orange band, partners" token="--salt-text-h2-sm" />
+    <TypeRow note="Section headings" token="--salt-text-h2" />
+    <TypeRow note="Donate headline" token="--salt-text-display" />
+  </tbody>
+</table>
+
+`--salt-text-logo` (104px) and `--salt-font` complete the set; the logo size is
+drawn into the hero artwork rather than set on live text.
+
+## Radius
+
+<table>
+  <tbody>
+    <BoxRow note="Photo cards and inputs" radius token="--salt-radius-sm" />
+    <BoxRow note="Buttons" radius token="--salt-radius-md" />
+    <BoxRow note="Service photos" radius token="--salt-radius-lg" />
+    <BoxRow note="Pills and round arrows" radius token="--salt-radius-full" />
+  </tbody>
+</table>
+
+## Layout and spacing
+
+<table>
+  <tbody>
+    <BoxRow note="Horizontal page padding" token="--salt-gutter" />
+    <BoxRow note="Standard section top padding" token="--salt-section-y" />
+    <BoxRow note="Minimum pointer target (WCAG 2.5.8)" token="--salt-target-min" />
+  </tbody>
+</table>
+
+The three content widths are `--salt-max-narrow` (720px, mission and vision),
+`--salt-max-content` (980px, card grids and partners) and `--salt-max-wide`
+(1080px, footer). `--salt-shadow-btn` is the single elevation token.
+
+## The nineteen patterns
+
+| Pattern            | What it is                                         |
+| ------------------ | -------------------------------------------------- |
+| `Action`           | One control behind all four button flavours        |
+| `Badge`            | The uppercase "Coming soon" status pill            |
+| `IconButton`       | The round previous/next control in three tones     |
+| `ImageSlot`        | A photograph, or a labelled placeholder            |
+| `Wordmark`         | The lockup at navigation and footer sizes          |
+| `SocialLinks`      | The Facebook and LinkedIn icon pair                |
+| `SectionIntro`     | Centred heading, lead paragraph and action pair    |
+| `ServiceCard`      | Photograph, title, optional badge, body            |
+| `MissionPanel`     | Heading and paragraph for the orange band          |
+| `TeamMemberCard`   | Portrait with a scrim caption                      |
+| `TeamMemberBio`    | Name, role, biography and slider controls          |
+| `TeamSlider`       | Owns the wrap-around member index                  |
+| `TestimonialPanel` | Quote over a photograph with a scrim               |
+| `GalleryStrip`     | Rolling three-up photo strip                       |
+| `PartnerGrid`      | Four-up partner logo row                           |
+| `SiteHeader`       | The overlay navigation bar                         |
+| `Hero`             | Photograph, scrim and event call-to-action pair    |
+| `DonateBand`       | The donate section, as real text over a photograph |
+| `SiteFooter`       | Brand, navigation, legal row                       |
+
+`Salt/Homepage` assembles all nineteen into the full page.
+
+## Two things to know before you extend this
+
+**Links need a doubled class.** `@fpkit/acss` declares
+`a[href] { background-color; border-radius; color; font-size; font-weight }` at
+specificity (0,1,1). A single `.salt-x` class is (0,1,0) and loses all five —
+measured, not assumed: a probe declaring an orange background at 13px measured
+as `rgba(0, 0, 0, 0)` at 16px. Any class that can land on an `<a href>` is
+written `.salt-x.salt-x` to reach (0,2,0).
+
+**Motion is opt-out by the operating system.** The design specifies none, but an
+instant slide swap reads as a glitch. `.salt-slide` cross-fades inside a
+`@media (prefers-reduced-motion: no-preference)` block using `@starting-style`,
+so under `reduce` no transition is declared at all.
