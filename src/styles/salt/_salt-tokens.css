@@ -95,20 +95,6 @@
     rgb(9, 12, 16, 0.82) 55%,
     rgb(9, 12, 16, 0.94) 100%
   );
-
-  /*
-   * ADDITION -- not in the design. --salt-scrim-hero covers the whole
-   * photograph and is deliberately light at the top so the skyline reads, but
-   * that leaves the hero's own white text at 1.39:1 over a bright sky
-   * (measured against the lightest pixel under it). This second scrim darkens
-   * only the band the text actually sits in, where the same measurement then
-   * reads 4.5:1 or better, and leaves the top of the photograph alone.
-   */
-  --salt-scrim-hero-text: linear-gradient(
-    180deg,
-    rgb(20, 32, 45, 0) 25%,
-    rgb(20, 32, 45, 0.75) 60%
-  );
   --salt-scrim-quote: linear-gradient(
     180deg,
     rgb(12, 16, 22, 0.2) 0%,

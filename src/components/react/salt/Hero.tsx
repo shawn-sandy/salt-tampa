@@ -2,6 +2,11 @@
  * The hero: a photograph, a gradient scrim, and the event eyebrow, headline
  * and two calls to action.
  *
+ * The photograph is a CSS background on the section rather than an `<img>`, so
+ * `background-size: cover` sizes it at every width without the element needing
+ * its own height. That makes it decorative to assistive tech, which suits a
+ * backdrop -- every word in the hero is real text in the DOM.
+ *
  * The design sizes this block's type in `cqw` -- a percentage of the container
  * width -- which renders the eyebrow at roughly five pixels on a 320px phone.
  * Faithful to the drawing, unreadable in practice. `.salt-hero__*` uses fixed
@@ -15,9 +20,8 @@ import type { ReactNode } from 'react'
 import Action from '#components/react/salt/Action'
 
 export type Props = {
-  /** Background photograph. */
+  /** Background photograph, painted on the section with `background-size: cover`. */
   imageSrc?: string | undefined
-  imageAlt?: string | undefined
   /** Small uppercase line above the headline. */
   eyebrow?: string | undefined
   headline: string
@@ -37,7 +41,6 @@ export type Props = {
  */
 export default function Hero({
   imageSrc,
-  imageAlt = '',
   eyebrow,
   headline,
   primaryLabel,
@@ -48,8 +51,11 @@ export default function Hero({
   className,
 }: Props) {
   return (
-    <section className={['salt-hero', className].filter(Boolean).join(' ')} id="top">
-      {imageSrc ? <img alt={imageAlt} className="salt-hero__image" src={imageSrc} /> : null}
+    <section
+      className={['salt-hero', className].filter(Boolean).join(' ')}
+      id="top"
+      style={imageSrc ? { backgroundImage: `url(${JSON.stringify(imageSrc)})` } : undefined}
+    >
       <div className="salt-hero__scrim" />
       {header}
       <div className="salt-hero__content">

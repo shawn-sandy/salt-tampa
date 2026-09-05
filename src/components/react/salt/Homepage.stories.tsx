@@ -68,7 +68,6 @@ function Homepage() {
         eyebrow="Come to our next event!"
         header={<SiteHeader links={NAV_LINKS} />}
         headline="Every 2nd Saturday"
-        imageAlt="The Tampa skyline behind the SALT Tampa wordmark"
         imageSrc={skyline}
         primaryHref="#volunteer"
         primaryLabel="Get involved"
