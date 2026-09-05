@@ -66,12 +66,25 @@
   --salt-surface-alt: #f4f4f5; /* button hover */
 
   /* Overlays (photo scrims) */
+
+  /*
+   * DEVIATION -- contrast. Weighted to the band the hero type actually sits in
+   * rather than to the bottom edge. Measured against the lightest pixel under
+   * each line (a cloud, rgb(243, 239, 231)): the eyebrow is 14px bold, so it
+   * is not large text and needs 4.5:1, which takes 0.58 alpha; the 40px
+   * headline is large text and needs 3:1, which takes 0.435. The old ramp gave
+   * roughly 0.09 there and left them at 2.68:1 and 2.44:1. Held flat across
+   * the type band so the figures hold as the text reflows between breakpoints,
+   * and still light at 24% so the skyline reads.
+   */
   --salt-scrim-hero: linear-gradient(
     180deg,
-    rgb(20, 32, 45, 0.3) 0%,
-    rgb(20, 32, 45, 0.05) 30%,
-    rgb(20, 32, 45, 0.1) 62%,
-    rgb(20, 32, 45, 0.42) 100%
+    rgb(20, 32, 45, 0.32) 0%,
+    rgb(20, 32, 45, 0.06) 24%,
+    rgb(20, 32, 45, 0.12) 40%,
+    rgb(20, 32, 45, 0.6) 52%,
+    rgb(20, 32, 45, 0.6) 72%,
+    rgb(20, 32, 45, 0.46) 100%
   );
 
   /*
