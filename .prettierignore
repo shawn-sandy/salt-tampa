@@ -5,6 +5,14 @@ playwright-report/
 test-results/
 *.min.js
 *.min.css
+
+# Sass build output. `npm run sass` writes this with --style=compressed, so
+# Prettier would un-minify it on every commit and Sass would re-compress it on
+# the next build -- a few thousand lines of churn each way, and a source map
+# that no longer matches the file it describes. Mirrors the same entry in
+# .stylelintrc.json's ignoreFiles.
+src/styles/index.css
+src/styles/index.css.map
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
