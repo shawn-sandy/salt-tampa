@@ -434,6 +434,7 @@
   flex-direction: column;
   gap: 14px;
   min-width: 0;
+  text-align: center;
 }
 
 .salt-mission__heading {
@@ -442,15 +443,15 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0;
-  text-align: center;
 }
 
 .salt-mission__body {
   color: var(--salt-surface);
   font-size: var(--salt-text-md);
   line-height: 1.7;
-  margin: 0;
-  text-wrap: pretty;
+  /* text-wrap: balance shrink-wraps the box, so auto margins re-centre it. */
+  margin: 0 auto;
+  text-wrap: balance;
 }
 
 /* ── Team ───────────────────────────────────────────────────────────────── */
