@@ -221,7 +221,15 @@
   border-radius: 0;
 }
 
-.salt-image-slot__img {
+/*
+ * Qualified by the slot to reach specificity 0,2,0. The global stylesheet
+ * carries `img[alt] { height: var(--img-height) }` at 0,1,1, which outranked a
+ * bare `.salt-image-slot__img` (0,1,0) and left height at auto -- a portrait
+ * photograph then rendered 396px tall inside a 250px slot while landscape ones
+ * rendered 223px. Filling the slot lets object-fit below do the cropping, so
+ * every photograph occupies the same box whatever its aspect ratio.
+ */
+.salt-image-slot .salt-image-slot__img {
   display: block;
   height: 100%;
   width: 100%;
@@ -434,6 +442,7 @@
   flex-direction: column;
   gap: 14px;
   min-width: 0;
+  text-align: center;
 }
 
 .salt-mission__heading {
@@ -442,15 +451,16 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0;
-  text-align: center;
 }
 
 .salt-mission__body {
   color: var(--salt-surface);
   font-size: var(--salt-text-md);
   line-height: 1.7;
-  margin: 0;
-  text-wrap: pretty;
+
+  /* text-wrap: balance shrink-wraps the box, so auto margins re-centre it. */
+  margin: 0 auto;
+  text-wrap: balance;
 }
 
 /* ── Team ───────────────────────────────────────────────────────────────── */
@@ -722,20 +732,16 @@
 /* ── Hero ───────────────────────────────────────────────────────────────── */
 
 .salt-hero {
-  background: var(--salt-slate);
+  /* The photograph itself arrives as an inline background-image from Hero's
+   * imageSrc prop; these longhands size it. Keep them longhand -- the
+   * background shorthand would reset that inline image. */
+  background-color: var(--salt-slate);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   min-height: 460px;
   overflow: hidden;
   position: relative;
-}
-
-.salt-hero__image {
-  display: block;
-  height: 100%;
-  inset: 0;
-  object-fit: cover;
-  object-position: center top;
-  position: absolute;
-  width: 100%;
 }
 
 .salt-hero__scrim {
@@ -747,7 +753,6 @@
 
 .salt-hero__content {
   align-items: center;
-  background: var(--salt-scrim-hero-text);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

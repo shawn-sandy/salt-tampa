@@ -26,18 +26,25 @@
 // sky-500. Low chroma is the point: it sits next to ink as a considered second
 // voice rather than shouting over it, and it darkens cleanly under the
 // `color-mix` hover states instead of going muddy.
-// Contrast, measured not estimated -- light: ink/paper 18.04:1,
-// ink-soft/paper 5.85:1, island/paper 7.01:1, ink-soft/paper-sunk 5.39:1
-// (the lowest pair). Dark: island/paper 8.54:1, ink-soft/paper-sunk 6.77:1
-// (the lowest pair).
+// Contrast, measured not estimated -- light: ink/paper 15.65:1,
+// ink-soft/paper 5.07:1 (the lowest pair), island/paper 6.08:1,
+// ink-soft/paper-sunk 5.39:1. Dark: island/paper 8.54:1,
+// ink-soft/paper-sunk 6.77:1 (the lowest pair).
+// `--paper` sits below white so the centred page column reads as a sheet on a
+// ground -- a 5% step down, measuring 1.18:1 against that white column. A 10%
+// step was tried and read too heavy. `--rule` moves with it: the old #dde1e6
+// measured only 1.11:1 here, so #cdd2da restores the 1.28:1 hairline weight it
+// had on the original near-white paper. `--paper-sunk` is deliberately left
+// lighter than `--paper`, so cards and the site header read as raised;
+// darkening it to match drops ink-soft on it to 4.32:1, below AA.
 @mixin direction-light {
   --ink: #101418;
   --ink-soft: #5a6472;
   --island: #0b6070;
   --island-bg: #e6f2f6;
-  --paper: #fcfcfd;
+  --paper: #ebecee;
   --paper-sunk: #f1f3f5;
-  --rule: #dde1e6;
+  --rule: #cdd2da;
 
   // Lets the UA paint native controls, scrollbars and form widgets to match.
   color-scheme: light;

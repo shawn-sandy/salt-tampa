@@ -33,7 +33,6 @@ const meta = {
   },
   args: {
     imageSrc: skyline,
-    imageAlt: 'The Tampa skyline behind the SALT Tampa wordmark',
     eyebrow: 'Come to our next event!',
     headline: 'Every 2nd Saturday',
     secondaryLabel: 'What we offer',
