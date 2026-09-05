@@ -2,44 +2,137 @@
 /**
  * Salt Tampa Outreach landing page.
  *
+ * Assembled from the React library under `#components/react/salt`, in the
+ * section order the design file draws: hero, services, mission + vision,
+ * team, partners, donate, gallery, testimonials, footer. This is the same
+ * composition the library's own `Salt/Homepage` story renders, so the story
+ * and the route cannot drift apart without one of them visibly changing.
+ *
+ * Three of the components hold state -- the team slider, the gallery strip and
+ * the testimonial panel -- and only those carry a `client:` directive. The
+ * other nine render to static HTML on the server and ship no JavaScript.
+ *
  * Built on `Base` rather than `Layout`: `Layout` wraps its default slot in
  * `<section><article>...</article><aside><Sidebar/></aside></section>`, and a
  * full-bleed landing page cannot live inside that article/sidebar grid.
  * `Base` supplies no `<main>` of its own, so this page provides one.
- *
- * Sections land here one at a time as they are rebuilt responsively. Hero and
- * services exist; mission, team, donate and testimonial follow.
  */
 import Base from '#layouts/Base.astro'
-import Hero from '#components/astro/salt/Hero.astro'
-import Services from '#components/astro/salt/Services.astro'
-import MissionBand from '#components/astro/salt/MissionBand.astro'
-import MissionStatement from '#components/astro/salt/MissionStatement.astro'
-import TeamSection from '#components/astro/salt/TeamSection.astro'
-import ImageStrip from '#components/astro/salt/ImageStrip.astro'
-import DonateBand from '#components/astro/salt/DonateBand.astro'
-import Testimonial from '#components/astro/salt/Testimonial.astro'
-import SaltFooter from '#components/astro/salt/Footer.astro'
 
-import donateBg from '#assets/salt/images/donate-bg.png'
-import volunteers from '#assets/salt/images/team-andrea.jpg'
-import gymLineup from '#assets/salt/images/carousel-1.jpg'
-import trailerBriefing from '#assets/salt/images/carousel-2.jpg'
+import DonateBand from '#components/react/salt/DonateBand'
+import GalleryStrip from '#components/react/salt/GalleryStrip'
+import Hero from '#components/react/salt/Hero'
+import MissionPanel from '#components/react/salt/MissionPanel'
+import PartnerGrid from '#components/react/salt/PartnerGrid'
+import SectionIntro from '#components/react/salt/SectionIntro'
+import ServiceCard from '#components/react/salt/ServiceCard'
+import SiteFooter from '#components/react/salt/SiteFooter'
+import SiteHeader from '#components/react/salt/SiteHeader'
+import TeamSlider from '#components/react/salt/TeamSlider'
+import type { TeamMember } from '#components/react/salt/TeamSlider'
+import TestimonialPanel from '#components/react/salt/TestimonialPanel'
 
 /*
- * Two photographs, not the kit's four.
+ * `?url` rather than a bare import: these are React components typed with
+ * `src?: string`, and a bare `#assets/...` import hands Astro's `ImageMetadata`
+ * object to a prop that will be spliced straight into an `src` attribute.
+ */
+import gymLineup from '#assets/salt/images/carousel-1.jpg?url'
+import trailerBriefing from '#assets/salt/images/carousel-2.jpg?url'
+import donateBg from '#assets/salt/images/donate-bg.png?url'
+import skyline from '#assets/salt/images/hero-skyline.png?url'
+import barber from '#assets/salt/images/outreach-tent.jpg?url'
+import clothes from '#assets/salt/images/service-clothes.jpg?url'
+import shower from '#assets/salt/images/service-shower.jpg?url'
+import andrea from '#assets/salt/images/team-andrea.jpg?url'
+import teamBriefing from '#assets/salt/images/team-holly.jpg?url'
+import nehiel from '#assets/salt/images/team-niehel.jpg?url'
+
+/*
+ * The design's nav, with its one dead anchor replaced.
+ *
+ * `#services`, `#mission`, `#about` and `#donate` all land on a section this
+ * page renders. `#volunteer` does not exist in the design either -- nothing
+ * anywhere carries that id -- so it points at the enquiry form instead of
+ * scrolling nowhere.
+ */
+const VOLUNTEER_HREF = '/message-us'
+const CONTACT_HREF = '/contact-us'
+
+const NAV_LINKS = [
+  { label: 'Services', href: '#services' },
+  { label: 'Mission', href: '#mission' },
+  { label: 'Our Team', href: '#about' },
+  { label: 'Volunteer', href: VOLUNTEER_HREF },
+]
+
+/*
+ * INTERIM, and the label says so.
+ *
+ * There is no giving URL anywhere in this repo and no donate route, so the
+ * appeal's button points at the contact page: someone who wants to give can
+ * still reach a human. A button labelled "Donate" that opens a general contact
+ * form promises a giving flow that does not exist, so the design's label is
+ * not used here -- `actionLabel` reads "Contact us to give" until there is
+ * something to send people to.
+ *
+ * When the real giving URL arrives, set it here and restore `actionLabel` to
+ * the design's "Donate". Two lines.
+ *
+ * The navbar chip is a different case and keeps the design's wording: it
+ * scrolls to the appeal on this page, which is a real destination.
+ */
+const DONATE_HREF = CONTACT_HREF
+
+/*
+ * Verbatim from the design's mission band. Both statements appear once, here;
+ * the design does not repeat either of them anywhere else on the page.
+ */
+const MISSION =
+  'To serve the Unsheltered community in Tampa Bay, through a dynamic, mobile, drop-in center dedicated to addressing immediate needs.'
+
+const VISION =
+  'We envision a community where every individual’s basic needs are met, and where a dynamic, mobile resource hub bridges the gap between people and the support services they need to thrive and grow.'
+
+/*
+ * Both members, with the biographies transcribed in full from the design's
+ * `members[]` logic class. The alternative text on the design's own portrait
+ * spells the first name "Niehel" and the asset filename follows it, but the
+ * data the page renders from spells it "Nehiel" -- and so does the volunteer's
+ * name badge in team-holly.jpg. The badge wins.
+ */
+const MEMBERS: TeamMember[] = [
+  {
+    name: 'Nehiel',
+    role: 'Co-Lead',
+    photoSrc: nehiel,
+    bio: "I believe in the power of a smile, a hug, and listening to someone's story, because during difficult moments in my life, others gave me the strength to keep going. I've been a co-leader with SALT for the past four years, and it has been a blessing to not only encourage someone who is facing uncertainty, but to help provide an opportunity for our volunteers to collaborate in sharing hope with someone. SALT stands for Service And Love Together, and I have had the chance to serve on multiple mission trips to Costa Rica, Botswana, and beyond! I love to travel, but especially in service of others. Disaster relief, local and international, is one of my passions as well! Aside from work and SALT, I'm an avid board game collector and Mario Kart enthusiast, and I enjoy hanging out with friends the most!",
+  },
+  {
+    name: 'Andrea',
+    role: 'Co-Lead',
+    photoSrc: andrea,
+    bio: 'I’m passionate about being part of this community and building each other up. I was drawn to SALT because it gave me the chance to meet people face to face and know them beyond their life situation. I’ve loved co-leading this ministry since it launched in October 2021. My favorite part is what SALT stands for: Service and Love Together — what we do, we do in love, and we do it together.\n\nBy day, I’m a case manager working with kids and families across Tampa Bay, with a heart for our most vulnerable neighbors. Outside of work, I’m a cat mom to Diego (17, tuxedo, and very much in charge) and love a good movie or discovering a new Asian food spot.',
+  },
+]
+
+/*
+ * The design's social links are `href="#"` placeholders on both portraits, so
+ * `facebookHref` and `linkedinHref` are left unset rather than transcribed:
+ * `TeamMemberCard` omits an icon it has no destination for, and a link to "#"
+ * is a keyboard stop that does nothing.
+ */
+
+/*
+ * Two photographs, not the design's three.
  *
  * `carousel-3.jpg` is a stock still-life of a leaf on a white studio
  * background -- nothing to do with Tampa or outreach -- so it is left out
- * rather than passed off as a photograph of this work. The kit's own demo
- * captions it "Guests sharing a meal at Trinity Cafe", which it plainly is not.
- *
- * The remaining candidates are already on this page: `outreach-tent.jpg` is the
- * barber service card and `team-andrea.jpg` is the quote band. Repeating either
- * a few hundred pixels further down reads as a thin photo library, so the strip
- * runs at two until more real photographs exist. Add them to this array.
+ * rather than captioned as a service day. `GalleryStrip` renders one tile per
+ * photograph when the list is shorter than three and hides its controls, so
+ * two is a complete row rather than a gap. Add real photographs here.
  */
-const STRIP = [
+const GALLERY = [
   {
     src: gymLineup,
     alt: 'Volunteers in red-striped serving aprons lined up across a school gym, bagged donations stacked along the wall behind them',
@@ -51,128 +144,177 @@ const STRIP = [
 ]
 
 /*
- * Only routes that exist. The source comp shipped `#mission` and `#volunteer`
- * anchors that were never on the page, and a `Donate` chip wired to a toast --
- * links are added here as their targets land, not before.
- */
-const NAV_LINKS = [
-  { label: 'Services', href: '#services' },
-  { label: 'Mission', href: '#mission' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact-us' },
-]
-
-/*
- * Both routes render a page titled "Contact Us", so there is only one real
- * destination behind two labels. Volunteer enquiries go to `/message-us` and
- * general enquiries to `/contact-us` to keep the two buttons distinguishable,
- * but this wants a decision from the requester.
- */
-const VOLUNTEER_HREF = '/message-us'
-const CONTACT_HREF = '/contact-us'
-
-/*
- * INTERIM. There is no giving URL anywhere in the repo and no donate route, so
- * the appeal points at the contact page: someone who wants to give can still
- * reach a human. It is the wrong destination for a button labelled "Donate"
- * and needs replacing with the real giving link before launch -- one line.
+ * One quote, not the design's two.
  *
- * The navbar chip is a different case: it scrolls to the appeal itself, which
- * is what the source did and is a real destination either way.
+ * "Testimonial coming soon." is the placeholder the design shipped, in both
+ * slots. Carrying both would render previous/next controls that step between
+ * two identical sentences; one renders the same placeholder with the controls
+ * suppressed. Replace with real quotations and the controls return.
  */
-const DONATE_HREF = '/contact-us'
+const QUOTES = ['Testimonial coming soon.']
 
 /*
- * Verbatim from the source. The design system's readme is explicit that this
- * copy is a different register from the rest of the site and must not be
- * paraphrased, shortened or "tightened", so it is transcribed exactly -- minus
- * one zero-width space (U+200B) the Figma export left after "Immediate Needs",
- * which is invisible in the file and would give the browser a stray break
- * opportunity in the middle of the clause.
- */
-const MISSION =
-  "To Share Christ's Love by Serving the Unsheltered Through Comprehensive Mobile Outreach Centers that Serve Immediate Needs, Catalyze Permanent Housing Solutions, and Empower Self-Sufficiency"
-
-const VISION =
-  'That Every Metropolitan Area in the US has a Comprehensive Outreach Center for People Experiencing Homelessness'
-
-/*
- * The same destinations as the navbar, plus the donate appeal. The source
- * footer carries a "Privacy Policy" link and a newsletter form; neither is
- * reproduced, because neither has anywhere to go:
- *
- * - there is no privacy policy page in this repo, and a legal link that 404s
- *   is worse than an absent one;
- * - there is no subscribe endpoint. `NewsletterForm` requires an `action` for
- *   exactly this reason -- the source's form called `preventDefault()` and
- *   fired a toast, so it looked like it worked and collected nothing. Omitting
- *   `newsletterAction` renders the footer without it.
- *
- * Both come back the moment a route exists: add `legal` and `newsletterAction`.
+ * The design's four footer links plus its three legal links. `#privacy`,
+ * `#terms` and `#cookies` have no page behind them in this repo, and a legal
+ * link that 404s is worse than an absent one, so `legalLinks` is left unset
+ * until those routes exist.
  */
 const FOOTER_LINKS = [
-  { label: 'Services', href: '#services' },
-  { label: 'Mission', href: '#mission' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: CONTACT_HREF },
   { label: 'Donate', href: '#donate' },
+  { label: 'Our Services', href: '#services' },
+  { label: 'Our Team', href: '#about' },
+  { label: 'Contact', href: CONTACT_HREF },
 ]
 
 /*
  * Resolved per request rather than hardcoded, so the year cannot go stale.
- * The source ships "2023 Ddsgnr. All right reserved." -- the design template
- * author's name, a dead year and a typo ("right" for "rights").
+ * The design ships a literal "2026".
  */
 const COPYRIGHT = `${new Date().getFullYear()} Salt Tampa Outreach. All rights reserved.`
 ---
 
 <Base
   pageTitle="Salt Tampa Outreach"
-  pageDescription="Sharing Christ's love by serving the unsheltered through mobile outreach centers in Tampa."
+  pageDescription="Serving the unsheltered community in Tampa Bay through a mobile, drop-in outreach center."
   hideHeader
   hideFooter
   hideNav
 >
-  <main id="main" tabindex="-1" class="st">
-    <Hero links={NAV_LINKS} volunteerHref={VOLUNTEER_HREF} donateHref="#donate" />
-    <Services volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
+  <main id="main" tabindex="-1" class="salt-page">
     {
       /*
-       * Mission here, Vision in the quote band below. The source puts both on
-       * this band AND cycles both through the quote band, so a faithful port
-       * would print the same two statements twice within three sections. One
-       * each keeps every word of the source copy on the page and says nothing
-       * twice.
-       */
-    }
-    <MissionBand id="mission">
-      <MissionStatement label="Mission" statement={MISSION} />
-    </MissionBand>
-    {/* The source places the photo strip directly after the mission band. */}
-    <ImageStrip images={STRIP} label="Photographs from Salt Tampa outreach days" />
-    <TeamSection volunteerHref={VOLUNTEER_HREF} contactHref={CONTACT_HREF} />
-    <DonateBand id="donate" image={donateBg} href={DONATE_HREF} />
-    {
-      /*
-       * Labelled "Our Vision", not "Testimonials". The design calls this the
-       * testimonial block, but no testimonial exists anywhere in the source --
-       * no quotation, no speaker, no attribution; the kit only ever
-       * demonstrates it with the mission statement. Calling a vision statement
-       * a testimonial would assert that somebody said it.
+       * The page's `<h1>`, and the only one.
        *
-       * When a real quote and speaker arrive, pass `statement` and
-       * `attribution` and set the label back -- the component renders a
-       * `<figcaption>` for exactly that.
+       * Neither the design nor the library provides a heading here: the design
+       * draws the hero headline as a bare `<div>` and `Hero` renders it as a
+       * `<p>`, so a page built from these components alone has no `<h1>` at
+       * all and its outline starts at `<h2>`. That is a defect on its own --
+       * a screen-reader user gets no name for the document -- and it is what
+       * `e2e/astro-v7-upgrade.spec.ts` catches.
+       *
+       * "Every 2nd Saturday" is not the answer: it is an event schedule, not
+       * what this page is about, and promoting it to `<h1>` would repaint it
+       * in the display face (`.salt-hero__headline` sets no `font-family`, so
+       * it currently inherits the body sans and an `<h1>` would not).
+       *
+       * The page's real title is the organisation, which the design renders
+       * as the wordmark in the hero bar -- a shared component used by every
+       * route, so it cannot own an `<h1>` of its own. It is stated here
+       * instead, and hidden visually rather than from assistive technology.
        */
     }
-    <Testimonial
-      label="Our Vision"
-      statement={VISION}
-      image={volunteers}
-      imageAlt="Salt Tampa volunteers gathered on the street before a Saturday outreach"
+    <h1 class="salt-page__title">Salt Tampa Outreach</h1>
+    {
+      /*
+       * The navigation bar is a named slot rather than markup of its own: it is
+       * absolutely positioned over the hero photograph, so `Hero` renders it
+       * inside its own positioned section.
+       */
+    }
+    <Hero
+      eyebrow="Come to our next event!"
+      headline="Every 2nd Saturday"
+      imageAlt="The Tampa skyline behind the SALT Tampa wordmark"
+      imageSrc={skyline}
+      primaryHref={VOLUNTEER_HREF}
+      primaryLabel="Get involved"
+      secondaryHref="#services"
+      secondaryLabel="What we offer"
+    >
+      <SiteHeader slot="header" links={NAV_LINKS} donateHref="#donate" />
+    </Hero>
+
+    <section class="salt-section" id="services">
+      <SectionIntro
+        heading="Take a look into our services!"
+        lead="We provide many services at Trinity Cafe every second Saturday of the month. Here is what we offer!"
+        primaryHref={CONTACT_HREF}
+        primaryLabel="Contact Us"
+        secondaryHref={VOLUNTEER_HREF}
+        secondaryLabel="Become a Volunteer"
+      />
+      <div class="salt-card-grid">
+        <ServiceCard
+          body="Find clean clothes at our mobile station. We offer a variety of sizes and styles, ensuring everyone can find something that fits and feels good."
+          imageAlt="Volunteers handing out folded jeans and clothing from a table under a canopy, with bags of clothes lined up underneath"
+          imageSrc={clothes}
+          title="Clothes"
+        />
+        <ServiceCard
+          body="Our skilled barbers provide free haircuts, beard trims, and styling to help you look and feel your best."
+          imageAlt="A barber in gloves trimming a seated man’s hair under a canopy, with a second barber working at a chair behind him"
+          imageSrc={barber}
+          title="Haircuts"
+        />
+        <ServiceCard
+          body="Salt's mobile shower unit offers a clean, private space to refresh. We provide toiletries and towels, ensuring a comfortable experience."
+          imageAlt="Salt’s restroom and shower trailer parked beside a canopy, with volunteers and a table of folded towels alongside"
+          imageSrc={shower}
+          title="Showers"
+        />
+        <ServiceCard
+          body="Take away meals and accessories, offered alongside our main stations."
+          placeholder="Meals and essentials photo"
+          title="Meals & Essentials"
+        />
+        <ServiceCard
+          badge="Coming soon"
+          body="Basic health screenings are on the way. We're working with partners to bring them to a future service day."
+          placeholder="Coming soon photo"
+          title="Health screening"
+        />
+      </div>
+    </section>
+
+    <section class="salt-mission-band" id="mission">
+      <div class="salt-mission-band__inner">
+        <MissionPanel body={MISSION} heading="Our Mission" />
+        <MissionPanel body={VISION} heading="Our Vision" />
+      </div>
+    </section>
+
+    <section class="salt-section" id="about">
+      <SectionIntro
+        heading="Meet our team members"
+        lead="The people who lead SALT Tampa and show up every second Saturday."
+        primaryHref={CONTACT_HREF}
+        primaryLabel="Contact Us"
+        secondaryHref={VOLUNTEER_HREF}
+        secondaryLabel="Become a Volunteer"
+      />
+      <TeamSlider client:visible members={MEMBERS} />
+    </section>
+
+    <PartnerGrid heading="Our Partners" partners={[{}, {}, {}, {}]} />
+
+    {
+      /*
+       * The design draws this band as a flat photograph with its message baked
+       * into the pixels and a 12%-wide invisible link over the artwork. The
+       * heading here is that baked-in sentence, set as real text over the same
+       * photograph, so it can be read aloud, indexed, translated and resized.
+       */
+    }
+    <DonateBand
+      actionHref={DONATE_HREF}
+      actionLabel="Contact us to give"
+      heading="We can continue to serve the Tampa Bay community with your help"
+      imageSrc={donateBg}
     />
+
+    <GalleryStrip client:visible photos={GALLERY} />
+
+    <section class="salt-section" id="testimonials">
+      <TestimonialPanel
+        client:visible
+        imageAlt="Salt Tampa volunteers in outpost t-shirts gathered beside the trailer for a briefing before a service day"
+        imageSrc={teamBriefing}
+        quotes={QUOTES}
+      />
+    </section>
   </main>
-  <SaltFooter links={FOOTER_LINKS} copyright={COPYRIGHT} />
+
+  <SiteFooter copyright={COPYRIGHT} links={FOOTER_LINKS} />
 </Base>
 
 <style>
@@ -183,16 +325,62 @@ const COPYRIGHT = `${new Date().getFullYear()} Salt Tampa Outreach. All rights r
    *   *+section   { margin-block-start: 2rem }
    *   main,footer { padding-block: var(--overlay-padding) }
    *
-   * Measured, that opened a 32px gap between all seven sections and another
-   * above the hero and below the quote band, and the near-black body ground
-   * (#0D1014) showed through every one of them as a dark stripe. Both rules
-   * are (0,0,1), so `main.st` at (0,1,1) is enough to state otherwise.
+   * Measured, that opened a 32px gap between every section and another above
+   * the hero, and the body ground showed through each one as a stripe. Both
+   * rules are (0,0,1), so `main.salt-page` at (0,1,1) is enough to state
+   * otherwise. The footer needs no such help: `.salt-footer` sets its own
+   * padding at (0,1,0) and already wins.
+   *
+   * `:global()` on every descendant selector below is load-bearing, not
+   * decoration. Astro scopes a page's `<style>` by stamping a generated class
+   * onto the elements *this file* writes, and every band on this page is
+   * rendered by a React component instead -- so an unscoped `section` or `h2`
+   * selector compiles to one that requires a class those elements never carry,
+   * and matches nothing. `main.salt-page` itself is written here, so it keeps
+   * the scope and the rules stay confined to this page.
    */
-  main.st {
+  main.salt-page {
     padding-block: 0;
   }
 
-  main.st > section {
+  main.salt-page > :global(section) {
     margin-block-start: 0;
+  }
+
+  /*
+   * `src/styles/_base.scss` title-cases every h1-h3 site-wide, deliberately.
+   * The Salt design sets its headings in sentence case, and the rule rewrites
+   * them on sight: "Take A Look Into Our Services!", "Meet Our Team Members",
+   * "We Can Continue To Serve The Tampa Bay Community With Your Help".
+   *
+   * Scoped to this page rather than relaxed globally, so the rest of the site
+   * keeps the casing its type system asks for. `h1, h2, h3` is (0,0,1); this
+   * is (0,1,1).
+   */
+  main.salt-page :global(:is(h1, h2, h3)) {
+    text-transform: none;
+  }
+
+  /*
+   * The `<h1>` above, removed from the visual design but not from the
+   * accessibility tree or the document outline.
+   *
+   * Clipped to a 1px box rather than `display: none` or `visibility: hidden`,
+   * both of which take it out of the accessibility tree entirely and would
+   * leave the page nameless again -- the failure this element exists to fix.
+   * No `.sr-only` utility ships in this project or in `@fpkit/acss`, so the
+   * rule is stated here; promote it to `src/styles/` the moment a second
+   * caller needs it.
+   */
+  .salt-page__title {
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   }
 </style>
