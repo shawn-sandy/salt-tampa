@@ -449,11 +449,13 @@
 }
 
 .salt-mission-band__inner {
-  display: flex;
-  flex-direction: column;
-  gap: 56px;
+  display: grid;
+
+  /* auto-fit collapses to one column below ~660px -- no media query needed. */
+  gap: 56px 48px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   margin: 0 auto;
-  max-width: var(--salt-max-narrow);
+  max-width: var(--salt-max-content);
 }
 
 .salt-mission {
