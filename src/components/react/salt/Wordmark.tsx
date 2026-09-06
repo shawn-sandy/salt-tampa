@@ -19,7 +19,7 @@
 
 export type Props = {
   /**
-   * `nav` is the 33px white lockup over the hero; `footer` is the 30px green
+   * `nav` is the 21px white lockup over the hero; `footer` is the 19px green
    * one; `hero` is the display-size white lockup inside the hero itself.
    */
   size?: 'nav' | 'footer' | 'hero' | undefined
