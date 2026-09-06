@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'The lockup at its two drawn sizes. The design file supplies the wordmark as a flattened bitmap; it is rebuilt here as the salt-crystal glyph beside real text, so the brand name is selectable, translatable, indexable and readable by a screen reader.',
+          'The lockup at its two drawn sizes. The artwork is a white-on-transparent SVG used as a CSS mask, so one asset renders white over the hero and sage in the footer; the element carries the brand name as its accessible name.',
       },
     },
   },
@@ -28,10 +28,10 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-/** The 18px green lockup used in the footer. */
+/** The 30px green lockup used in the footer. */
 export const Footer: Story = {}
 
-/** The 20px white lockup, drawn over the hero photograph. */
+/** The 33px white lockup, drawn over the hero photograph. */
 export const Nav: Story = {
   args: { size: 'nav', href: '#top' },
   decorators: [
