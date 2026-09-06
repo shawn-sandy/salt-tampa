@@ -300,14 +300,19 @@
 }
 
 /* The hero lockup is sized from the width rather than the height so it scales
-   with the photograph, and `margin-bottom: auto` takes the hero content's free
-   space, leaving the mark near the top and the event copy at the bottom. */
+   with the photograph.
+
+   The gap below it is a real margin rather than `margin-bottom: auto`: the auto
+   margin only spends *free* space, and the content's natural height already
+   exceeds the 460px minimum, so it resolved to zero and the mark sat 8px above
+   the eyebrow. The margin scales with the viewport and caps at the design's
+   spacing; below 720px the lockup is hidden, so it costs phones nothing. */
 .salt-wordmark--hero.salt-wordmark--hero {
   align-self: center;
   aspect-ratio: 1091 / 241;
   color: var(--salt-surface);
   height: auto;
-  margin-bottom: auto;
+  margin-bottom: min(200px, 16vw);
   mask-image: url('/images/salt-logo.svg');
   mask-position: center;
   width: min(760px, 84%);
