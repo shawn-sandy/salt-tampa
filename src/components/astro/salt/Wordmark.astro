@@ -1,12 +1,13 @@
 ---
 /**
- * The two Salt Tampa lockups drawn in the source file.
+ * The Salt Tampa lockup, drawn from `public/images/navbar-salt-logo.svg`.
  *
- * `nav`    -- SALT / TAMPA in Montserrat 600/24 at 0.09em, white by default.
- * `footer` -- the salt-crystal glyph beside "Salt Tampa Outreach" in sage Lato 700/22.
- *
- * The hero uses neither: it sets SALT and TAMPA at 130px around the circular
- * skyline mark, which is a composition, not a lockup.
+ * The artwork is white on transparent and the footer sits on white, so it is
+ * used as a CSS mask rather than an `<img>`: its alpha channel supplies the
+ * shape and `currentcolor` supplies the ink. One asset covers both placements
+ * -- white over the hero, sage in the footer -- with no second file and no
+ * filter chain. The element carries `role="img"` and the brand name as its
+ * accessible name, so a screen reader still announces "Salt Tampa".
  *
  * @component Wordmark
  * @example
@@ -16,7 +17,7 @@
  * ```
  */
 export type Props = {
-  /** Which lockup to draw. */
+  /** Which size to draw. */
   variant?: 'nav' | 'footer'
   /** Overrides the default colour (white for `nav`, sage for `footer`). */
   color?: string
@@ -27,76 +28,37 @@ export type Props = {
 const { variant = 'nav', color, class: className } = Astro.props as Props
 ---
 
-{
-  variant === 'footer' ? (
-    <div
-      class:list={['st-wordmark', 'st-wordmark--footer', className]}
-      style={color ? `--st-wordmark-color:${color}` : undefined}
-    >
-      <svg
-        width="23.158"
-        height="20"
-        viewBox="0 0 23.158 20"
-        aria-hidden="true"
-        class="st-wordmark__glyph"
-      >
-        <path
-          d="M 15.893 2.426 C 15.542 1.577 14.328 1.611 14.025 2.478 L 11.549 9.567 C 11.263 10.386 10.141 10.477 9.727 9.715 L 7.362 5.369 C 6.954 4.619 5.855 4.692 5.55 5.49 L 0.519 18.643 C 0.269 19.297 0.752 20 1.453 20 L 21.662 20 C 22.375 20 22.859 19.276 22.587 18.618 L 15.893 2.426 Z"
-          fill-rule="nonzero"
-        />
-      </svg>
-      <span class="st-wordmark__name">Salt Tampa Outreach</span>
-    </div>
-  ) : (
-    <div
-      class:list={['st-wordmark', 'st-wordmark--nav', className]}
-      style={color ? `--st-wordmark-color:${color}` : undefined}
-    >
-      <span class="st-wordmark__word">SALT</span>
-      <span class="st-wordmark__word">TAMPA</span>
-    </div>
-  )
-}
+<span
+  class:list={['st-wordmark', `st-wordmark--${variant}`, className]}
+  style={color ? `--st-wordmark-color:${color}` : undefined}
+  role="img"
+  aria-label="Salt Tampa"></span>
 
 <style>
   .st-wordmark {
-    align-items: center;
-    display: flex;
+    /* The footer stacks its brand column with the default `stretch`, which
+       would blow the box out to the column's full width and strand the mark in
+       the middle of it. `start` holds the derived width. */
+    align-self: start;
+
+    /* The source viewBox is 175x29; the ratio derives the width from the height
+       below, so neither size restates the artwork's proportions. */
+    aspect-ratio: 175 / 29;
+    background-color: var(--st-wordmark-color, currentcolor);
+    display: inline-block;
+    mask-image: url('/images/navbar-salt-logo.svg');
+    mask-position: left center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
   }
 
   .st-wordmark--nav {
-    color: var(--st-wordmark-color, var(--st-white));
-    gap: var(--st-space-1);
+    color: var(--st-white);
+    height: 22px;
   }
 
   .st-wordmark--footer {
-    color: var(--st-wordmark-color, var(--st-text-footer));
-    gap: 2px;
-  }
-
-  .st-wordmark__word {
-    color: inherit;
-    font-family: var(--st-font-display);
-    font-size: var(--st-size-brand);
-    font-weight: 600;
-    letter-spacing: var(--st-track-brand);
-    line-height: var(--st-lh-tight);
-  }
-
-  .st-wordmark__glyph {
-    border-radius: 1px;
-    fill: currentcolor;
-    flex-shrink: 0;
-  }
-
-  .st-wordmark__name {
-    color: inherit;
-    font-family: var(--st-font-editorial);
-    font-size: var(--st-size-footer-brand);
-    font-weight: 700;
-    letter-spacing: var(--st-track-footer-brand);
-    line-height: 1;
-    padding-left: 2px;
-    white-space: nowrap;
+    color: var(--st-text-footer);
+    height: 20px;
   }
 </style>
