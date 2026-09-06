@@ -69,6 +69,7 @@ function Homepage() {
         header={<SiteHeader links={NAV_LINKS} />}
         headline="Every 2nd Saturday"
         imageSrc={skyline}
+        logo
         primaryHref="#volunteer"
         primaryLabel="Get involved"
         secondaryHref="#services"

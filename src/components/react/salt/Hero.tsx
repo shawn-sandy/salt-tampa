@@ -18,10 +18,13 @@
 import type { ReactNode } from 'react'
 
 import Action from '#components/react/salt/Action'
+import Wordmark from '#components/react/salt/Wordmark'
 
 export type Props = {
   /** Background photograph, painted on the section with `background-size: cover`. */
   imageSrc?: string | undefined
+  /** Draws the display-size lockup above the eyebrow, as the design does. */
+  logo?: boolean | undefined
   /** Small uppercase line above the headline. */
   eyebrow?: string | undefined
   headline: string
@@ -41,6 +44,7 @@ export type Props = {
  */
 export default function Hero({
   imageSrc,
+  logo,
   eyebrow,
   headline,
   primaryLabel,
@@ -59,6 +63,7 @@ export default function Hero({
       <div className="salt-hero__scrim" />
       {header}
       <div className="salt-hero__content">
+        {logo ? <Wordmark size="hero" /> : null}
         {eyebrow ? <div className="salt-hero__eyebrow">{eyebrow}</div> : null}
         <p className="salt-hero__headline">{headline}</p>
         {primaryLabel || secondaryLabel ? (
