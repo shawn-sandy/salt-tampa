@@ -1,9 +1,10 @@
 /**
  * A heading and paragraph sized for the orange band.
  *
- * The design stacks two of these -- "Our Mission" and "Our Vision" -- inside
- * one full-width orange section. The band itself is layout, so it lives in the
- * page composition; this component is the pair of text blocks inside it.
+ * The design places two of these -- "Our Mission" and "Our Vision" -- inside
+ * one full-width orange section, side by side on wide screens and stacked on
+ * narrow ones. The band itself is layout, so it lives in the page composition;
+ * this component is one heading-and-paragraph block inside it.
  *
  * @module components/react/salt/MissionPanel
  */
