@@ -1,6 +1,7 @@
 ---
 /**
- * The Salt Tampa lockup, drawn from `public/images/salt-logo.svg`.
+ * The Salt Tampa lockup, drawn from `public/images/navbar-salt-logo.svg` --
+ * the compact 175x29 artwork with the emblem set inline between the words.
  *
  * The artwork is white on transparent and the footer sits on white, so it is
  * used as a CSS mask rather than an `<img>`: its alpha channel supplies the
@@ -41,24 +42,27 @@ const { variant = 'nav', color, class: className } = Astro.props as Props
        the middle of it. `start` holds the derived width. */
     align-self: start;
 
-    /* The source viewBox is 1091x241; the ratio derives the width from the
+    /* The source viewBox is 175x29; the ratio derives the width from the
        height below, so neither size restates the artwork's proportions. */
-    aspect-ratio: 1091 / 241;
+    aspect-ratio: 175 / 29;
     background-color: var(--st-wordmark-color, currentcolor);
     display: inline-block;
-    mask-image: url('/images/salt-logo.svg');
+    mask-image: url('/images/navbar-salt-logo.svg');
     mask-position: left center;
     mask-repeat: no-repeat;
     mask-size: contain;
   }
 
+  /* The compact lockup is nearly all letterform -- its letters span 59.7% of
+     the viewBox -- so these boxes are shorter than the 33px and 30px the
+     emblem-above-text artwork needed to render the same ~12.7px text. */
   .st-wordmark--nav {
     color: var(--st-white);
-    height: 33px;
+    height: 21px;
   }
 
   .st-wordmark--footer {
     color: var(--st-text-footer);
-    height: 30px;
+    height: 19px;
   }
 </style>

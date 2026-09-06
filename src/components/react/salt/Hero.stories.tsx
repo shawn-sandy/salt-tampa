@@ -48,9 +48,9 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
-/** With the overlay navigation bar, which is how the page renders it. */
+/** With the overlay navigation bar and the lockup, which is how the page renders it. */
 export const WithHeader: Story = {
-  args: { header: <SiteHeader links={NAV_LINKS} /> },
+  args: { header: <SiteHeader links={NAV_LINKS} />, logo: true },
 }
 
 /** Headline only, with no event to announce. */

@@ -261,39 +261,61 @@
 
 /* ── Wordmark ───────────────────────────────────────────────────────────── */
 
-/* The lockup is public/images/salt-logo.svg, white on transparent. The footer
-   sits on white, so the artwork is masked rather than drawn: the alpha channel is
-   the shape and `currentcolor` is the ink, letting one asset render white over
-   the hero and sage in the footer. The 1091x241 viewBox ratio derives each width
-   from the height set on the size class.
+/* Two lockups, both white on transparent. The bars use
+   public/images/navbar-salt-logo.svg -- the compact 175x29 lockup with the
+   emblem set inline -- and the hero uses public/images/salt-logo.svg, the
+   1091x241 one whose skyline emblem stands above the letterforms.
 
-   The heights are larger than the wordmark-only lockup they replace because the
-   skyline emblem is taller than the letterforms: measured, the letters span 38.4%
-   of this viewBox against 57.9% of the old one, so 33px and 30px hold the text at
-   the ~12.7px and ~11.6px it already rendered at. */
+   The footer sits on white, so the artwork is masked rather than drawn: the
+   alpha channel is the shape and `currentcolor` is the ink, so one asset
+   renders white over the hero and sage in the footer. Each variant states its
+   own viewBox ratio, which derives the width from its height.
+
+   The bar heights fell when the artwork changed because the compact lockup is
+   nearly all letterform: measured, its letters span 59.7% of its viewBox
+   against 38.4% of the hero one, so 21px and 19px hold the text at the ~12.7px
+   and ~11.5px the 33px and 30px boxes rendered before. */
 .salt-wordmark.salt-wordmark {
   /* The footer stacks its brand column with the default `stretch`, which would
      blow the box out to the column's full width and strand the mark in the
      middle of it. `start` keeps the box at the width `aspect-ratio` derives. */
   align-self: start;
-  aspect-ratio: 1091 / 241;
   background-color: currentcolor;
   display: inline-block;
-  mask-image: url('/images/salt-logo.svg');
   mask-position: left center;
   mask-repeat: no-repeat;
   mask-size: contain;
   text-decoration: none;
 }
 
+.salt-wordmark--nav.salt-wordmark--nav,
+.salt-wordmark--footer.salt-wordmark--footer {
+  aspect-ratio: 175 / 29;
+  mask-image: url('/images/navbar-salt-logo.svg');
+}
+
 .salt-wordmark--nav.salt-wordmark--nav {
   color: var(--salt-surface);
-  height: 33px;
+  height: 21px;
+}
+
+/* The hero lockup is sized from the width rather than the height so it scales
+   with the photograph, and `margin-bottom: auto` takes the hero content's free
+   space, leaving the mark near the top and the event copy at the bottom. */
+.salt-wordmark--hero.salt-wordmark--hero {
+  align-self: center;
+  aspect-ratio: 1091 / 241;
+  color: var(--salt-surface);
+  height: auto;
+  margin-bottom: auto;
+  mask-image: url('/images/salt-logo.svg');
+  mask-position: center;
+  width: min(760px, 84%);
 }
 
 .salt-wordmark--footer.salt-wordmark--footer {
   color: var(--salt-green);
-  height: 30px;
+  height: 19px;
 }
 
 /* ── SocialLinks ────────────────────────────────────────────────────────── */
@@ -1018,6 +1040,22 @@
 
   .salt-gallery__tile {
     height: 260px;
+  }
+}
+
+/*
+ * The header wraps to two rows below roughly 700px (measured with the four
+ * links the site ships) and, being absolutely positioned, then covers the top
+ * of the hero content where the display-size lockup sits. The header carries
+ * the lockup already, so the hero one steps aside rather than hiding behind it.
+ *
+ * ponytail: a measured breakpoint, not a derived one -- if the navigation gains
+ * a link, re-measure, or move the header into the hero's flow so the content
+ * cannot be covered at any width.
+ */
+@media (width <= 720px) {
+  .salt-wordmark--hero.salt-wordmark--hero {
+    display: none;
   }
 }
 
