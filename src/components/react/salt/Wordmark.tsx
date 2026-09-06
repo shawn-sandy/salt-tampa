@@ -1,8 +1,9 @@
 /**
- * The Salt Tampa lockup at its two drawn sizes: 22px tall in the navigation
- * bar and 20px in the footer.
+ * The Salt Tampa lockup at its two drawn sizes: 33px tall in the navigation
+ * bar and 30px in the footer. The skyline emblem is taller than the letterforms,
+ * so these boxes are larger than a wordmark-only lockup would need.
  *
- * The artwork is `public/images/navbar-salt-logo.svg`, white on transparent.
+ * The artwork is `public/images/salt-logo.svg`, white on transparent.
  * The footer sits on white, so it is used as a CSS mask rather than an `<img>`:
  * its alpha channel supplies the shape and `currentcolor` supplies the ink,
  * letting one asset draw white over the hero and sage in the footer.
@@ -13,7 +14,7 @@
  */
 
 export type Props = {
-  /** `nav` is the 22px white lockup over the hero; `footer` is the 20px green one. */
+  /** `nav` is the 33px white lockup over the hero; `footer` is the 30px green one. */
   size?: 'nav' | 'footer' | undefined
   /** Renders the lockup as a link. */
   href?: string | undefined

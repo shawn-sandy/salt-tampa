@@ -28,10 +28,10 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-/** The 20px green lockup used in the footer. */
+/** The 30px green lockup used in the footer. */
 export const Footer: Story = {}
 
-/** The 22px white lockup, drawn over the hero photograph. */
+/** The 33px white lockup, drawn over the hero photograph. */
 export const Nav: Story = {
   args: { size: 'nav', href: '#top' },
   decorators: [

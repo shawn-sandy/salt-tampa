@@ -261,20 +261,25 @@
 
 /* ── Wordmark ───────────────────────────────────────────────────────────── */
 
-/* The lockup is public/images/navbar-salt-logo.svg, white on transparent. The footer
+/* The lockup is public/images/salt-logo.svg, white on transparent. The footer
    sits on white, so the artwork is masked rather than drawn: the alpha channel is
    the shape and `currentcolor` is the ink, letting one asset render white over
-   the hero and sage in the footer. The 175x29 viewBox ratio derives each width
-   from the height set on the size class. */
+   the hero and sage in the footer. The 1091x241 viewBox ratio derives each width
+   from the height set on the size class.
+
+   The heights are larger than the wordmark-only lockup they replace because the
+   skyline emblem is taller than the letterforms: measured, the letters span 38.4%
+   of this viewBox against 57.9% of the old one, so 33px and 30px hold the text at
+   the ~12.7px and ~11.6px it already rendered at. */
 .salt-wordmark.salt-wordmark {
   /* The footer stacks its brand column with the default `stretch`, which would
      blow the box out to the column's full width and strand the mark in the
      middle of it. `start` keeps the box at the width `aspect-ratio` derives. */
   align-self: start;
-  aspect-ratio: 175 / 29;
+  aspect-ratio: 1091 / 241;
   background-color: currentcolor;
   display: inline-block;
-  mask-image: url('/images/navbar-salt-logo.svg');
+  mask-image: url('/images/salt-logo.svg');
   mask-position: left center;
   mask-repeat: no-repeat;
   mask-size: contain;
@@ -283,12 +288,12 @@
 
 .salt-wordmark--nav.salt-wordmark--nav {
   color: var(--salt-surface);
-  height: 22px;
+  height: 33px;
 }
 
 .salt-wordmark--footer.salt-wordmark--footer {
   color: var(--salt-green);
-  height: 20px;
+  height: 30px;
 }
 
 /* ── SocialLinks ────────────────────────────────────────────────────────── */
